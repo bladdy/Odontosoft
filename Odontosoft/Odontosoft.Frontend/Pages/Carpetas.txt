@@ -1,0 +1,136 @@
+﻿/Modules
+   /Clinica
+       /Components
+           ClinicaList.razor
+           AddClinicaModal.razor
+           EditClinicaModal.razor
+       /Models
+           ClinicaDTO.cs
+       /Services
+           ClinicaService.cs
+
+   /Sucursal
+       /Components
+           SucursalList.razor
+           AddSucursalModal.razor
+           EditSucursalModal.razor
+       /Models
+           SucursalDTO.cs
+       /Services
+           SucursalService.cs
+
+   /Usuario
+       /Components
+           UsuarioList.razor
+           AddUsuarioModal.razor
+           EditUsuarioModal.razor
+       /Models
+           UsuarioDTO.cs
+       /Services
+           UsuarioService.cs
+
+   /UsuarioSucursal
+       /Components
+           UsuarioSucursalList.razor
+           AssignSucursalModal.razor
+       /Models
+           UsuarioSucursalDTO.cs
+       /Services
+           UsuarioSucursalService.cs
+
+   /Paciente
+       /Components
+           PacienteList.razor
+           AddPacienteModal.razor
+           EditPacienteModal.razor
+           PacienteDetails.razor
+       /Models
+           PacienteDTO.cs
+       /Services
+           PacienteService.cs
+
+   /ExpedienteClinico
+       /Components
+           ExpedienteList.razor
+           ExpedienteDetalle.razor
+           CrearExpediente.razor
+       /Models
+           ExpedienteClinicoDTO.cs
+       /Services
+           ExpedienteClinicoService.cs
+
+   /NotaClinica
+       /Components
+           NotaList.razor
+           AddNotaClinicaModal.razor
+       /Models
+           NotaClinicaDTO.cs
+       /Services
+           NotaClinicaService.cs
+
+   /Diagnostico
+       /Components
+           DiagnosticoList.razor
+           AddDiagnosticoModal.razor
+       /Models
+           DiagnosticoDTO.cs
+       /Services
+           DiagnosticoService.cs
+
+   /Tratamiento
+       /Components
+           TratamientoList.razor
+           AddTratamientoModal.razor
+           EditTratamientoModal.razor
+       /Models
+           TratamientoDTO.cs
+       /Services
+           TratamientoService.cs
+
+   /Radiografia
+       /Components
+           RadiografiaList.razor
+           UploadRadiografiaModal.razor
+           ViewerRadiografia.razor
+       /Models
+           RadiografiaDTO.cs
+       /Services
+           RadiografiaService.cs
+
+   /FotografiaIntraoral
+       /Components
+           IntraoralList.razor
+           UploadFotoModal.razor
+           ViewerIntraoral.razor
+       /Models
+           FotografiaIntraoralDTO.cs
+       /Services
+           FotografiaIntraoralService.cs
+
+   /Evolucion
+       /Components
+           EvolucionList.razor
+           AddEvolucionModal.razor
+       /Models
+           EvolucionDTO.cs
+       /Services
+           EvolucionService.cs
+
+   /FirmaDigital
+       /Components
+           RegistroFirma.razor
+           FirmaViewer.razor
+       /Models
+           FirmaDigitalDTO.cs
+       /Services
+           FirmaDigitalService.cs
+
+   /Prescripcion
+       /Components
+           PrescripcionList.razor
+           AddPrescripcionModal.razor
+           PdfPrescripcion.razor
+       /Models
+           PrescripcionDTO.cs
+       /Services
+           PrescripcionService.cs

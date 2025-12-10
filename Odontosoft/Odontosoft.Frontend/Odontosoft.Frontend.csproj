@@ -7,8 +7,69 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Patient\**" />
+    <Content Remove="Pages\Patient\**" />
+    <EmbeddedResource Remove="Pages\Patient\**" />
+    <None Remove="Pages\Patient\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CurrieTechnologies.Razor.SweetAlert2" Version="5.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.15" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Clinica\Components\" />
+    <Folder Include="Pages\Clinica\Models\" />
+    <Folder Include="Pages\Clinica\Services\" />
+    <Folder Include="Pages\Diagnostico\Components\" />
+    <Folder Include="Pages\Diagnostico\Models\" />
+    <Folder Include="Pages\Diagnostico\Services\" />
+    <Folder Include="Pages\Evolucion\Components\" />
+    <Folder Include="Pages\Evolucion\Models\" />
+    <Folder Include="Pages\Evolucion\Services\" />
+    <Folder Include="Pages\ExpedienteClinico\Components\" />
+    <Folder Include="Pages\ExpedienteClinico\Diagnosticos\" />
+    <Folder Include="Pages\ExpedienteClinico\Evolucion\" />
+    <Folder Include="Pages\ExpedienteClinico\Firmas\" />
+    <Folder Include="Pages\ExpedienteClinico\Fotografias\" />
+    <Folder Include="Pages\ExpedienteClinico\Models\" />
+    <Folder Include="Pages\ExpedienteClinico\Notas\" />
+    <Folder Include="Pages\ExpedienteClinico\Prescripciones\" />
+    <Folder Include="Pages\ExpedienteClinico\Radiografias\" />
+    <Folder Include="Pages\ExpedienteClinico\Services\" />
+    <Folder Include="Pages\ExpedienteClinico\Tratamientos\" />
+    <Folder Include="Pages\FirmaDigital\Components\" />
+    <Folder Include="Pages\FirmaDigital\Models\" />
+    <Folder Include="Pages\FirmaDigital\Services\" />
+    <Folder Include="Pages\FotografiaIntraoral\Components\" />
+    <Folder Include="Pages\FotografiaIntraoral\Models\" />
+    <Folder Include="Pages\FotografiaIntraoral\Services\" />
+    <Folder Include="Pages\NotaClinica\Components\" />
+    <Folder Include="Pages\NotaClinica\Models\" />
+    <Folder Include="Pages\NotaClinica\Services\" />
+    <Folder Include="Pages\Paciente\Components\" />
+    <Folder Include="Pages\Paciente\Models\" />
+    <Folder Include="Pages\Paciente\Services\" />
+    <Folder Include="Pages\Prescripcion\Components\" />
+    <Folder Include="Pages\Prescripcion\Models\" />
+    <Folder Include="Pages\Prescripcion\Services\" />
+    <Folder Include="Pages\Radiografia\Components\" />
+    <Folder Include="Pages\Radiografia\Models\" />
+    <Folder Include="Pages\Radiografia\Services\" />
+    <Folder Include="Pages\Sucursal\Components\" />
+    <Folder Include="Pages\Sucursal\Models\" />
+    <Folder Include="Pages\Sucursal\Services\" />
+    <Folder Include="Pages\Tratamiento\Components\" />
+    <Folder Include="Pages\Tratamiento\Models\" />
+    <Folder Include="Pages\Tratamiento\Services\" />
+    <Folder Include="Pages\UsuarioSucursal\Components\" />
+    <Folder Include="Pages\UsuarioSucursal\Models\" />
+    <Folder Include="Pages\UsuarioSucursal\Services\" />
+    <Folder Include="Pages\Usuario\Components\" />
+    <Folder Include="Pages\Usuario\Models\" />
+    <Folder Include="Pages\Usuario\Services\" />
   </ItemGroup>
 
 </Project>
