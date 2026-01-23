@@ -1,31 +1,53 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Odontosoft.Frontend</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿<!-- Mobile toggle -->
+<button class="md:hidden fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded-lg shadow"
+        @onclick="ToggleNavMenu">
+    ☰
+</button>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+<!-- Overlay mobile -->
+@if (collapseNavMenu)
+{
+    <div class="fixed inset-0 bg-black/50 z-40 md:hidden" @onclick="ToggleNavMenu"></div>
+}
+
+<!-- Sidebar -->
+<aside class="
+    fixed md:static z-50
+    h-full w-64
+    bg-gray-900 text-white
+    transform transition-transform duration-300
+    @(collapseNavMenu ? "translate-x-0" : "-translate-x-full")
+    md:translate-x-0
+">
+
+    <!-- Logo -->
+    <div class="h-16 flex items-center justify-center text-xl font-bold border-b border-gray-700">
+        Odontosoft
+    </div>
+
+    <!-- Menu -->
+    <nav class="px-4 py-6 space-y-1">
+
+        <NavLink href="/" Match="NavLinkMatch.All"
+                 class="block px-3 py-2 rounded hover:bg-gray-700 transition"
+                 activeClass="bg-gray-700">
+            🏠 Home
+        </NavLink>
+
+        <NavLink href="/counter"
+                 class="block px-3 py-2 rounded hover:bg-gray-700 transition"
+                 activeClass="bg-gray-700">
+            ➕ Counter
+        </NavLink>
+
+        <NavLink href="/weather"
+                 class="block px-3 py-2 rounded hover:bg-gray-700 transition"
+                 activeClass="bg-gray-700">
+            ☁ Weather
+        </NavLink>
+
     </nav>
-</div>
+</aside>
 
 @code {
     private bool collapseNavMenu = true;
