@@ -3,7 +3,8 @@ using Odontosoft.Backend.UnitsOfWork.Interfaces;
 using Odontosoft.Shared.DTOs;
 
 namespace Odontosoft.Backend.Controllers;
-
+[ApiController]
+[Route("api/[controller]")]
 public class GenericController<T> : Controller where T : class
 {
     private readonly IGenericUnitOfWork<T> _unitOfWork;
