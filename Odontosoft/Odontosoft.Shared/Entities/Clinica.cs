@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,14 +10,44 @@ namespace Odontosoft.Shared.Entities
     public class Clinica
     {
         public int Id { get; set; }
+
+        [Required, MaxLength(200)]
         public string Nombre { get; set; }
-        public string RazonSocial { get; set; } // Razón social de la clínica
-        public string RFC { get; set; } // RFC de la clínica
+
+        [MaxLength(250)]
+        public string RazonSocial { get; set; }
+
+        [MaxLength(13)]
+        public string RFC { get; set; }
+
+        [MaxLength(20)]
         public string Telefono { get; set; }
+
+        [MaxLength(200)]
         public string Email { get; set; }
+
+        [MaxLength(500)]
         public string Direccion { get; set; }
 
-        // Relación con las sucursales
+        [MaxLength(100)]
+        public string Ciudad { get; set; }
+
+        [MaxLength(100)]
+        public string Estado { get; set; }
+
+        [MaxLength(10)]
+        public string CodigoPostal { get; set; }
+
+        [MaxLength(500)]
+        public string Logo { get; set; } // URL del logo
+
+        public bool Activo { get; set; } = true;
+        public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+        public DateTime? FechaModificacion { get; set; }
+
+        // Relaciones
         public ICollection<Sucursal> Sucursales { get; set; }
+
+        public ICollection<ClinicaModulo> ClinicaModulos { get; set; }
     }
 }

@@ -9,45 +9,694 @@ public class DataContext : DbContext
     {
     }
 
+    // ==================== ENTIDADES BASE ====================
     public DbSet<Clinica> Clinicas { get; set; }
+
     public DbSet<Sucursal> Sucursales { get; set; }
+    public DbSet<Modulo> Modulos { get; set; }
+    public DbSet<ClinicaModulo> ClinicaModulos { get; set; }
+
+    // ==================== USUARIOS Y PERMISOS ====================
     public DbSet<Usuario> Usuarios { get; set; }
+
     public DbSet<UsuarioSucursal> UsuarioSucursales { get; set; }
-    public DbSet<ExpedienteClinico> ExpedientesClinicos { get; set; }
+    public DbSet<PermisoModulo> PermisosModulo { get; set; }
+    public DbSet<Rol> Roles { get; set; }
+    public DbSet<RolPermiso> RolPermisos { get; set; }
+    public DbSet<UsuarioRol> UsuarioRoles { get; set; }
+
+    // ==================== PACIENTES ====================
     public DbSet<Paciente> Pacientes { get; set; }
-    public DbSet<NotaClinica> NotasClinicas { get; set; }
-    public DbSet<Diagnostico> Diagnosticos { get; set; }
-    public DbSet<Tratamiento> Tratamientos { get; set; }
-    public DbSet<Radiografia> Radiografias { get; set; }
-    public DbSet<FotografiaIntraoral> FotografiasIntraorales { get; set; }
-    public DbSet<Evolucion> Evoluciones { get; set; }
-    public DbSet<FirmaDigital> FirmasDigitales { get; set; }
-    public DbSet<Prescripcion> Prescripciones { get; set; }
+
+    public DbSet<Alergia> Alergias { get; set; }
+    public DbSet<Antecedente> Antecedentes { get; set; }
+
+    // ==================== MÉDICOS ====================
+    public DbSet<Medico> Medicos { get; set; }
+
+    public DbSet<Especialidad> Especialidades { get; set; }
+    public DbSet<MedicoEspecialidad> MedicoEspecialidades { get; set; }
+    public DbSet<HorarioMedico> HorariosMedico { get; set; }
+
+    // ==================== CITAS Y CONSULTORIOS ====================
+    public DbSet<Cita> Citas { get; set; }
+
+    public DbSet<Consultorio> Consultorios { get; set; }
+
+    // ==================== CONSULTAS ====================
+    public DbSet<Consulta> Consultas { get; set; }
+
+    public DbSet<HistoriaClinica> HistoriasClinicas { get; set; }
+
+    // ==================== RECETAS ====================
+    public DbSet<Receta> Recetas { get; set; }
+
+    public DbSet<RecetaDetalle> RecetaDetalles { get; set; }
+    public DbSet<Medicamento> Medicamentos { get; set; }
+
+    // ==================== LABORATORIO ====================
+    public DbSet<OrdenLaboratorio> OrdenesLaboratorio { get; set; }
+
+    public DbSet<OrdenLaboratorioDetalle> OrdenLaboratorioDetalles { get; set; }
+    public DbSet<EstudioLaboratorio> EstudiosLaboratorio { get; set; }
+
+    // ==================== IMAGENOLOGÍA ====================
+    public DbSet<OrdenImagen> OrdenesImagen { get; set; }
+
+    public DbSet<OrdenImagenDetalle> OrdenImagenDetalles { get; set; }
+    public DbSet<EstudioImagen> EstudiosImagen { get; set; }
+
+    // ==================== FACTURACIÓN ====================
+    public DbSet<Factura> Facturas { get; set; }
+
+    public DbSet<FacturaDetalle> FacturaDetalles { get; set; }
+    public DbSet<Servicio> Servicios { get; set; }
+    public DbSet<Pago> Pagos { get; set; }
+
+    // ==================== INVENTARIO ====================
+    public DbSet<Producto> Productos { get; set; }
+
+    public DbSet<MovimientoInventario> MovimientosInventario { get; set; }
+
+    // ==================== AUDITORÍA Y CONFIGURACIÓN ====================
+    public DbSet<AuditoriaAcceso> AuditoriasAcceso { get; set; }
+
+    public DbSet<AuditoriaCambios> AuditoriasCambios { get; set; }
+    public DbSet<ConfiguracionGeneral> ConfiguracionesGenerales { get; set; }
+    public DbSet<Notificacion> Notificaciones { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<UsuarioSucursal>()
-            .HasKey(us => new { us.UsuarioId, us.SucursalId });
+        // ==================== CONFIGURACIÓN CLINICA ====================
+        modelBuilder.Entity<Clinica>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Clinicas");
+            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.RFC).HasMaxLength(13);
+            entity.HasIndex(e => e.RFC).IsUnique();
+            entity.HasIndex(e => e.Email);
+        });
 
-        modelBuilder.Entity<UsuarioSucursal>()
-            .HasOne(us => us.Usuario)
-            .WithMany(u => u.UsuarioSucursales)
-            .HasForeignKey(us => us.UsuarioId);
+        // ==================== CONFIGURACIÓN SUCURSAL ====================
+        modelBuilder.Entity<Sucursal>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Sucursales");
+            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Codigo).IsRequired().HasMaxLength(20);
+            entity.HasIndex(e => new { e.ClinicaId, e.Codigo }).IsUnique();
 
-        modelBuilder.Entity<UsuarioSucursal>()
-            .HasOne(us => us.Sucursal)
-            .WithMany(s => s.UsuarioSucursales)
-            .HasForeignKey(us => us.SucursalId);
+            entity.HasOne(e => e.Clinica)
+                .WithMany(e => e.Sucursales)
+                .HasForeignKey(e => e.ClinicaId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
-        modelBuilder.Entity<ExpedienteClinico>()
-            .HasOne(e => e.Sucursal)
-            .WithMany(s => s.ExpedientesClinicos)
-            .HasForeignKey(e => e.SucursalId);
+        // ==================== CONFIGURACIÓN MÓDULO ====================
+        modelBuilder.Entity<Modulo>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Modulos");
+            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Codigo).IsRequired().HasMaxLength(50);
+            entity.HasIndex(e => e.Codigo).IsUnique();
 
-        modelBuilder.Entity<Tratamiento>()
-            .Property(t => t.Costo)
-            .HasColumnType("decimal(18,2)");
+            entity.HasOne(e => e.ModuloPadre)
+                .WithMany(e => e.SubModulos)
+                .HasForeignKey(e => e.ModuloPadreId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==================== CONFIGURACIÓN CLINICA-MODULO ====================
+        modelBuilder.Entity<ClinicaModulo>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("ClinicaModulos");
+            entity.HasIndex(e => new { e.ClinicaId, e.ModuloId }).IsUnique();
+
+            entity.HasOne(e => e.Clinica)
+                .WithMany(e => e.ClinicaModulos)
+                .HasForeignKey(e => e.ClinicaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Modulo)
+                .WithMany(e => e.ClinicaModulos)
+                .HasForeignKey(e => e.ModuloId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==================== CONFIGURACIÓN USUARIO ====================
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Usuarios");
+            entity.Property(e => e.Email).IsRequired().HasMaxLength(200);
+            entity.HasIndex(e => e.Email).IsUnique();
+            entity.HasIndex(e => e.NombreUsuario).IsUnique();
+        });
+
+        // ==================== CONFIGURACIÓN USUARIO-SUCURSAL ====================
+        modelBuilder.Entity<UsuarioSucursal>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("UsuarioSucursales");
+            entity.HasIndex(e => new { e.UsuarioId, e.SucursalId }).IsUnique();
+
+            entity.HasOne(e => e.Usuario)
+                .WithMany(e => e.UsuarioSucursales)
+                .HasForeignKey(e => e.UsuarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany(e => e.UsuarioSucursales)
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==================== CONFIGURACIÓN PERMISO-MODULO ====================
+        modelBuilder.Entity<PermisoModulo>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("PermisosModulo");
+            entity.HasIndex(e => new { e.UsuarioSucursalId, e.ModuloId }).IsUnique();
+
+            entity.HasOne(e => e.UsuarioSucursal)
+                .WithMany(e => e.PermisosModulo)
+                .HasForeignKey(e => e.UsuarioSucursalId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Modulo)
+                .WithMany(e => e.PermisosModulo)
+                .HasForeignKey(e => e.ModuloId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==================== CONFIGURACIÓN ROL ====================
+        modelBuilder.Entity<Rol>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Roles");
+        });
+
+        modelBuilder.Entity<RolPermiso>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("RolPermisos");
+            entity.HasIndex(e => new { e.RolId, e.ModuloId }).IsUnique();
+
+            entity.HasOne(e => e.Rol)
+                .WithMany(e => e.RolPermisos)
+                .HasForeignKey(e => e.RolId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Modulo)
+                .WithMany()
+                .HasForeignKey(e => e.ModuloId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<UsuarioRol>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("UsuarioRoles");
+            entity.HasIndex(e => new { e.UsuarioSucursalId, e.RolId }).IsUnique();
+
+            entity.HasOne(e => e.UsuarioSucursal)
+                .WithMany()
+                .HasForeignKey(e => e.UsuarioSucursalId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Rol)
+                .WithMany(e => e.UsuarioRoles)
+                .HasForeignKey(e => e.RolId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==================== CONFIGURACIÓN PACIENTE ====================
+        modelBuilder.Entity<Paciente>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Pacientes");
+            entity.HasIndex(e => new { e.SucursalId, e.NumeroExpediente }).IsUnique();
+            entity.HasIndex(e => e.CURP);
+            entity.HasIndex(e => e.Email);
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany(e => e.Pacientes)
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Alergia>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Alergias");
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.Alergias)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Antecedente>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Antecedentes");
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.Antecedentes)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ==================== CONFIGURACIÓN MÉDICO ====================
+        modelBuilder.Entity<Medico>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Medicos");
+            entity.HasIndex(e => e.CedulaProfesional).IsUnique();
+
+            entity.HasOne(e => e.Usuario)
+                .WithMany(e => e.Medicos)
+                .HasForeignKey(e => e.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Especialidad>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Especialidades");
+        });
+
+        modelBuilder.Entity<MedicoEspecialidad>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("MedicoEspecialidades");
+            entity.HasIndex(e => new { e.MedicoId, e.EspecialidadId }).IsUnique();
+
+            entity.HasOne(e => e.Medico)
+                .WithMany(e => e.MedicoEspecialidades)
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Especialidad)
+                .WithMany(e => e.MedicoEspecialidades)
+                .HasForeignKey(e => e.EspecialidadId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<HorarioMedico>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("HorariosMedico");
+            entity.HasIndex(e => new { e.MedicoId, e.SucursalId, e.DiaSemana });
+
+            entity.HasOne(e => e.Medico)
+                .WithMany(e => e.HorariosMedico)
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany()
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==================== CONFIGURACIÓN CITA ====================
+        modelBuilder.Entity<Cita>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Citas");
+            entity.HasIndex(e => e.NumeroCita).IsUnique();
+            entity.HasIndex(e => new { e.MedicoId, e.FechaHora });
+            entity.HasIndex(e => new { e.PacienteId, e.FechaHora });
+            entity.HasIndex(e => e.EstadoCita);
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany(e => e.Citas)
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.Citas)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany(e => e.Citas)
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Consultorio)
+                .WithMany(e => e.Citas)
+                .HasForeignKey(e => e.ConsultorioId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Consultorio>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Consultorios");
+            entity.HasIndex(e => new { e.SucursalId, e.Numero }).IsUnique();
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany(e => e.Consultorios)
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ==================== CONFIGURACIÓN CONSULTA ====================
+        modelBuilder.Entity<Consulta>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Consultas");
+            entity.HasIndex(e => e.NumeroConsulta).IsUnique();
+            entity.HasIndex(e => new { e.PacienteId, e.FechaConsulta });
+
+            entity.HasOne(e => e.Cita)
+                .WithOne(e => e.Consulta)
+                .HasForeignKey<Consulta>(e => e.CitaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany(e => e.Consultas)
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.Peso).HasPrecision(5, 2);
+            entity.Property(e => e.Altura).HasPrecision(5, 2);
+            entity.Property(e => e.IMC).HasPrecision(5, 2);
+            entity.Property(e => e.Temperatura).HasPrecision(4, 2);
+        });
+
+        modelBuilder.Entity<HistoriaClinica>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("HistoriasClinicas");
+            entity.HasIndex(e => new { e.PacienteId, e.FechaRegistro });
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.HistoriasClinicas)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Consulta)
+                .WithMany()
+                .HasForeignKey(e => e.ConsultaId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // ==================== CONFIGURACIÓN RECETA ====================
+        modelBuilder.Entity<Receta>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Recetas");
+            entity.HasIndex(e => e.NumeroReceta).IsUnique();
+
+            entity.HasOne(e => e.Consulta)
+                .WithMany(e => e.Recetas)
+                .HasForeignKey(e => e.ConsultaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.Recetas)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<RecetaDetalle>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("RecetaDetalles");
+
+            entity.HasOne(e => e.Receta)
+                .WithMany(e => e.RecetaDetalles)
+                .HasForeignKey(e => e.RecetaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Medicamento)
+                .WithMany(e => e.RecetaDetalles)
+                .HasForeignKey(e => e.MedicamentoId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Medicamento>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Medicamentos");
+            entity.HasIndex(e => e.Nombre);
+        });
+
+        // ==================== CONFIGURACIÓN LABORATORIO ====================
+        modelBuilder.Entity<OrdenLaboratorio>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("OrdenesLaboratorio");
+            entity.HasIndex(e => e.NumeroOrden).IsUnique();
+
+            entity.HasOne(e => e.Consulta)
+                .WithMany(e => e.OrdenesLaboratorio)
+                .HasForeignKey(e => e.ConsultaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.OrdenesLaboratorio)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<OrdenLaboratorioDetalle>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("OrdenLaboratorioDetalles");
+
+            entity.HasOne(e => e.OrdenLaboratorio)
+                .WithMany(e => e.OrdenLaboratorioDetalles)
+                .HasForeignKey(e => e.OrdenLaboratorioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.EstudioLaboratorio)
+                .WithMany(e => e.OrdenLaboratorioDetalles)
+                .HasForeignKey(e => e.EstudioLaboratorioId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<EstudioLaboratorio>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("EstudiosLaboratorio");
+            entity.HasIndex(e => e.Codigo);
+
+            entity.Property(e => e.Precio).HasPrecision(10, 2);
+        });
+
+        // ==================== CONFIGURACIÓN IMAGENOLOGÍA ====================
+        modelBuilder.Entity<OrdenImagen>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("OrdenesImagen");
+            entity.HasIndex(e => e.NumeroOrden).IsUnique();
+
+            entity.HasOne(e => e.Consulta)
+                .WithMany(e => e.OrdenesImagen)
+                .HasForeignKey(e => e.ConsultaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.OrdenesImagen)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<OrdenImagenDetalle>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("OrdenImagenDetalles");
+
+            entity.HasOne(e => e.OrdenImagen)
+                .WithMany(e => e.OrdenImagenDetalles)
+                .HasForeignKey(e => e.OrdenImagenId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.EstudioImagen)
+                .WithMany(e => e.OrdenImagenDetalles)
+                .HasForeignKey(e => e.EstudioImagenId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<EstudioImagen>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("EstudiosImagen");
+            entity.HasIndex(e => e.Codigo);
+
+            entity.Property(e => e.Precio).HasPrecision(10, 2);
+        });
+
+        // ==================== CONFIGURACIÓN FACTURACIÓN ====================
+        modelBuilder.Entity<Factura>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Facturas");
+            entity.HasIndex(e => e.NumeroFactura).IsUnique();
+            entity.HasIndex(e => e.UUID);
+            entity.HasIndex(e => new { e.PacienteId, e.FechaEmision });
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany()
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany(e => e.Facturas)
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Cita)
+                .WithMany()
+                .HasForeignKey(e => e.CitaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.Property(e => e.Subtotal).HasPrecision(18, 2);
+            entity.Property(e => e.IVA).HasPrecision(18, 2);
+            entity.Property(e => e.Total).HasPrecision(18, 2);
+            entity.Property(e => e.Descuento).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<FacturaDetalle>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("FacturaDetalles");
+
+            entity.HasOne(e => e.Factura)
+                .WithMany(e => e.FacturaDetalles)
+                .HasForeignKey(e => e.FacturaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Servicio)
+                .WithMany(e => e.FacturaDetalles)
+                .HasForeignKey(e => e.ServicioId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.Property(e => e.Cantidad).HasPrecision(18, 2);
+            entity.Property(e => e.PrecioUnitario).HasPrecision(18, 2);
+            entity.Property(e => e.Subtotal).HasPrecision(18, 2);
+            entity.Property(e => e.IVA).HasPrecision(18, 2);
+            entity.Property(e => e.Total).HasPrecision(18, 2);
+            entity.Property(e => e.Descuento).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<Servicio>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Servicios");
+            entity.HasIndex(e => e.Codigo);
+
+            entity.Property(e => e.Precio).HasPrecision(18, 2);
+            entity.Property(e => e.IVA).HasPrecision(5, 2);
+        });
+
+        modelBuilder.Entity<Pago>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Pagos");
+            entity.HasIndex(e => e.NumeroPago).IsUnique();
+
+            entity.HasOne(e => e.Factura)
+                .WithMany(e => e.Pagos)
+                .HasForeignKey(e => e.FacturaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.Monto).HasPrecision(18, 2);
+        });
+
+        // ==================== CONFIGURACIÓN INVENTARIO ====================
+        modelBuilder.Entity<Producto>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Productos");
+            entity.HasIndex(e => new { e.SucursalId, e.Codigo }).IsUnique();
+            entity.HasIndex(e => e.CodigoBarras);
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany()
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.PrecioCompra).HasPrecision(18, 2);
+            entity.Property(e => e.PrecioVenta).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<MovimientoInventario>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("MovimientosInventario");
+            entity.HasIndex(e => new { e.ProductoId, e.FechaMovimiento });
+
+            entity.HasOne(e => e.Producto)
+                .WithMany(e => e.MovimientosInventario)
+                .HasForeignKey(e => e.ProductoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany()
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ==================== CONFIGURACIÓN AUDITORÍA ====================
+        modelBuilder.Entity<AuditoriaAcceso>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("AuditoriasAcceso");
+            entity.HasIndex(e => new { e.UsuarioId, e.FechaHora });
+            entity.HasIndex(e => e.DireccionIP);
+        });
+
+        modelBuilder.Entity<AuditoriaCambios>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("AuditoriasCambios");
+            entity.HasIndex(e => new { e.Tabla, e.RegistroId, e.FechaHora });
+            entity.HasIndex(e => new { e.UsuarioId, e.FechaHora });
+        });
+
+        // ==================== CONFIGURACIÓN GENERAL ====================
+        modelBuilder.Entity<ConfiguracionGeneral>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("ConfiguracionesGenerales");
+            entity.HasIndex(e => new { e.ClinicaId, e.SucursalId, e.Clave }).IsUnique();
+        });
+
+        modelBuilder.Entity<Notificacion>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Notificaciones");
+            entity.HasIndex(e => new { e.UsuarioId, e.Leida, e.FechaCreacion });
+        });
     }
 }

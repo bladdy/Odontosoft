@@ -1,0 +1,28 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Odontosoft.Shared.Entities
+{
+    public class Alergia
+    {
+        public int Id { get; set; }
+        public int PacienteId { get; set; }
+
+        [Required, MaxLength(200)]
+        public string Nombre { get; set; }
+
+        [MaxLength(50)]
+        public string Tipo { get; set; } // Medicamento, Alimento, Ambiental, Otro
+
+        [MaxLength(50)]
+        public string Gravedad { get; set; } // Leve, Moderada, Grave
+
+        [MaxLength(1000)]
+        public string Descripcion { get; set; }
+
+        public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
+        public bool Activo { get; set; } = true;
+
+        // Relaciones
+        public Paciente Paciente { get; set; }
+    }
+}
