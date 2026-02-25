@@ -9,14 +9,14 @@ public class DataContext : DbContext
     {
     }
 
-    // ==================== ENTIDADES BASE ====================
+    // DbSets principales
     public DbSet<Clinica> Clinicas { get; set; }
 
     public DbSet<Sucursal> Sucursales { get; set; }
     public DbSet<Modulo> Modulos { get; set; }
     public DbSet<ClinicaModulo> ClinicaModulos { get; set; }
 
-    // ==================== USUARIOS Y PERMISOS ====================
+    // Usuarios y permisos
     public DbSet<Usuario> Usuarios { get; set; }
 
     public DbSet<UsuarioSucursal> UsuarioSucursales { get; set; }
@@ -25,60 +25,60 @@ public class DataContext : DbContext
     public DbSet<RolPermiso> RolPermisos { get; set; }
     public DbSet<UsuarioRol> UsuarioRoles { get; set; }
 
-    // ==================== PACIENTES ====================
+    // Pacientes
     public DbSet<Paciente> Pacientes { get; set; }
 
     public DbSet<Alergia> Alergias { get; set; }
     public DbSet<Antecedente> Antecedentes { get; set; }
 
-    // ==================== MÉDICOS ====================
+    // Médicos
     public DbSet<Medico> Medicos { get; set; }
 
     public DbSet<Especialidad> Especialidades { get; set; }
     public DbSet<MedicoEspecialidad> MedicoEspecialidades { get; set; }
     public DbSet<HorarioMedico> HorariosMedico { get; set; }
 
-    // ==================== CITAS Y CONSULTORIOS ====================
+    // Citas y Consultorios
     public DbSet<Cita> Citas { get; set; }
 
     public DbSet<Consultorio> Consultorios { get; set; }
 
-    // ==================== CONSULTAS ====================
+    // Consultas
     public DbSet<Consulta> Consultas { get; set; }
 
     public DbSet<HistoriaClinica> HistoriasClinicas { get; set; }
 
-    // ==================== RECETAS ====================
+    // Recetas
     public DbSet<Receta> Recetas { get; set; }
 
     public DbSet<RecetaDetalle> RecetaDetalles { get; set; }
     public DbSet<Medicamento> Medicamentos { get; set; }
 
-    // ==================== LABORATORIO ====================
+    // Laboratorio
     public DbSet<OrdenLaboratorio> OrdenesLaboratorio { get; set; }
 
     public DbSet<OrdenLaboratorioDetalle> OrdenLaboratorioDetalles { get; set; }
     public DbSet<EstudioLaboratorio> EstudiosLaboratorio { get; set; }
 
-    // ==================== IMAGENOLOGÍA ====================
+    // Imagenología
     public DbSet<OrdenImagen> OrdenesImagen { get; set; }
 
     public DbSet<OrdenImagenDetalle> OrdenImagenDetalles { get; set; }
     public DbSet<EstudioImagen> EstudiosImagen { get; set; }
 
-    // ==================== FACTURACIÓN ====================
+    // Facturación
     public DbSet<Factura> Facturas { get; set; }
 
     public DbSet<FacturaDetalle> FacturaDetalles { get; set; }
     public DbSet<Servicio> Servicios { get; set; }
     public DbSet<Pago> Pagos { get; set; }
 
-    // ==================== INVENTARIO ====================
+    // Inventario
     public DbSet<Producto> Productos { get; set; }
 
     public DbSet<MovimientoInventario> MovimientosInventario { get; set; }
 
-    // ==================== AUDITORÍA Y CONFIGURACIÓN ====================
+    // Auditoría y configuración
     public DbSet<AuditoriaAcceso> AuditoriasAcceso { get; set; }
 
     public DbSet<AuditoriaCambios> AuditoriasCambios { get; set; }
@@ -94,8 +94,6 @@ public class DataContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.ToTable("Clinicas");
-            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.RFC).HasMaxLength(13);
             entity.HasIndex(e => e.RFC).IsUnique();
             entity.HasIndex(e => e.Email);
         });
@@ -105,8 +103,6 @@ public class DataContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.ToTable("Sucursales");
-            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Codigo).IsRequired().HasMaxLength(20);
             entity.HasIndex(e => new { e.ClinicaId, e.Codigo }).IsUnique();
 
             entity.HasOne(e => e.Clinica)
@@ -115,13 +111,11 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN MÓDULO ====================
+        // ==================== CONFIGURACIÓN MODULO ====================
         modelBuilder.Entity<Modulo>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.ToTable("Modulos");
-            entity.Property(e => e.Nombre).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.Codigo).IsRequired().HasMaxLength(50);
             entity.HasIndex(e => e.Codigo).IsUnique();
 
             entity.HasOne(e => e.ModuloPadre)
@@ -153,7 +147,6 @@ public class DataContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.ToTable("Usuarios");
-            entity.Property(e => e.Email).IsRequired().HasMaxLength(200);
             entity.HasIndex(e => e.Email).IsUnique();
             entity.HasIndex(e => e.NombreUsuario).IsUnique();
         });
