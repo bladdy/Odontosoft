@@ -1,4 +1,5 @@
-﻿using Odontosoft.Shared.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Odontosoft.Shared.Entities;
 
 namespace Odontosoft.Backend.Data
 {
@@ -7,7 +8,7 @@ namespace Odontosoft.Backend.Data
         public static void SeedDatabase(DataContext context)
         {
             // Aplicar migraciones pendientes
-            //context.Database.Migrate();
+            context.Database.Migrate();
 
             // Seed Módulos del sistema
             if (!context.Modulos.Any())

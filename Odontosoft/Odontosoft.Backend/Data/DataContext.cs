@@ -81,7 +81,7 @@ public class DataContext : DbContext
     // Auditoría y configuración
     public DbSet<AuditoriaAcceso> AuditoriasAcceso { get; set; }
 
-    public DbSet<AuditoriasCambios> AuditoriasCambios { get; set; }
+    public DbSet<AuditoriaCambios> AuditoriasCambios { get; set; }
     public DbSet<ConfiguracionGeneral> ConfiguracionesGenerales { get; set; }
     public DbSet<Notificacion> Notificaciones { get; set; }
 
