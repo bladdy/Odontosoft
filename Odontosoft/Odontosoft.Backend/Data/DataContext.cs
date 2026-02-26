@@ -81,15 +81,33 @@ public class DataContext : DbContext
     // Auditoría y configuración
     public DbSet<AuditoriaAcceso> AuditoriasAcceso { get; set; }
 
-    public DbSet<AuditoriaCambios> AuditoriasCambios { get; set; }
+    public DbSet<AuditoriasCambios> AuditoriasCambios { get; set; }
     public DbSet<ConfiguracionGeneral> ConfiguracionesGenerales { get; set; }
     public DbSet<Notificacion> Notificaciones { get; set; }
+
+    // ==================== DBSETS ODONTOLOGÍA (NUEVOS) ====================
+    public DbSet<Odontograma> Odontogramas { get; set; }
+
+    public DbSet<DienteEstado> DientesEstado { get; set; }
+    public DbSet<TratamientoDental> TratamientosDentales { get; set; }
+    public DbSet<SeguimientoTratamiento> SeguimientosTratamiento { get; set; }
+    public DbSet<PresupuestoDental> PresupuestosDentales { get; set; }
+    public DbSet<PresupuestoDetalle> PresupuestosDetalle { get; set; }
+    public DbSet<RadiografiaDental> RadiografiasDentales { get; set; }
+    public DbSet<ExamenPeriodontal> ExamenesPeriodontales { get; set; }
+    public DbSet<BolsaPeriodontal> BolsasPeriodontales { get; set; }
+    public DbSet<TratamientoOrtodoncia> TratamientosOrtodoncia { get; set; }
+    public DbSet<ControlOrtodoncia> ControlesOrtodoncia { get; set; }
+    public DbSet<ConsentimientoInformado> ConsentimientosInformados { get; set; }
+    public DbSet<CatalogoTratamientoDental> CatalogoTratamientosDentales { get; set; }
+    public DbSet<MaterialDental> MaterialesDentales { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // ==================== CONFIGURACIÓN CLINICA ====================
+        // ==================== TU CONFIGURACIÓN ORIGINAL (SIN CAMBIOS) ====================
+
         modelBuilder.Entity<Clinica>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -98,7 +116,6 @@ public class DataContext : DbContext
             entity.HasIndex(e => e.Email);
         });
 
-        // ==================== CONFIGURACIÓN SUCURSAL ====================
         modelBuilder.Entity<Sucursal>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -111,7 +128,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN MODULO ====================
         modelBuilder.Entity<Modulo>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -124,7 +140,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN CLINICA-MODULO ====================
         modelBuilder.Entity<ClinicaModulo>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -142,7 +157,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN USUARIO ====================
         modelBuilder.Entity<Usuario>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -151,7 +165,6 @@ public class DataContext : DbContext
             entity.HasIndex(e => e.NombreUsuario).IsUnique();
         });
 
-        // ==================== CONFIGURACIÓN USUARIO-SUCURSAL ====================
         modelBuilder.Entity<UsuarioSucursal>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -169,7 +182,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN PERMISO-MODULO ====================
         modelBuilder.Entity<PermisoModulo>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -187,7 +199,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN ROL ====================
         modelBuilder.Entity<Rol>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -228,7 +239,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN PACIENTE ====================
         modelBuilder.Entity<Paciente>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -265,7 +275,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ==================== CONFIGURACIÓN MÉDICO ====================
         modelBuilder.Entity<Medico>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -318,7 +327,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN CITA ====================
         modelBuilder.Entity<Cita>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -361,7 +369,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ==================== CONFIGURACIÓN CONSULTA ====================
         modelBuilder.Entity<Consulta>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -407,7 +414,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull);
         });
 
-        // ==================== CONFIGURACIÓN RECETA ====================
         modelBuilder.Entity<Receta>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -453,7 +459,6 @@ public class DataContext : DbContext
             entity.HasIndex(e => e.Nombre);
         });
 
-        // ==================== CONFIGURACIÓN LABORATORIO ====================
         modelBuilder.Entity<OrdenLaboratorio>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -501,7 +506,6 @@ public class DataContext : DbContext
             entity.Property(e => e.Precio).HasPrecision(10, 2);
         });
 
-        // ==================== CONFIGURACIÓN IMAGENOLOGÍA ====================
         modelBuilder.Entity<OrdenImagen>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -549,7 +553,6 @@ public class DataContext : DbContext
             entity.Property(e => e.Precio).HasPrecision(10, 2);
         });
 
-        // ==================== CONFIGURACIÓN FACTURACIÓN ====================
         modelBuilder.Entity<Factura>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -626,7 +629,6 @@ public class DataContext : DbContext
             entity.Property(e => e.Monto).HasPrecision(18, 2);
         });
 
-        // ==================== CONFIGURACIÓN INVENTARIO ====================
         modelBuilder.Entity<Producto>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -660,7 +662,6 @@ public class DataContext : DbContext
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
-        // ==================== CONFIGURACIÓN AUDITORÍA ====================
         modelBuilder.Entity<AuditoriaAcceso>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -677,7 +678,6 @@ public class DataContext : DbContext
             entity.HasIndex(e => new { e.UsuarioId, e.FechaHora });
         });
 
-        // ==================== CONFIGURACIÓN GENERAL ====================
         modelBuilder.Entity<ConfiguracionGeneral>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -690,6 +690,252 @@ public class DataContext : DbContext
             entity.HasKey(e => e.Id);
             entity.ToTable("Notificaciones");
             entity.HasIndex(e => new { e.UsuarioId, e.Leida, e.FechaCreacion });
+        });
+
+        // ==================== CONFIGURACIÓN ODONTOLOGÍA (NUEVO - SIN _tenantService) ====================
+
+        modelBuilder.Entity<Odontograma>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("Odontogramas");
+            entity.HasIndex(e => new { e.PacienteId, e.FechaCreacion });
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<DienteEstado>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("DientesEstado");
+            entity.HasIndex(e => new { e.OdontogramaId, e.NumeroDiente });
+
+            entity.HasOne(e => e.Odontograma)
+                .WithMany(e => e.DientesEstado)
+                .HasForeignKey(e => e.OdontogramaId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<TratamientoDental>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("TratamientosDentales");
+            entity.HasIndex(e => e.NumeroTratamiento).IsUnique();
+            entity.HasIndex(e => new { e.PacienteId, e.FechaTratamiento });
+            entity.HasIndex(e => new { e.MedicoId, e.Estado });
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Consulta)
+                .WithMany()
+                .HasForeignKey(e => e.ConsultaId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(e => e.DienteEstado)
+                .WithMany(d => d.Tratamientos)
+                .HasForeignKey(e => e.DienteEstadoId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.Property(e => e.Costo).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<SeguimientoTratamiento>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("SeguimientosTratamiento");
+            entity.HasIndex(e => new { e.TratamientoDentalId, e.NumeroSesion });
+
+            entity.HasOne(e => e.TratamientoDental)
+                .WithMany(t => t.Seguimientos)
+                .HasForeignKey(e => e.TratamientoDentalId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<PresupuestoDental>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("PresupuestosDentales");
+            entity.HasIndex(e => e.NumeroPresupuesto).IsUnique();
+            entity.HasIndex(e => new { e.PacienteId, e.FechaEmision });
+            entity.HasIndex(e => new { e.SucursalId, e.Estado });
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Sucursal)
+                .WithMany()
+                .HasForeignKey(e => e.SucursalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.Subtotal).HasPrecision(18, 2);
+            entity.Property(e => e.Descuento).HasPrecision(18, 2);
+            entity.Property(e => e.Total).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<PresupuestoDetalle>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("PresupuestosDetalle");
+
+            entity.HasOne(e => e.PresupuestoDental)
+                .WithMany(p => p.Detalles)
+                .HasForeignKey(e => e.PresupuestoDentalId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.PrecioUnitario).HasPrecision(18, 2);
+            entity.Property(e => e.Subtotal).HasPrecision(18, 2);
+            entity.Property(e => e.Descuento).HasPrecision(18, 2);
+            entity.Property(e => e.Total).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<RadiografiaDental>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("RadiografiasDentales");
+            entity.HasIndex(e => e.NumeroRadiografia).IsUnique();
+            entity.HasIndex(e => new { e.PacienteId, e.FechaToma });
+            entity.HasIndex(e => e.TipoRadiografia);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<ExamenPeriodontal>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("ExamenesPeriodontales");
+            entity.HasIndex(e => new { e.PacienteId, e.FechaExamen });
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<BolsaPeriodontal>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("BolsasPeriodontales");
+            entity.HasIndex(e => new { e.ExamenPeriodontalId, e.NumeroDiente });
+
+            entity.HasOne(e => e.ExamenPeriodontal)
+                .WithMany(ex => ex.BolsasPeriodontales)
+                .HasForeignKey(e => e.ExamenPeriodontalId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<TratamientoOrtodoncia>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("TratamientosOrtodoncia");
+            entity.HasIndex(e => e.NumeroTratamiento).IsUnique();
+            entity.HasIndex(e => new { e.PacienteId, e.Estado });
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(e => e.CostoTotal).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<ControlOrtodoncia>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("ControlesOrtodoncia");
+            entity.HasIndex(e => new { e.TratamientoOrtodonciaId, e.FechaControl });
+
+            entity.HasOne(e => e.TratamientoOrtodoncia)
+                .WithMany(t => t.Controles)
+                .HasForeignKey(e => e.TratamientoOrtodonciaId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ConsentimientoInformado>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("ConsentimientosInformados");
+            entity.HasIndex(e => new { e.PacienteId, e.FechaConsentimiento });
+            entity.HasIndex(e => e.TratamientoDentalId);
+
+            entity.HasOne(e => e.Paciente)
+                .WithMany()
+                .HasForeignKey(e => e.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Medico)
+                .WithMany()
+                .HasForeignKey(e => e.MedicoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.TratamientoDental)
+                .WithMany()
+                .HasForeignKey(e => e.TratamientoDentalId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<CatalogoTratamientoDental>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("CatalogoTratamientosDentales");
+            entity.HasIndex(e => e.Codigo);
+            entity.HasIndex(e => e.Categoria);
+
+            entity.Property(e => e.PrecioBase).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<MaterialDental>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("MaterialesDentales");
+            entity.HasIndex(e => e.Codigo);
+            entity.HasIndex(e => e.Categoria);
+
+            entity.Property(e => e.PrecioUnitario).HasPrecision(18, 2);
         });
     }
 }

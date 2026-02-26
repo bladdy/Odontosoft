@@ -68,16 +68,16 @@ namespace Odontosoft.Shared.Entities
         public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
         public DateTime? FechaModificacion { get; set; }
 
-        // Relaciones
+        // Relaciones EXISTENTES
         public Sucursal Sucursal { get; set; }
 
-        public ICollection<Cita> Citas { get; set; }
-        public ICollection<HistoriaClinica> HistoriasClinicas { get; set; }
         public ICollection<Alergia> Alergias { get; set; }
         public ICollection<Antecedente> Antecedentes { get; set; }
+        public ICollection<Cita> Citas { get; set; }
         public ICollection<Receta> Recetas { get; set; }
         public ICollection<OrdenLaboratorio> OrdenesLaboratorio { get; set; }
         public ICollection<OrdenImagen> OrdenesImagen { get; set; }
         public ICollection<Factura> Facturas { get; set; }
+        public ICollection<HistoriaClinica> HistoriasClinicas { get; set; }
     }
 }

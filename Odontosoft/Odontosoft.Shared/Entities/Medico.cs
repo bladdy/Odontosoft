@@ -27,7 +27,7 @@ namespace Odontosoft.Shared.Entities
         public bool Activo { get; set; } = true;
         public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
 
-        // Relaciones
+        // Relaciones EXISTENTES
         public Usuario Usuario { get; set; }
 
         public ICollection<MedicoEspecialidad> MedicoEspecialidades { get; set; }
