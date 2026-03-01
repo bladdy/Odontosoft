@@ -21,6 +21,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IOdontogramaRepository, OdontogramaRepository>();
 builder.Services.AddScoped<ITratamientoDentalRepository, TratamientoDentalRepository>();
+builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
+builder.Services.AddScoped<IMedicoRepository, MedicoRepository>();
 builder.Services.AddScoped<IPresupuestoDentalRepository, PresupuestoDentalRepository>();
 builder.Services.AddScoped<IRadiografiaDentalRepository, RadiografiaDentalRepository>();
 builder.Services.AddScoped<IExamenPeriodontalRepository, ExamenPeriodontalRepository>();
@@ -28,8 +30,6 @@ builder.Services.AddScoped<ITratamientoOrtodonciaRepository, TratamientoOrtodonc
 builder.Services.AddScoped<IClinicaRepository, ClinicaRepository>();
 builder.Services.AddScoped<ISucursalRepository, SucursalRepository>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
-builder.Services.AddScoped<IMedicoRepository, MedicoRepository>();
 builder.Services.AddScoped<ICitaRepository, CitaRepository>();
 builder.Services.AddScoped<IConsultaRepository, ConsultaRepository>();
 builder.Services.AddScoped<IRecetaRepository, RecetaRepository>();
