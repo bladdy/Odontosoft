@@ -79,9 +79,9 @@ if (app.Environment.IsDevelopment())
 
 // ==================== MIDDLEWARE ====================
 app.UseMiddleware<TenantMiddleware>();
-
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

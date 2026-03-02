@@ -140,6 +140,10 @@ public class DataContext : DbContext
         {
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
+
+        modelBuilder.Entity<Tenant>()
+            .HasIndex(t => t.Subdomain)
+            .IsUnique();
         modelBuilder.Entity<Clinica>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -976,27 +980,20 @@ public class DataContext : DbContext
     {
         modelBuilder.Entity<TEntity>()
             .HasQueryFilter(e =>
-                _tenantService.TenantId != Guid.Empty &&
+                _tenantService.TenantId == Guid.Empty ||
                 e.TenantId == _tenantService.TenantId);
     }
 
     public override async Task<int> SaveChangesAsync(
-        CancellationToken cancellationToken = default)
+    CancellationToken cancellationToken = default)
     {
         foreach (var entry in ChangeTracker
             .Entries<ITenantEntity>()
             .Where(e => e.State == EntityState.Added))
         {
-            // Si estamos en Seed (sin request HTTP)
             if (_tenantService.TenantId == Guid.Empty)
             {
-                // Buscar el primer tenant existente
-                var defaultTenant = Tenants.FirstOrDefault();
-
-                if (defaultTenant == null)
-                    throw new Exception("No existe un Tenant configurado.");
-
-                entry.Entity.TenantId = defaultTenant.Id;
+                entry.Entity.TenantId = GetDefaultTenantId();
             }
             else
             {
@@ -1005,5 +1002,21 @@ public class DataContext : DbContext
         }
 
         return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private Guid? _cachedDefaultTenantId;
+
+    private Guid GetDefaultTenantId()
+    {
+        if (_cachedDefaultTenantId.HasValue)
+            return _cachedDefaultTenantId.Value;
+
+        var tenant = Tenants.AsNoTracking().FirstOrDefault();
+
+        if (tenant == null)
+            throw new Exception("No existe un Tenant configurado.");
+
+        _cachedDefaultTenantId = tenant.Id;
+        return tenant.Id;
     }
 }

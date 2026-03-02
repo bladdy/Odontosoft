@@ -13,22 +13,27 @@ public class TenantMiddleware
         _next = next;
     }
 
-    public async Task Invoke(HttpContext context,
-                             ITenantService tenantService,
-                             DataContext db)
+    public async Task InvokeAsync(
+        HttpContext context,
+        DataContext dbContext,
+        ITenantService tenantService)
     {
-        var subdomain = context.Request.Headers["X-Tenant"].FirstOrDefault();
+        var host = context.Request.Host.Host;
 
-        if (string.IsNullOrEmpty(subdomain))
-            throw new Exception("Tenant header required");
+        var subdomain = host.Split('.').FirstOrDefault();
 
-        var tenant = await db.Tenants
-            .FirstOrDefaultAsync(t => t.Subdomain == subdomain && t.IsActive);
+        if (!string.IsNullOrWhiteSpace(subdomain))
+        {
+            var tenant = await dbContext.Tenants
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t =>
+                    t.Subdomain.ToLower() == subdomain.ToLower());
 
-        if (tenant == null)
-            throw new Exception("Tenant not found");
-
-        tenantService.SetTenant(tenant.Id, tenant.Subdomain);
+            if (tenant != null)
+            {
+                tenantService.SetTenant(tenant);
+            }
+        }
 
         await _next(context);
     }
