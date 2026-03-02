@@ -13,21 +13,20 @@ public class TenantMiddleware
         _next = next;
     }
 
-    public async Task Invoke(
-        HttpContext context,
-        ITenantService tenantService,
-        DataContext dbContext)
+    public async Task Invoke(HttpContext context,
+                             ITenantService tenantService,
+                             DataContext db)
     {
         var subdomain = context.Request.Headers["X-Tenant"].FirstOrDefault();
 
         if (string.IsNullOrEmpty(subdomain))
-            throw new Exception("Tenant no especificado");
+            throw new Exception("Tenant header required");
 
-        var tenant = await dbContext.Tenants
+        var tenant = await db.Tenants
             .FirstOrDefaultAsync(t => t.Subdomain == subdomain && t.IsActive);
 
         if (tenant == null)
-            throw new Exception("Tenant no encontrado");
+            throw new Exception("Tenant not found");
 
         tenantService.SetTenant(tenant.Id, tenant.Subdomain);
 

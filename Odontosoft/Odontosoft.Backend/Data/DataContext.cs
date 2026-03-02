@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Odontosoft.Backend.Services;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Interfaces;
 using System.Reflection;
@@ -7,8 +8,14 @@ namespace Odontosoft.Backend.Data;
 
 public class DataContext : DbContext
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options)
+    private readonly ITenantService _tenantService;
+
+    public DataContext(
+        DbContextOptions<DataContext> options,
+        ITenantService tenantService)
+        : base(options)
     {
+        _tenantService = tenantService;
     }
 
     // Tenants (multi-tenant)
@@ -960,6 +967,24 @@ public class DataContext : DbContext
     where TEntity : class, ITenantEntity
     {
         modelBuilder.Entity<TEntity>()
-            .HasQueryFilter(e => e.TenantId == _tenantService.TenantId);
+            .HasQueryFilter(e =>
+                _tenantService.TenantId != Guid.Empty &&
+                e.TenantId == _tenantService.TenantId);
+    }
+
+    public override async Task<int> SaveChangesAsync(
+    CancellationToken cancellationToken = default)
+    {
+        foreach (var entry in ChangeTracker
+            .Entries<ITenantEntity>()
+            .Where(e => e.State == EntityState.Added))
+        {
+            if (_tenantService.TenantId == Guid.Empty)
+                throw new Exception("TenantId no resuelto en la petición.");
+
+            entry.Entity.TenantId = _tenantService.TenantId;
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }
