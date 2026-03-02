@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Odontosoft.Backend.Services;
 using Odontosoft.Shared.Entities;
 
 namespace Odontosoft.Backend.Data
@@ -6,210 +8,342 @@ namespace Odontosoft.Backend.Data
     public class DatabaseSeeder
     {
         private readonly DataContext _context;
+        private readonly ITenantService _tenantService;
 
-        public DatabaseSeeder(DataContext context)
+        public DatabaseSeeder(DataContext context, ITenantService tenantService)
         {
             _context = context;
+            _tenantService = tenantService;
         }
 
         public async Task SeedDatabase()
         {
             await _context.Database.MigrateAsync();
 
-            // ==============================
-            // 1️⃣ CREAR TENANT PRINCIPAL
-            // ==============================
+            // =====================================================
+            // 1️⃣ TENANT DEMO (IGNORANDO FILTRO GLOBAL)
+            // =====================================================
 
-            if (!_context.Tenants.Any())
+            var tenant = await _context.Tenants
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(t => t.Subdomain == "demo");
+
+            if (tenant == null)
             {
-                var tenant = new Tenant
+                tenant = new Tenant
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Tenant Principal",
-                    Subdomain = "localhost",
+                    Name = "Clínica Demo",
+                    Subdomain = "demo",
                     IsActive = true
                 };
 
                 _context.Tenants.Add(tenant);
-                await _context.SaveChangesAsync(); // ← Guardar primero el tenant
+                await _context.SaveChangesAsync();
             }
 
-            // ==============================
-            // 2️⃣ SEED NORMAL
-            // ==============================
+            // 🔥 SET TENANT PARA MULTI-TENANT
+            _tenantService.SetTenant(tenant);
 
-            if (!_context.Modulos.Any())
-                SeedModulos();
-
-            if (!_context.Especialidades.Any())
-                SeedEspecialidades();
-
-            if (!_context.Medicamentos.Any())
-                SeedMedicamentos();
-
-            if (!_context.EstudiosLaboratorio.Any())
-                SeedEstudiosLaboratorio();
-
-            if (!_context.EstudiosImagen.Any())
-                SeedEstudiosImagen();
+            // =====================================================
+            // 2️⃣ ROLES
+            // =====================================================
 
             if (!_context.Roles.Any())
-                SeedRoles();
-
-            if (!_context.CatalogoTratamientosDentales.Any())
-                SeedCatalogoTratamientos();
-
-            if (!_context.MaterialesDentales.Any())
-                SeedMaterialesDentales();
-
-            await _context.SaveChangesAsync();
-        }
-
-        // ==============================
-        // ROLES
-        // ==============================
-
-        private void SeedRoles()
-        {
-            var roles = new List<Rol>
             {
-                new Rol { Nombre = "Administrador", Descripcion = "Acceso completo al sistema", Activo = true },
-                new Rol { Nombre = "Médico", Descripcion = "Acceso a consultas y órdenes", Activo = true },
-                new Rol { Nombre = "Recepcionista", Descripcion = "Gestión de agenda", Activo = true },
-                new Rol { Nombre = "Laboratorista", Descripcion = "Módulo de laboratorio", Activo = true }
-            };
-
-            _context.Roles.AddRange(roles);
-        }
-
-        private void SeedEspecialidades()
-        {
-            var especialidades = new List<Especialidad>
-            {
-                new Especialidad { Nombre = "Medicina General", Descripcion = "Atención médica general", Activo = true },
-                new Especialidad { Nombre = "Odontología", Descripcion = "Salud bucal", Activo = true },
-                new Especialidad { Nombre = "Cardiología", Descripcion = "Enfermedades del corazón", Activo = true }
-            };
-
-            _context.Especialidades.AddRange(especialidades);
-        }
-
-        private void SeedMedicamentos()
-        {
-            var medicamentos = new List<Medicamento>
-            {
-                new Medicamento
+                var adminRol = new Rol
                 {
-                    Nombre = "Paracetamol 500mg",
-                    NombreGenerico = "Paracetamol",
+                    Nombre = "Administrador",
+                    Descripcion = "Acceso total",
+                    Activo = true
+                };
+
+                var medicoRol = new Rol
+                {
+                    Nombre = "Medico",
+                    Descripcion = "Atención médica",
+                    Activo = true
+                };
+
+                _context.Roles.AddRange(adminRol, medicoRol);
+                await _context.SaveChangesAsync();
+            }
+
+            var rolAdmin = await _context.Roles.FirstAsync(r => r.Nombre == "Administrador");
+            var rolMedico = await _context.Roles.FirstAsync(r => r.Nombre == "Medico");
+
+            // =====================================================
+            // 3️⃣ CLINICA
+            // =====================================================
+
+            if (!_context.Clinicas.Any())
+            {
+                var clinica = new Clinica
+                {
+                    Nombre = "Clínica Odontológica Demo",
+                    RazonSocial = "Clínica Demo SAC",
+                    RFC = "12345678901",
+                    Direccion = "Av. Salud 123",
+                    Telefono = "999888777",
+                    Email = "info@demo.com",
+                    Ciudad = "Santiago",
+                    CodigoPostal = "2566333",
+                    Estado = "Santiago",
+                    Logo = "Unlogo",
+                    Activo = true
+                };
+
+                _context.Clinicas.Add(clinica);
+                await _context.SaveChangesAsync();
+            }
+
+            var clinicaDemo = await _context.Clinicas.FirstAsync();
+
+            // =====================================================
+            // 4️⃣ SUCURSAL
+            // =====================================================
+
+            if (!_context.Sucursales.Any())
+            {
+                var sucursal = new Sucursal
+                {
+                    Nombre = "Sucursal Central",
+                    Direccion = "Av. Salud 123",
+                    Telefono = "999888777",
+                    Ciudad = "Santiago",
+                    Estado = "Santiago",
+                    CodigoPostal = "888888",
+                    Email = "demo@ducursaldemo.com",
+                    Codigo = "CDS-7885",
+                    ClinicaId = clinicaDemo.Id,
+                    Activo = true
+                };
+
+                _context.Sucursales.Add(sucursal);
+                await _context.SaveChangesAsync();
+            }
+
+            var sucursalDemo = await _context.Sucursales.FirstAsync();
+
+            // =====================================================
+            // 5️⃣ USUARIO ADMIN
+            // =====================================================
+
+            if (!_context.Usuarios.Any())
+            {
+                var admin = new Usuario
+                {
+                    Nombre = "Admin",
+                    UsuarioSucursales = sucursalDemo.UsuarioSucursales,
+
+                    NombreUsuario = "@admin",
+                    Avatar = "avatar",
+                    Telefono = "888888888",
+                    FechaCreacion = DateTime.UtcNow,
+                    Apellidos = "Sistema",
+                    Email = "admin@demo.com",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123*"),
+                    Activo = true
+                };
+
+                _context.Usuarios.Add(admin);
+                await _context.SaveChangesAsync();
+
+                _context.UsuarioRoles.Add(new UsuarioRol
+                {
+                    UsuarioSucursalId = admin.Id,
+                    RolId = rolAdmin.Id
+                });
+
+                _context.UsuarioSucursales.Add(new UsuarioSucursal
+                {
+                    UsuarioId = admin.Id,
+                    SucursalId = sucursalDemo.Id
+                });
+
+                await _context.SaveChangesAsync();
+            }
+
+            // =====================================================
+            // 6️⃣ ESPECIALIDAD
+            // =====================================================
+
+            if (!_context.Especialidades.Any())
+            {
+                var especialidad = new Especialidad
+                {
+                    Nombre = "Odontología General",
+                    Descripcion = "Atención odontológica integral",
+                    Activo = true
+                };
+
+                _context.Especialidades.Add(especialidad);
+                await _context.SaveChangesAsync();
+            }
+
+            var especialidadDemo = await _context.Especialidades.FirstAsync();
+
+            // =====================================================
+            // 7️⃣ MEDICO
+            // =====================================================
+
+            if (!_context.Medicos.Any())
+            {
+                var medico = new Medico
+                {
+                    Sello = "Dr. Juan Pérez",
+                    CedulaProfesional = "78889",
+                    Especialidades = _context.Especialidades.FirstOrDefaultAsync().Result!.Nombre,
+                    Universidad = "NULA",
+                    Firma = "Firma",
+                    Activo = true,
+                    UsuarioId = _context.Usuarios.FirstOrDefaultAsync().Result!.Id
+                };
+
+                _context.Medicos.Add(medico);
+                await _context.SaveChangesAsync();
+
+                _context.MedicoEspecialidades.Add(new MedicoEspecialidad
+                {
+                    MedicoId = medico.Id,
+                    CedulaEspecialidad = medico.CedulaProfesional,
+                    EspecialidadId = especialidadDemo.Id
+                });
+
+                await _context.SaveChangesAsync();
+            }
+
+            // =====================================================
+            // 8️⃣ PACIENTE DEMO
+            // =====================================================
+
+            if (!_context.Pacientes.Any())
+            {
+                var paciente = new Paciente
+                {
+                    Nombre = "Carlos",
+                    RFC = "7885555555555555555",
+                    FechaRegistro = DateTime.UtcNow,
+                    Sexo = "M",
+                    TelefonoEmergencia = "787999999989",
+                    SucursalId = sucursalDemo.Id,
+                    Ocupacion = "Constructor",
+                    Apellidos = "Ramírez Gómez",
+                    Foto = "Una Foto",
+                    CURP = "87654321",
+                    GrupoSanguineo = "AB+",
+                    Telefono = "988777666",
+                    Email = "paciente@demo.com",
+                    CodigoPostal = "78996",
+                    EstadoCivil = "Soltero",
+                    Ciudad = "Santiago",
+                    ContactoEmergencia = "7899998",
+                    Estado = "Santiago",
+                    Direccion = "Calle siempre viva",
+                    NumeroExpediente = "PTR-78-7888855",
+                    FechaNacimiento = new DateTime(1990, 1, 1),
+                    Activo = true
+                };
+
+                _context.Pacientes.Add(paciente);
+                await _context.SaveChangesAsync();
+            }
+
+            // =====================================================
+            // 9️⃣ MODULOS
+            // =====================================================
+
+            if (!_context.Modulos.Any())
+            {
+                _context.Modulos.AddRange(
+                    new Modulo
+                    {
+                        Nombre = "Dashboard",
+                        Codigo = "DASH",
+                        Ruta = "/dashboard",
+                        Icono = "Dashboard",
+                        Descripcion = "Dashboard",
+                        Activo = true
+                    },
+                    new Modulo { Nombre = "Pacientes", Descripcion = "Pacientes", Icono = "Dashboard", Codigo = "PAC", Ruta = "/pacientes", Activo = true },
+                    new Modulo { Nombre = "Citas", Descripcion = "Citas", Codigo = "CIT", Icono = "Dashboard", Ruta = "/citas", Activo = true }
+                );
+
+                await _context.SaveChangesAsync();
+            }
+
+            // =====================================================
+            // 🔟 MEDICAMENTOS
+            // =====================================================
+
+            if (!_context.Medicamentos.Any())
+            {
+                _context.Medicamentos.Add(new Medicamento
+                {
+                    Nombre = "Ibuprofeno 400mg",
+                    NombreGenerico = "Ibuprofeno",
                     Presentacion = "Tabletas",
-                    Concentracion = "500mg",
-                    Descripcion ="Dolor de cabeza",
+                    Concentracion = "400mg",
+                    Descripcion = "Ibuprofeno",
                     Via = "Oral",
-                    Laboratorio="BGL",
+                    Laboratorio = "GBL",
                     RequiereReceta = false,
                     Activo = true
-                }
-            };
+                });
 
-            _context.Medicamentos.AddRange(medicamentos);
-        }
+                await _context.SaveChangesAsync();
+            }
 
-        private void SeedEstudiosLaboratorio()
-        {
-            var estudios = new List<EstudioLaboratorio>
+            // =====================================================
+            // 11️⃣ PRODUCTO INVENTARIO
+            // =====================================================
+
+            if (!_context.Productos.Any())
             {
-                new EstudioLaboratorio
+                _context.Productos.Add(new Producto
                 {
-                    Nombre = "Biometría Hemática Completa",
-                    Codigo = "BHC",
-                    Categoria = "Hematología",
-                    Descripcion = "Análisis completo de células sanguíneas",
-                    Precio = 150,
-                    Preparacion = "No requiere ayuno",
+                    Nombre = "Guantes quirúrgicos",
+                    Codigo = "GUANTE001",
+                    PrecioVenta = 25,
+                    PrecioCompra = 20,
+                    StockActual = 100,
+                    StockMaximo = 200,
+                    StockMinimo = 20,
+                    CodigoBarras = "888888888888888888",
+                    Marca = "SafeHands",
+                    Descripcion = "Guantes guantes",
+                    Categoria = "Material de Protección",
+                    FechaCaducidad = DateTime.UtcNow.AddYears(2),
+                    FechaCreacion = DateTime.UtcNow,
+                    Presentacion = "Caja con 100 unidades",
+                    SucursalId = sucursalDemo.Id,
+                    Lote = "788",
+                    TenantId = tenant.Id,
                     Activo = true
-                }
-            };
+                });
 
-            _context.EstudiosLaboratorio.AddRange(estudios);
-        }
+                await _context.SaveChangesAsync();
+            }
 
-        private void SeedEstudiosImagen()
-        {
-            var estudios = new List<EstudioImagen>
+            // =====================================================
+            // 12️⃣ SERVICIO FACTURABLE
+            // =====================================================
+
+            if (!_context.Servicios.Any())
             {
-                new EstudioImagen
+                _context.Servicios.Add(new Servicio
                 {
-                    Nombre = "Radiografía de Tórax",
-                    Codigo = "RX-TORAX",
-                    Tipo = "Rayos X",
-                    Descripcion = "Imagen del tórax para evaluación pulmonar",
-                    Precio = 250,
-                    Preparacion = "No requiere preparación",
+                    Codigo = "FGR-4233",
+                    Nombre = "Consulta Odontológica",
+                    Descripcion = "Consulta general para evaluación y diagnóstico",
+                    Categoria = "Cosnultas",
+                    ClaveProdServ = "FE-333",
+                    Precio = 80,
                     Activo = true
-                }
-            };
+                });
 
-            _context.EstudiosImagen.AddRange(estudios);
-        }
-
-        private void SeedCatalogoTratamientos()
-        {
-            var tratamientos = new List<CatalogoTratamientoDental>
-            {
-                new CatalogoTratamientoDental
-                {
-                    Nombre = "Limpieza Dental",
-                    Codigo = "PROF001",
-                    Categoria = "Preventiva",
-                    Descripcion = "Profilaxis dental",
-                    PrecioBase = 500,
-                    DuracionEstimadaMinutos = 30,
-                    RequiereConsentimiento = false,
-                    Activo = true
-                }
-            };
-
-            _context.CatalogoTratamientosDentales.AddRange(tratamientos);
-        }
-
-        private void SeedMaterialesDentales()
-        {
-            var materiales = new List<MaterialDental>
-            {
-                new MaterialDental
-                {
-                    Nombre = "Resina Compuesta A2",
-                    Codigo = "RES001",
-                    Categoria = "Resinas",
-                    Marca = "3M",
-                    UnidadMedida = "Jeringa",
-                    PrecioUnitario = 350,
-                    StockMinimo = 5,
-                    Activo = true
-                }
-            };
-
-            _context.MaterialesDentales.AddRange(materiales);
-        }
-
-        private void SeedModulos()
-        {
-            var modulos = new List<Modulo>
-            {
-                new Modulo
-                {
-                    Nombre = "Dashboard",
-                    Codigo = "DASHBOARD",
-                    Descripcion = "Panel principal",
-                    Icono = "dashboard",
-                    Orden = 1,
-                    Ruta = "/dashboard",
-                    Activo = true
-                }
-            };
-
-            _context.Modulos.AddRange(modulos);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
