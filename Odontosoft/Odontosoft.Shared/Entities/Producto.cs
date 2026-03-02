@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Odontosoft.Shared.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class Producto
+    public class Producto : ITenantEntity
     {
+        public int Id { get; set; }
+
+        public Tenant Tenant { get; set; }
+        public Guid TenantId { get; set; }
         public int Id { get; set; }
         public int SucursalId { get; set; }
 

@@ -1,45 +1,48 @@
-﻿using System;
+﻿using Odontosoft.Shared.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Odontosoft.Shared.Entities
+namespace Odontosoft.Shared.Entities;
+
+public class ExamenPeriodontal : ITenantEntity
 {
-    public class ExamenPeriodontal
-    {
-        public int Id { get; set; }
-        public int PacienteId { get; set; }
-        public int MedicoId { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        public DateTime FechaExamen { get; set; }
+    public Tenant Tenant { get; set; }
+    public Guid TenantId { get; set; }
+    public int PacienteId { get; set; }
+    public int MedicoId { get; set; }
 
-        [MaxLength(50)]
-        public string? IndiceHigiene { get; set; } // Excelente, Bueno, Regular, Malo
+    [Required]
+    public DateTime FechaExamen { get; set; }
 
-        [MaxLength(50)]
-        public string? IndiceGingival { get; set; } // 0-3 (Leve, Moderado, Severo)
+    [MaxLength(50)]
+    public string? IndiceHigiene { get; set; } // Excelente, Bueno, Regular, Malo
 
-        public bool Sangrado { get; set; }
-        public bool PresenciaPlaca { get; set; }
-        public bool PresenciaSarro { get; set; }
-        public bool Movilidad { get; set; }
+    [MaxLength(50)]
+    public string? IndiceGingival { get; set; } // 0-3 (Leve, Moderado, Severo)
 
-        [MaxLength(2000)]
-        public string? Diagnostico { get; set; }
+    public bool Sangrado { get; set; }
+    public bool PresenciaPlaca { get; set; }
+    public bool PresenciaSarro { get; set; }
+    public bool Movilidad { get; set; }
 
-        [MaxLength(2000)]
-        public string? PlanTratamiento { get; set; }
+    [MaxLength(2000)]
+    public string? Diagnostico { get; set; }
 
-        [MaxLength(2000)]
-        public string? Observaciones { get; set; }
+    [MaxLength(2000)]
+    public string? PlanTratamiento { get; set; }
 
-        // Relaciones
-        public Paciente Paciente { get; set; }
+    [MaxLength(2000)]
+    public string? Observaciones { get; set; }
 
-        public Medico Medico { get; set; }
-        public ICollection<BolsaPeriodontal> BolsasPeriodontales { get; set; }
-    }
+    // Relaciones
+    public Paciente Paciente { get; set; }
+
+    public Medico Medico { get; set; }
+    public ICollection<BolsaPeriodontal> BolsasPeriodontales { get; set; }
 }

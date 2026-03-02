@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Odontosoft.Shared.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class Sucursal
+    public class Sucursal : ITenantEntity
     {
         public int Id { get; set; }
+        public Guid TenantId { get; set; }
         public int ClinicaId { get; set; }
 
         [Required, MaxLength(200)]
@@ -42,6 +44,8 @@ namespace Odontosoft.Shared.Entities
 
         // Relaciones
         public Clinica Clinica { get; set; }
+
+        public Tenant Tenant { get; set; }
 
         public ICollection<UsuarioSucursal> UsuarioSucursales { get; set; }
         public ICollection<Consultorio> Consultorios { get; set; }

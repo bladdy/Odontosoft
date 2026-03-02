@@ -1,8 +1,13 @@
-﻿namespace Odontosoft.Shared.Entities
+﻿using Odontosoft.Shared.Interfaces;
+
+namespace Odontosoft.Shared.Entities
 {
-    public class RolPermiso
+    public class RolPermiso : ITenantEntity
     {
         public int Id { get; set; }
+
+        public Tenant Tenant { get; set; }
+        public Guid TenantId { get; set; }
         public int RolId { get; set; }
         public int ModuloId { get; set; }
         public bool PuedeLeer { get; set; } = false;

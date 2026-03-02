@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Odontosoft.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class BolsaPeriodontal
+    public class BolsaPeriodontal : ITenantEntity
     {
         public int Id { get; set; }
+
+        public Tenant Tenant { get; set; }
+        public Guid TenantId { get; set; }
         public int ExamenPeriodontalId { get; set; }
 
         [Required, MaxLength(10)]

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Odontosoft.Shared.Interfaces;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class Usuario
+    public class Usuario : ITenantEntity
     {
         public int Id { get; set; }
         public Guid TenantId { get; set; }

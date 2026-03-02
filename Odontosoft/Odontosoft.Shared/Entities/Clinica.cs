@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Odontosoft.Shared.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class Clinica
+    public class Clinica : ITenantEntity
     {
         public int Id { get; set; }
+
+        public Guid TenantId { get; set; }
 
         [Required, MaxLength(200)]
         public string Nombre { get; set; }
@@ -46,6 +49,8 @@ namespace Odontosoft.Shared.Entities
         public DateTime? FechaModificacion { get; set; }
 
         // Relaciones
+        public Tenant Tenant { get; set; } = null!;
+
         public ICollection<Sucursal> Sucursales { get; set; }
 
         public ICollection<ClinicaModulo> ClinicaModulos { get; set; }

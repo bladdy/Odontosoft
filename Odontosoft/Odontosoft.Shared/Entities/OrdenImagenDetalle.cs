@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Odontosoft.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class OrdenImagenDetalle
+    public class OrdenImagenDetalle : ITenantEntity
     {
         public int Id { get; set; }
+
+        public Tenant Tenant { get; set; }
+        public Guid TenantId { get; set; }
         public int OrdenImagenId { get; set; }
         public int EstudioImagenId { get; set; }
 
