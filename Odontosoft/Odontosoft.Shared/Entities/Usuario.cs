@@ -10,6 +10,7 @@ namespace Odontosoft.Shared.Entities
     public class Usuario
     {
         public int Id { get; set; }
+        public Guid TenantId { get; set; }
 
         [Required, MaxLength(100)]
         public string NombreUsuario { get; set; }
@@ -38,6 +39,8 @@ namespace Odontosoft.Shared.Entities
         public DateTime? UltimoAcceso { get; set; }
 
         // Relaciones
+        public Tenant Tenant { get; set; } = null!;
+
         public ICollection<UsuarioSucursal> UsuarioSucursales { get; set; }
 
         public ICollection<Medico> Medicos { get; set; } // Un usuario puede ser médico

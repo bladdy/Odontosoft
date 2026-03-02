@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Odontosoft.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class Medico
+    public class Medico : ITenantEntity
     {
         public int Id { get; set; }
         public int UsuarioId { get; set; }
+
+        public Guid TenantId { get; set; }
 
         [Required, MaxLength(50)]
         public string CedulaProfesional { get; set; }
@@ -29,6 +32,8 @@ namespace Odontosoft.Shared.Entities
 
         // Relaciones EXISTENTES
         public Usuario Usuario { get; set; }
+
+        public Tenant Tenant { get; set; } = null!;
 
         public ICollection<MedicoEspecialidad> MedicoEspecialidades { get; set; }
         public ICollection<HorarioMedico> HorariosMedico { get; set; }

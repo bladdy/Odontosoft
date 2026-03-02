@@ -13,6 +13,7 @@ namespace Odontosoft.Shared.Entities
         public int PacienteId { get; set; }
         public int MedicoId { get; set; }
         public int SucursalId { get; set; }
+        public Guid TenantId { get; set; }
 
         [Required, MaxLength(30)]
         public string NumeroPresupuesto { get; set; } = null!;
@@ -48,6 +49,8 @@ namespace Odontosoft.Shared.Entities
         public Paciente Paciente { get; set; }
 
         public Medico Medico { get; set; }
+
+        public Tenant Tenant { get; set; } = null!;
         public Sucursal Sucursal { get; set; }
         public ICollection<PresupuestoDetalle> Detalles { get; set; }
     }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Odontosoft.Shared.Entities;
+using Odontosoft.Shared.Interfaces;
+using System.Reflection;
 
 namespace Odontosoft.Backend.Data;
 
@@ -8,6 +10,9 @@ public class DataContext : DbContext
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
     }
+
+    // Tenants (multi-tenant)
+    public DbSet<Tenant> Tenants { get; set; }
 
     // DbSets principales
     public DbSet<Clinica> Clinicas { get; set; }
@@ -107,6 +112,18 @@ public class DataContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // ==================== TU CONFIGURACIÓN ORIGINAL (SIN CAMBIOS) ====================
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(ITenantEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var method = typeof(DataContext)
+                    .GetMethod(nameof(SetTenantFilter), BindingFlags.NonPublic | BindingFlags.Instance)!
+                    .MakeGenericMethod(entityType.ClrType);
+
+                method.Invoke(this, new object[] { modelBuilder });
+            }
+        }
 
         modelBuilder.Entity<Clinica>(entity =>
         {
@@ -937,5 +954,12 @@ public class DataContext : DbContext
 
             entity.Property(e => e.PrecioUnitario).HasPrecision(18, 2);
         });
+    }
+
+    private void SetTenantFilter<TEntity>(ModelBuilder modelBuilder)
+    where TEntity : class, ITenantEntity
+    {
+        modelBuilder.Entity<TEntity>()
+            .HasQueryFilter(e => e.TenantId == _tenantService.TenantId);
     }
 }

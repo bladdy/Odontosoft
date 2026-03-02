@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Odontosoft.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class Paciente
+    public class Paciente : ITenantEntity
     {
         public int Id { get; set; }
         public int SucursalId { get; set; }
+
+        public Guid TenantId { get; set; }
 
         [Required, MaxLength(20)]
         public string NumeroExpediente { get; set; }
@@ -70,6 +73,8 @@ namespace Odontosoft.Shared.Entities
 
         // Relaciones EXISTENTES
         public Sucursal Sucursal { get; set; }
+
+        public Tenant Tenant { get; set; } = null!;
 
         public ICollection<Alergia> Alergias { get; set; }
         public ICollection<Antecedente> Antecedentes { get; set; }

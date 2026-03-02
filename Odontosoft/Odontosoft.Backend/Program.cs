@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
+using Odontosoft.Backend.Middleware;
 using Odontosoft.Backend.Repositories.Implementations;
 using Odontosoft.Backend.Repositories.Interfaces;
+using Odontosoft.Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,8 @@ builder.Services.AddScoped<IRecetaRepository, RecetaRepository>();
 builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<ICatalogoTratamientoDentalRepository, CatalogoTratamientoDentalRepository>();
+// ============================= Servicios =============================
+builder.Services.AddScoped<ITenantService, TenantService>();
 
 var app = builder.Build();
 app.UseCors(x => x
@@ -49,6 +53,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<TenantMiddleware>();
 
 app.UseHttpsRedirection();
 

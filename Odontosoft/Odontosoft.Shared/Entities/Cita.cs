@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Odontosoft.Shared.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace Odontosoft.Shared.Entities
 {
-    public class Cita
+    public class Cita : ITenantEntity
     {
         public int Id { get; set; }
+        public Guid TenantId { get; set; }
         public int SucursalId { get; set; }
         public int PacienteId { get; set; }
         public int MedicoId { get; set; }
@@ -45,6 +47,7 @@ namespace Odontosoft.Shared.Entities
         // Relaciones
         public Sucursal Sucursal { get; set; }
 
+        public Tenant Tenant { get; set; } = null!;
         public Paciente Paciente { get; set; }
         public Medico Medico { get; set; }
         public Consultorio Consultorio { get; set; }
