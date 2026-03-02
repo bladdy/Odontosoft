@@ -4,7 +4,7 @@ namespace Odontosoft.Shared.Entities
 {
     public class Modulo
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required, MaxLength(100)]
         public string Nombre { get; set; }
@@ -24,7 +24,7 @@ namespace Odontosoft.Shared.Entities
         [MaxLength(200)]
         public string Ruta { get; set; } // Ruta del módulo en el frontend
 
-        public int? ModuloPadreId { get; set; } // Para submódulos
+        public Guid? ModuloPadreId { get; set; } // Para submódulos
 
         // Relaciones
         public Modulo ModuloPadre { get; set; }

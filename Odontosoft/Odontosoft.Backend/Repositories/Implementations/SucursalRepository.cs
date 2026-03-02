@@ -14,7 +14,7 @@ public class SucursalRepository : GenericRepository<Sucursal>, ISucursalReposito
         _context = context;
     }
 
-    public async Task<ActionResponse<IEnumerable<Sucursal>>> GetSucursalesPorClinicaAsync(int clinicaId)
+    public async Task<ActionResponse<IEnumerable<Sucursal>>> GetSucursalesPorClinicaAsync(Guid clinicaId)
     {
         try
         {
@@ -40,7 +40,7 @@ public class SucursalRepository : GenericRepository<Sucursal>, ISucursalReposito
         }
     }
 
-    public async Task<ActionResponse<Sucursal>> GetSucursalConConsultoriosAsync(int sucursalId)
+    public async Task<ActionResponse<Sucursal>> GetSucursalConConsultoriosAsync(Guid sucursalId)
     {
         try
         {
@@ -74,7 +74,7 @@ public class SucursalRepository : GenericRepository<Sucursal>, ISucursalReposito
         }
     }
 
-    public async Task<ActionResponse<Sucursal>> GetByCodigoAsync(int clinicaId, string codigo)
+    public async Task<ActionResponse<Sucursal>> GetByCodigoAsync(Guid clinicaId, string codigo)
     {
         try
         {

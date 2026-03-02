@@ -14,7 +14,7 @@ public class ProductoRepository : GenericRepository<Producto>, IProductoReposito
         _context = context;
     }
 
-    public async Task<ActionResponse<IEnumerable<Producto>>> GetProductosPorSucursalAsync(int sucursalId)
+    public async Task<ActionResponse<IEnumerable<Producto>>> GetProductosPorSucursalAsync(Guid sucursalId)
     {
         try
         {
@@ -40,7 +40,7 @@ public class ProductoRepository : GenericRepository<Producto>, IProductoReposito
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Producto>>> GetProductosBajoStockAsync(int sucursalId)
+    public async Task<ActionResponse<IEnumerable<Producto>>> GetProductosBajoStockAsync(Guid sucursalId)
     {
         try
         {
@@ -100,7 +100,7 @@ public class ProductoRepository : GenericRepository<Producto>, IProductoReposito
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Producto>>> GetProductosProximosVencerAsync(int sucursalId, int diasAnticipacion = 30)
+    public async Task<ActionResponse<IEnumerable<Producto>>> GetProductosProximosVencerAsync(Guid sucursalId, int diasAnticipacion = 30)
     {
         try
         {

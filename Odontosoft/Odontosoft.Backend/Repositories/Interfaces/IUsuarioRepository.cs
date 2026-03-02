@@ -9,9 +9,9 @@ public interface IUsuarioRepository : IGenericRepository<Usuario>
 
     Task<ActionResponse<Usuario>> GetByNombreUsuarioAsync(string nombreUsuario);
 
-    Task<ActionResponse<Usuario>> GetUsuarioConSucursalesAsync(int usuarioId);
+    Task<ActionResponse<Usuario>> GetUsuarioConSucursalesAsync(Guid usuarioId);
 
-    Task<ActionResponse<Usuario>> GetUsuarioConPermisosAsync(int usuarioId, int sucursalId);
+    Task<ActionResponse<Usuario>> GetUsuarioConPermisosAsync(Guid usuarioId, Guid sucursalId);
 
     Task<ActionResponse<bool>> ValidarCredencialesAsync(string email, string passwordHash);
 }

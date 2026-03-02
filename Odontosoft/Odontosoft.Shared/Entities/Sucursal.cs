@@ -10,9 +10,9 @@ namespace Odontosoft.Shared.Entities
 {
     public class Sucursal : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public Guid TenantId { get; set; }
-        public int ClinicaId { get; set; }
+        public Guid ClinicaId { get; set; }
 
         [Required, MaxLength(200)]
         public string Nombre { get; set; }

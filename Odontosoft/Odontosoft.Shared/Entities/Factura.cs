@@ -5,13 +5,13 @@ namespace Odontosoft.Shared.Entities
 {
     public class Factura : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int SucursalId { get; set; }
-        public int PacienteId { get; set; }
-        public int? CitaId { get; set; }
+        public Guid SucursalId { get; set; }
+        public Guid PacienteId { get; set; }
+        public Guid? CitaId { get; set; }
 
         [Required, MaxLength(50)]
         public string NumeroFactura { get; set; }

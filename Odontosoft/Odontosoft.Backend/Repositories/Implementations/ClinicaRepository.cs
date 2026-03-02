@@ -14,7 +14,7 @@ public class ClinicaRepository : GenericRepository<Clinica>, IClinicaRepository
         _context = context;
     }
 
-    public async Task<ActionResponse<Clinica>> GetClinicaConSucursalesAsync(int clinicaId)
+    public async Task<ActionResponse<Clinica>> GetClinicaConSucursalesAsync(Guid clinicaId)
     {
         try
         {
@@ -47,7 +47,7 @@ public class ClinicaRepository : GenericRepository<Clinica>, IClinicaRepository
         }
     }
 
-    public async Task<ActionResponse<Clinica>> GetClinicaConModulosAsync(int clinicaId)
+    public async Task<ActionResponse<Clinica>> GetClinicaConModulosAsync(Guid clinicaId)
     {
         try
         {

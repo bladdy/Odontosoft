@@ -14,7 +14,7 @@ public class ExamenPeriodontalRepository : GenericRepository<ExamenPeriodontal>,
         _context = context;
     }
 
-    public async Task<ActionResponse<ExamenPeriodontal>> GetExamenCompletoAsync(int examenId)
+    public async Task<ActionResponse<ExamenPeriodontal>> GetExamenCompletoAsync(Guid examenId)
     {
         try
         {
@@ -49,7 +49,7 @@ public class ExamenPeriodontalRepository : GenericRepository<ExamenPeriodontal>,
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<ExamenPeriodontal>>> GetExamenesPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<ExamenPeriodontal>>> GetExamenesPacienteAsync(Guid pacienteId)
     {
         try
         {
@@ -75,7 +75,7 @@ public class ExamenPeriodontalRepository : GenericRepository<ExamenPeriodontal>,
         }
     }
 
-    public async Task<ActionResponse<ExamenPeriodontal>> GetUltimoExamenAsync(int pacienteId)
+    public async Task<ActionResponse<ExamenPeriodontal>> GetUltimoExamenAsync(Guid pacienteId)
     {
         try
         {

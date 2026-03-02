@@ -8,9 +8,9 @@ namespace Odontosoft.Shared.Entities
 {
     public class UsuarioSucursal
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
-        public int SucursalId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
+        public Guid SucursalId { get; set; }
         public bool EsSucursalPrincipal { get; set; } = false;
         public DateTime FechaAsignacion { get; set; } = DateTime.UtcNow;
         public bool Activo { get; set; } = true;

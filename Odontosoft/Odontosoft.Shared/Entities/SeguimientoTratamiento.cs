@@ -5,11 +5,11 @@ namespace Odontosoft.Shared.Entities
 {
     public class SeguimientoTratamiento : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int TratamientoDentalId { get; set; }
+        public Guid TratamientoDentalId { get; set; }
 
         public int NumeroSesion { get; set; }
 
@@ -25,7 +25,7 @@ namespace Odontosoft.Shared.Entities
         [MaxLength(50)]
         public string? EstadoPaciente { get; set; } // Mejoría, Estable, Complicación
 
-        public int? MedicoId { get; set; }
+        public Guid? MedicoId { get; set; }
 
         [MaxLength(500)]
         public string? Imagenes { get; set; } // URLs separadas por coma

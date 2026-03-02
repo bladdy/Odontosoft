@@ -14,7 +14,7 @@ public class ConsultaRepository : GenericRepository<Consulta>, IConsultaReposito
         _context = context;
     }
 
-    public async Task<ActionResponse<Consulta>> GetConsultaCompletaAsync(int consultaId)
+    public async Task<ActionResponse<Consulta>> GetConsultaCompletaAsync(Guid consultaId)
     {
         try
         {
@@ -52,7 +52,7 @@ public class ConsultaRepository : GenericRepository<Consulta>, IConsultaReposito
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasPacienteAsync(Guid pacienteId)
     {
         try
         {
@@ -78,7 +78,7 @@ public class ConsultaRepository : GenericRepository<Consulta>, IConsultaReposito
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasMedicoAsync(int medicoId, DateTime? fechaInicio = null)
+    public async Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasMedicoAsync(Guid medicoId, DateTime? fechaInicio = null)
     {
         try
         {

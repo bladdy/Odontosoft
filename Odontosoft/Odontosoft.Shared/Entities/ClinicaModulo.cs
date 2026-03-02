@@ -4,9 +4,9 @@ namespace Odontosoft.Shared.Entities
 {
     public class ClinicaModulo
     {
-        public int Id { get; set; }
-        public int ClinicaId { get; set; }
-        public int ModuloId { get; set; }
+        public Guid Id { get; set; }
+        public Guid ClinicaId { get; set; }
+        public Guid ModuloId { get; set; }
         public DateTime FechaActivacion { get; set; } = DateTime.UtcNow;
         public DateTime? FechaVencimiento { get; set; }
         public bool Activo { get; set; } = true;

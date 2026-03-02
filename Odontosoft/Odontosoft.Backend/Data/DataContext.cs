@@ -83,6 +83,7 @@ public class DataContext : DbContext
 
     public DbSet<FacturaDetalle> FacturaDetalles { get; set; }
     public DbSet<Servicio> Servicios { get; set; }
+
     public DbSet<Pago> Pagos { get; set; }
 
     // Inventario
@@ -118,8 +119,7 @@ public class DataContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // ==================== TU CONFIGURACIÓN ORIGINAL (SIN CAMBIOS) ====================
-
+        // ================= TENANT FILTER =================
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(ITenantEntity).IsAssignableFrom(entityType.ClrType))
@@ -132,6 +132,14 @@ public class DataContext : DbContext
             }
         }
 
+        // 🔐 IMPORTANTE: SOLO bloquear cascade desde Tenant
+        foreach (var relationship in modelBuilder.Model
+            .GetEntityTypes()
+            .SelectMany(e => e.GetForeignKeys())
+            .Where(fk => fk.PrincipalEntityType.ClrType == typeof(Tenant)))
+        {
+            relationship.DeleteBehavior = DeleteBehavior.Restrict;
+        }
         modelBuilder.Entity<Clinica>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -973,16 +981,27 @@ public class DataContext : DbContext
     }
 
     public override async Task<int> SaveChangesAsync(
-    CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default)
     {
         foreach (var entry in ChangeTracker
             .Entries<ITenantEntity>()
             .Where(e => e.State == EntityState.Added))
         {
+            // Si estamos en Seed (sin request HTTP)
             if (_tenantService.TenantId == Guid.Empty)
-                throw new Exception("TenantId no resuelto en la petición.");
+            {
+                // Buscar el primer tenant existente
+                var defaultTenant = Tenants.FirstOrDefault();
 
-            entry.Entity.TenantId = _tenantService.TenantId;
+                if (defaultTenant == null)
+                    throw new Exception("No existe un Tenant configurado.");
+
+                entry.Entity.TenantId = defaultTenant.Id;
+            }
+            else
+            {
+                entry.Entity.TenantId = _tenantService.TenantId;
+            }
         }
 
         return await base.SaveChangesAsync(cancellationToken);

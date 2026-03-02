@@ -10,11 +10,11 @@ namespace Odontosoft.Shared.Entities
 {
     public class Notificacion : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
 
         [Required, MaxLength(200)]
         public string Titulo { get; set; }

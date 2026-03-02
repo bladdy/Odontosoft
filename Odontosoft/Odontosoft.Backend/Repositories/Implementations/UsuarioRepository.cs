@@ -78,7 +78,7 @@ public class UsuarioRepository : GenericRepository<Usuario>, IUsuarioRepository
         }
     }
 
-    public async Task<ActionResponse<Usuario>> GetUsuarioConSucursalesAsync(int usuarioId)
+    public async Task<ActionResponse<Usuario>> GetUsuarioConSucursalesAsync(Guid usuarioId)
     {
         try
         {
@@ -113,7 +113,7 @@ public class UsuarioRepository : GenericRepository<Usuario>, IUsuarioRepository
         }
     }
 
-    public async Task<ActionResponse<Usuario>> GetUsuarioConPermisosAsync(int usuarioId, int sucursalId)
+    public async Task<ActionResponse<Usuario>> GetUsuarioConPermisosAsync(Guid usuarioId, Guid sucursalId)
     {
         try
         {

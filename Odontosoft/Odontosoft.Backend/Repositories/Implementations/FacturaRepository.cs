@@ -14,7 +14,7 @@ public class FacturaRepository : GenericRepository<Factura>, IFacturaRepository
         _context = context;
     }
 
-    public async Task<ActionResponse<Factura>> GetFacturaConDetallesAsync(int facturaId)
+    public async Task<ActionResponse<Factura>> GetFacturaConDetallesAsync(Guid facturaId)
     {
         try
         {
@@ -51,7 +51,7 @@ public class FacturaRepository : GenericRepository<Factura>, IFacturaRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Factura>>> GetFacturasPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<Factura>>> GetFacturasPacienteAsync(Guid pacienteId)
     {
         try
         {
@@ -77,7 +77,7 @@ public class FacturaRepository : GenericRepository<Factura>, IFacturaRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Factura>>> GetFacturasPorEstadoAsync(int sucursalId, string estado)
+    public async Task<ActionResponse<IEnumerable<Factura>>> GetFacturasPorEstadoAsync(Guid sucursalId, string estado)
     {
         try
         {
@@ -103,7 +103,7 @@ public class FacturaRepository : GenericRepository<Factura>, IFacturaRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Factura>>> GetFacturasPendientesPagoAsync(int sucursalId)
+    public async Task<ActionResponse<IEnumerable<Factura>>> GetFacturasPendientesPagoAsync(Guid sucursalId)
     {
         try
         {
@@ -130,7 +130,7 @@ public class FacturaRepository : GenericRepository<Factura>, IFacturaRepository
         }
     }
 
-    public async Task<ActionResponse<string>> GenerarNumeroFacturaAsync(int sucursalId)
+    public async Task<ActionResponse<string>> GenerarNumeroFacturaAsync(Guid sucursalId)
     {
         try
         {
@@ -166,7 +166,7 @@ public class FacturaRepository : GenericRepository<Factura>, IFacturaRepository
         }
     }
 
-    public async Task<ActionResponse<decimal>> GetTotalFacturadoAsync(int sucursalId, DateTime fechaInicio, DateTime fechaFin)
+    public async Task<ActionResponse<decimal>> GetTotalFacturadoAsync(Guid sucursalId, DateTime fechaInicio, DateTime fechaFin)
     {
         try
         {

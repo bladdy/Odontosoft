@@ -14,7 +14,7 @@ public class RecetaRepository : GenericRepository<Receta>, IRecetaRepository
         _context = context;
     }
 
-    public async Task<ActionResponse<Receta>> GetRecetaConDetallesAsync(int recetaId)
+    public async Task<ActionResponse<Receta>> GetRecetaConDetallesAsync(Guid recetaId)
     {
         try
         {
@@ -50,7 +50,7 @@ public class RecetaRepository : GenericRepository<Receta>, IRecetaRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Receta>>> GetRecetasPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<Receta>>> GetRecetasPacienteAsync(Guid pacienteId)
     {
         try
         {
@@ -76,7 +76,7 @@ public class RecetaRepository : GenericRepository<Receta>, IRecetaRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Receta>>> GetRecetasActivasAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<Receta>>> GetRecetasActivasAsync(Guid pacienteId)
     {
         try
         {

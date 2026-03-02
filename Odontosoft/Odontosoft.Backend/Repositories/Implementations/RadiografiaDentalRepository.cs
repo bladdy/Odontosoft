@@ -15,7 +15,7 @@ public class RadiografiaDentalRepository : GenericRepository<RadiografiaDental>,
         _context = context;
     }
 
-    public async Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPacienteAsync(Guid pacienteId)
     {
         try
         {
@@ -41,7 +41,7 @@ public class RadiografiaDentalRepository : GenericRepository<RadiografiaDental>,
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPorTipoAsync(int pacienteId, string tipo)
+    public async Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPorTipoAsync(Guid pacienteId, string tipo)
     {
         try
         {

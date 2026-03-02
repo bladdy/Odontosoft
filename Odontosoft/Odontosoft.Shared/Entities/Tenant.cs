@@ -15,6 +15,4 @@ public class Tenant
     public bool IsActive { get; set; } = true;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
 }

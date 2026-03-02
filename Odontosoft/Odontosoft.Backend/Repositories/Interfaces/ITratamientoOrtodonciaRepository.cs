@@ -5,11 +5,11 @@ using Odontosoft.Backend.Repositories.Interfaces;
 
 public interface ITratamientoOrtodonciaRepository : IGenericRepository<TratamientoOrtodoncia>
 {
-    Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoCompletoAsync(int tratamientoId);
+    Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoCompletoAsync(Guid tratamientoId);
 
-    Task<ActionResponse<IEnumerable<TratamientoOrtodoncia>>> GetTratamientosActivosAsync(int medicoId);
+    Task<ActionResponse<IEnumerable<TratamientoOrtodoncia>>> GetTratamientosActivosAsync(Guid medicoId);
 
-    Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoActivoPacienteAsync(int pacienteId);
+    Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoActivoPacienteAsync(Guid pacienteId);
 
     Task<ActionResponse<string>> GenerarNumeroTratamientoAsync();
 }

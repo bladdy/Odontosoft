@@ -3,11 +3,13 @@ using Odontosoft.Backend.Data;
 using Odontosoft.Backend.Repositories.Interfaces;
 using Odontosoft.Shared.DTOs;
 using Odontosoft.Shared.Helpers;
+using Odontosoft.Shared.Interfaces;
 using Odontosoft.Shared.Responses;
 
 namespace Odontosoft.Backend.Repositories.Implementations;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class
+public class GenericRepository<T> : IGenericRepository<T>
+    where T : class, ITenantEntity
 {
     private readonly DataContext _context;
     private readonly DbSet<T> _entity;
@@ -33,76 +35,21 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public virtual async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
     {
-        var queryable = _entity.AsQueryable();
-        double count = await queryable.CountAsync();
         return new ActionResponse<int>
         {
             WasSuccess = true,
-            Result = (int)count
+            Result = await _entity.CountAsync()
         };
     }
 
-    public virtual async Task<ActionResponse<T>> AddAsync(T entity)
+    public virtual async Task<ActionResponse<T>> GetAsync(Guid id)
     {
-        _context.Add(entity);
-        try
-        {
-            await _context.SaveChangesAsync();
-            return new ActionResponse<T>
-            {
-                WasSuccess = true,
-                Result = entity
-            };
-        }
-        catch (DbUpdateException)
-        {
-            return DbUpdateExceptionActionResponse();
-        }
-        catch (Exception exception)
-        {
-            return ExceptionActionRespose(exception);
-        }
-    }
+        var row = await _entity
+            .FirstOrDefaultAsync(x => x.Id == id);
 
-    public virtual async Task<ActionResponse<T>> DeleteAsync(int id)
-    {
-        var row = await _entity.FindAsync(id);
         if (row == null)
-        {
-            return new ActionResponse<T>
-            {
-                Message = "Registro no encontrado"
-            };
-        }
-        _entity.Remove(row);
+            return new ActionResponse<T> { Message = "Registro no encontrado" };
 
-        try
-        {
-            await _context.SaveChangesAsync();
-            return new ActionResponse<T>
-            {
-                WasSuccess = true
-            };
-        }
-        catch
-        {
-            return new ActionResponse<T>
-            {
-                Message = "No se puede borrar porque tiene registros relacionados."
-            };
-        }
-    }
-
-    public virtual async Task<ActionResponse<T>> GetAsync(int id)
-    {
-        var row = await _entity.FindAsync(id);
-        if (row == null)
-        {
-            return new ActionResponse<T>
-            {
-                Message = "Registro no encontrado"
-            };
-        }
         return new ActionResponse<T>
         {
             WasSuccess = true,
@@ -110,41 +57,62 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         };
     }
 
-    public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync() => new ActionResponse<IEnumerable<T>>
+    public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync()
     {
-        WasSuccess = true,
-        Result = await _entity.ToListAsync()
-    };
+        return new ActionResponse<IEnumerable<T>>
+        {
+            WasSuccess = true,
+            Result = await _entity.ToListAsync()
+        };
+    }
+
+    public virtual async Task<ActionResponse<T>> AddAsync(T entity)
+    {
+        _entity.Add(entity);
+        await _context.SaveChangesAsync();
+
+        return new ActionResponse<T>
+        {
+            WasSuccess = true,
+            Result = entity
+        };
+    }
 
     public virtual async Task<ActionResponse<T>> UpdateAsync(T entity)
     {
-        _context.Update(entity);
-        try
+        var current = await _entity
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == entity.Id);
+
+        if (current == null)
+            return new ActionResponse<T> { Message = "Registro no encontrado" };
+
+        entity.TenantId = current.TenantId;
+
+        _entity.Update(entity);
+        await _context.SaveChangesAsync();
+
+        return new ActionResponse<T>
         {
-            await _context.SaveChangesAsync();
-            return new ActionResponse<T>
-            {
-                WasSuccess = true,
-                Result = entity
-            };
-        }
-        catch (DbUpdateException)
-        {
-            return DbUpdateExceptionActionResponse();
-        }
-        catch (Exception exception)
-        {
-            return ExceptionActionRespose(exception);
-        }
+            WasSuccess = true,
+            Result = entity
+        };
     }
 
-    private ActionResponse<T> ExceptionActionRespose(Exception exception) => new ActionResponse<T>
+    public virtual async Task<ActionResponse<T>> DeleteAsync(Guid id)
     {
-        Message = exception.Message
-    };
+        var row = await _entity
+            .FirstOrDefaultAsync(x => x.Id == id);
 
-    private ActionResponse<T> DbUpdateExceptionActionResponse() => new ActionResponse<T>
-    {
-        Message = "Ya existe el registro."
-    };
+        if (row == null)
+            return new ActionResponse<T> { Message = "Registro no encontrado" };
+
+        _entity.Remove(row);
+        await _context.SaveChangesAsync();
+
+        return new ActionResponse<T>
+        {
+            WasSuccess = true
+        };
+    }
 }

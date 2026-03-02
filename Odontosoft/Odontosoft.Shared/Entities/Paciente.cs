@@ -5,8 +5,8 @@ namespace Odontosoft.Shared.Entities
 {
     public class Paciente : ITenantEntity
     {
-        public int Id { get; set; }
-        public int SucursalId { get; set; }
+        public Guid Id { get; set; }
+        public Guid SucursalId { get; set; }
 
         public Guid TenantId { get; set; }
 

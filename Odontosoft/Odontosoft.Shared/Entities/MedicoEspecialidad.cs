@@ -5,12 +5,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class MedicoEspecialidad : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int MedicoId { get; set; }
-        public int EspecialidadId { get; set; }
+        public Guid MedicoId { get; set; }
+        public Guid EspecialidadId { get; set; }
 
         [MaxLength(50)]
         public string CedulaEspecialidad { get; set; }

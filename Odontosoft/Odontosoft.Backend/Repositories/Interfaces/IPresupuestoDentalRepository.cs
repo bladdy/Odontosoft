@@ -5,13 +5,13 @@ namespace Odontosoft.Backend.Repositories.Interfaces;
 
 public interface IPresupuestoDentalRepository : IGenericRepository<PresupuestoDental>
 {
-    Task<ActionResponse<PresupuestoDental>> GetPresupuestoCompletoAsync(int presupuestoId);
+    Task<ActionResponse<PresupuestoDental>> GetPresupuestoCompletoAsync(Guid presupuestoId);
 
-    Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPacienteAsync(int pacienteId);
+    Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPacienteAsync(Guid pacienteId);
 
-    Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPorEstadoAsync(int sucursalId, string estado);
+    Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPorEstadoAsync(Guid sucursalId, string estado);
 
-    Task<ActionResponse<string>> GenerarNumeroPresupuestoAsync(int sucursalId);
+    Task<ActionResponse<string>> GenerarNumeroPresupuestoAsync(Guid sucursalId);
 
-    Task<ActionResponse<bool>> AprobarPresupuestoAsync(int presupuestoId);
+    Task<ActionResponse<bool>> AprobarPresupuestoAsync(Guid presupuestoId);
 }

@@ -14,7 +14,7 @@ public class TratamientoOrtodonciaRepository : GenericRepository<TratamientoOrto
         _context = context;
     }
 
-    public async Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoCompletoAsync(int tratamientoId)
+    public async Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoCompletoAsync(Guid tratamientoId)
     {
         try
         {
@@ -49,7 +49,7 @@ public class TratamientoOrtodonciaRepository : GenericRepository<TratamientoOrto
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<TratamientoOrtodoncia>>> GetTratamientosActivosAsync(int medicoId)
+    public async Task<ActionResponse<IEnumerable<TratamientoOrtodoncia>>> GetTratamientosActivosAsync(Guid medicoId)
     {
         try
         {
@@ -75,7 +75,7 @@ public class TratamientoOrtodonciaRepository : GenericRepository<TratamientoOrto
         }
     }
 
-    public async Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoActivoPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<TratamientoOrtodoncia>> GetTratamientoActivoPacienteAsync(Guid pacienteId)
     {
         try
         {

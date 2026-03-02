@@ -4,9 +4,9 @@ using Odontosoft.Backend.Repositories.Interfaces;
 
 public interface IClinicaRepository : IGenericRepository<Clinica>
 {
-    Task<ActionResponse<Clinica>> GetClinicaConSucursalesAsync(int clinicaId);
+    Task<ActionResponse<Clinica>> GetClinicaConSucursalesAsync(Guid clinicaId);
 
-    Task<ActionResponse<Clinica>> GetClinicaConModulosAsync(int clinicaId);
+    Task<ActionResponse<Clinica>> GetClinicaConModulosAsync(Guid clinicaId);
 
     Task<ActionResponse<Clinica>> GetByRFCAsync(string rfc);
 

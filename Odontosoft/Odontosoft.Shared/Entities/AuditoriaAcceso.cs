@@ -10,12 +10,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class AuditoriaAcceso : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int UsuarioId { get; set; }
-        public int SucursalId { get; set; }
+        public Guid UsuarioId { get; set; }
+        public Guid SucursalId { get; set; }
 
         [Required, MaxLength(50)]
         public string TipoAcceso { get; set; } // Login, Logout, Cambio Sucursal

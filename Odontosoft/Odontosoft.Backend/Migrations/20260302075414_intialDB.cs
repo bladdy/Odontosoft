@@ -6,19 +6,59 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Odontosoft.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class intialDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Modulos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Codigo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Icono = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Orden = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    Ruta = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ModuloPadreId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modulos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Modulos_Modulos_ModuloPadreId",
+                        column: x => x.ModuloPadreId,
+                        principalTable: "Modulos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tenants",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Subdomain = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tenants", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AuditoriasAcceso",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TipoAcceso = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DireccionIP = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UserAgent = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -29,15 +69,21 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuditoriasAcceso", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AuditoriasAcceso_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AuditoriasCambios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Tabla = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Operacion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     RegistroId = table.Column<int>(type: "int", nullable: false),
@@ -49,14 +95,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuditoriasCambios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AuditoriasCambios_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "CatalogoTratamientosDentales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Categoria = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -70,14 +122,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CatalogoTratamientosDentales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CatalogoTratamientosDentales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Clinicas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     RazonSocial = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
                     RFC = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
@@ -95,16 +153,22 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clinicas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Clinicas_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ConfiguracionesGenerales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClinicaId = table.Column<int>(type: "int", nullable: true),
-                    SucursalId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClinicaId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Clave = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Valor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -114,14 +178,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ConfiguracionesGenerales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConfiguracionesGenerales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Especialidades",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false)
@@ -129,14 +199,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Especialidades", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Especialidades_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "EstudiosImagen",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -148,14 +224,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EstudiosImagen", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EstudiosImagen_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "EstudiosLaboratorio",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Categoria = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -167,14 +249,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EstudiosLaboratorio", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EstudiosLaboratorio_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MaterialesDentales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Categoria = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -190,14 +278,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MaterialesDentales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MaterialesDentales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Medicamentos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     NombreGenerico = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Presentacion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
@@ -211,30 +305,10 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Medicamentos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Modulos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Codigo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Icono = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Orden = table.Column<int>(type: "int", nullable: false),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    Ruta = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    ModuloPadreId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Modulos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Modulos_Modulos_ModuloPadreId",
-                        column: x => x.ModuloPadreId,
-                        principalTable: "Modulos",
+                        name: "FK_Medicamentos_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -243,9 +317,9 @@ namespace Odontosoft.Backend.Migrations
                 name: "Notificaciones",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Mensaje = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -257,14 +331,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notificaciones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notificaciones_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false)
@@ -272,14 +352,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Roles_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Servicios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ClaveProdServ = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -292,14 +378,20 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Servicios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Servicios_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NombreUsuario = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -315,34 +407,10 @@ namespace Odontosoft.Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Sucursales",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClinicaId = table.Column<int>(type: "int", nullable: false),
-                    Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Codigo = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Telefono = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Direccion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Ciudad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CodigoPostal = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Activo = table.Column<bool>(type: "bit", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Sucursales", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sucursales_Clinicas_ClinicaId",
-                        column: x => x.ClinicaId,
-                        principalTable: "Clinicas",
+                        name: "FK_Usuarios_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -351,10 +419,9 @@ namespace Odontosoft.Backend.Migrations
                 name: "ClinicaModulos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClinicaId = table.Column<int>(type: "int", nullable: false),
-                    ModuloId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClinicaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModuloId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaActivacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaVencimiento = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Activo = table.Column<bool>(type: "bit", nullable: false)
@@ -377,13 +444,49 @@ namespace Odontosoft.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sucursales",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClinicaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Codigo = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Direccion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Ciudad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Estado = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CodigoPostal = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaModificacion = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sucursales", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sucursales_Clinicas_ClinicaId",
+                        column: x => x.ClinicaId,
+                        principalTable: "Clinicas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Sucursales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RolPermisos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RolId = table.Column<int>(type: "int", nullable: false),
-                    ModuloId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModuloId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PuedeLeer = table.Column<bool>(type: "bit", nullable: false),
                     PuedeCrear = table.Column<bool>(type: "bit", nullable: false),
                     PuedeEditar = table.Column<bool>(type: "bit", nullable: false),
@@ -404,15 +507,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolPermisos_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Medicos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CedulaProfesional = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Universidad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     AnioTitulacion = table.Column<int>(type: "int", nullable: false),
@@ -426,6 +535,12 @@ namespace Odontosoft.Backend.Migrations
                 {
                     table.PrimaryKey("PK_Medicos", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Medicos_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Medicos_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "Usuarios",
@@ -437,9 +552,9 @@ namespace Odontosoft.Backend.Migrations
                 name: "Consultorios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Numero = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -454,15 +569,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Consultorios_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Pacientes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroExpediente = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Apellidos = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
@@ -495,15 +616,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Pacientes_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Productos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CodigoBarras = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -530,16 +657,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Productos_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UsuarioSucursales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioId = table.Column<int>(type: "int", nullable: false),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EsSucursalPrincipal = table.Column<bool>(type: "bit", nullable: false),
                     FechaAsignacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Activo = table.Column<bool>(type: "bit", nullable: false)
@@ -565,10 +697,10 @@ namespace Odontosoft.Backend.Migrations
                 name: "HorariosMedico",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DiaSemana = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
                     HoraFin = table.Column<TimeSpan>(type: "time", nullable: false),
@@ -590,16 +722,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_HorariosMedico_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MedicoEspecialidades",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
-                    EspecialidadId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EspecialidadId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CedulaEspecialidad = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     FechaObtencion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -618,15 +756,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Medicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MedicoEspecialidades_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Alergias",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Gravedad = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -643,15 +787,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Alergias_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Antecedentes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Tipo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -668,18 +818,24 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Antecedentes_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Citas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
-                    ConsultorioId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultorioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     NumeroCita = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaHora = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DuracionMinutos = table.Column<int>(type: "int", nullable: false),
@@ -721,16 +877,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Citas_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ExamenesPeriodontales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaExamen = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IndiceHigiene = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     IndiceGingival = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -757,16 +919,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExamenesPeriodontales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Odontogramas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaActualizacion = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TipoOdontograma = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -788,17 +956,23 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Odontogramas_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PresupuestosDentales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroPresupuesto = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaEmision = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaVencimiento = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -835,16 +1009,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PresupuestosDentales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RadiografiasDentales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     NumeroRadiografia = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaToma = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TipoRadiografia = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -871,16 +1051,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RadiografiasDentales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TratamientosOrtodoncia",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroTratamiento = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaEstimadaFin = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -908,16 +1094,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TratamientosOrtodoncia_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MovimientosInventario",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductoId = table.Column<int>(type: "int", nullable: false),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TipoMovimiento = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     StockAnterior = table.Column<int>(type: "int", nullable: false),
@@ -942,16 +1134,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovimientosInventario_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PermisosModulo",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioSucursalId = table.Column<int>(type: "int", nullable: false),
-                    ModuloId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioSucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModuloId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PuedeLeer = table.Column<bool>(type: "bit", nullable: false),
                     PuedeCrear = table.Column<bool>(type: "bit", nullable: false),
                     PuedeEditar = table.Column<bool>(type: "bit", nullable: false),
@@ -968,6 +1166,12 @@ namespace Odontosoft.Backend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_PermisosModulo_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_PermisosModulo_UsuarioSucursales_UsuarioSucursalId",
                         column: x => x.UsuarioSucursalId,
                         principalTable: "UsuarioSucursales",
@@ -979,10 +1183,10 @@ namespace Odontosoft.Backend.Migrations
                 name: "UsuarioRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UsuarioSucursalId = table.Column<int>(type: "int", nullable: false),
-                    RolId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UsuarioSucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaAsignacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -992,6 +1196,12 @@ namespace Odontosoft.Backend.Migrations
                         name: "FK_UsuarioRoles_Roles_RolId",
                         column: x => x.RolId,
                         principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_UsuarioRoles_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1006,11 +1216,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "Consultas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CitaId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CitaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroConsulta = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaConsulta = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Peso = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: true),
@@ -1052,17 +1262,23 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Consultas_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Facturas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SucursalId = table.Column<int>(type: "int", nullable: false),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    CitaId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SucursalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CitaId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     NumeroFactura = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Serie = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Folio = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -1104,15 +1320,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Sucursales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Facturas_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "BolsasPeriodontales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExamenPeriodontalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExamenPeriodontalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroDiente = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     VestibularMesial = table.Column<int>(type: "int", nullable: true),
                     VestibularCentral = table.Column<int>(type: "int", nullable: true),
@@ -1134,15 +1356,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "ExamenesPeriodontales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BolsasPeriodontales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "DientesEstado",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OdontogramaId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OdontogramaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroDiente = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     SuperficieOclusal = table.Column<bool>(type: "bit", nullable: false),
@@ -1164,15 +1392,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Odontogramas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DientesEstado_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "PresupuestosDetalle",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PresupuestoDentalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PresupuestoDentalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Tratamiento = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     NumeroDiente = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Descripcion = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
@@ -1195,15 +1429,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "PresupuestosDentales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PresupuestosDetalle_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ControlesOrtodoncia",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TratamientoOrtodonciaId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TratamientoOrtodonciaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FechaControl = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NumeroControl = table.Column<int>(type: "int", nullable: false),
                     ActividadesRealizadas = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
@@ -1216,6 +1456,12 @@ namespace Odontosoft.Backend.Migrations
                 {
                     table.PrimaryKey("PK_ControlesOrtodoncia", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_ControlesOrtodoncia_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_ControlesOrtodoncia_TratamientosOrtodoncia_TratamientoOrtodonciaId",
                         column: x => x.TratamientoOrtodonciaId,
                         principalTable: "TratamientosOrtodoncia",
@@ -1227,14 +1473,14 @@ namespace Odontosoft.Backend.Migrations
                 name: "HistoriasClinicas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    ConsultaId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Tipo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FechaRegistro = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsuarioRegistroId = table.Column<int>(type: "int", nullable: false)
+                    UsuarioRegistroId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1251,17 +1497,23 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_HistoriasClinicas_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrdenesImagen",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ConsultaId = table.Column<int>(type: "int", nullable: false),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroOrden = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaEmision = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -1291,17 +1543,23 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrdenesImagen_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrdenesLaboratorio",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ConsultaId = table.Column<int>(type: "int", nullable: false),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroOrden = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaEmision = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Estado = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -1331,17 +1589,23 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrdenesLaboratorio_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Recetas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ConsultaId = table.Column<int>(type: "int", nullable: false),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroReceta = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaEmision = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaVencimiento = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1370,16 +1634,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Recetas_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "FacturaDetalles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FacturaId = table.Column<int>(type: "int", nullable: false),
-                    ServicioId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacturaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServicioId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Concepto = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     ClaveProdServ = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ClaveUnidad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -1405,15 +1675,21 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Servicios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_FacturaDetalles_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Pagos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FacturaId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FacturaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroPago = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaPago = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FormaPago = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -1431,18 +1707,24 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Facturas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Pagos_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "TratamientosDentales",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
-                    ConsultaId = table.Column<int>(type: "int", nullable: true),
-                    DienteEstadoId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ConsultaId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DienteEstadoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     NumeroTratamiento = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     FechaTratamiento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TipoTratamiento = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
@@ -1484,16 +1766,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Pacientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TratamientosDentales_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrdenImagenDetalles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrdenImagenId = table.Column<int>(type: "int", nullable: false),
-                    EstudioImagenId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrdenImagenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EstudioImagenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Resultado = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     Observaciones = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
                 },
@@ -1512,16 +1800,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "OrdenesImagen",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrdenImagenDetalles_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrdenLaboratorioDetalles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OrdenLaboratorioId = table.Column<int>(type: "int", nullable: false),
-                    EstudioLaboratorioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrdenLaboratorioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EstudioLaboratorioId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Resultado = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     ValorReferencia = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Observaciones = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
@@ -1541,16 +1835,22 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "OrdenesLaboratorio",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_OrdenLaboratorioDetalles_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RecetaDetalles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RecetaId = table.Column<int>(type: "int", nullable: false),
-                    MedicamentoId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RecetaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicamentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     MedicamentoNombre = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Presentacion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Dosis = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
@@ -1575,17 +1875,23 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Recetas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RecetaDetalles_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "ConsentimientosInformados",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PacienteId = table.Column<int>(type: "int", nullable: false),
-                    MedicoId = table.Column<int>(type: "int", nullable: false),
-                    TratamientoDentalId = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PacienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TratamientoDentalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     TipoProcedimiento = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     FechaConsentimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContenidoConsentimiento = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -1613,6 +1919,12 @@ namespace Odontosoft.Backend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_ConsentimientosInformados_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_ConsentimientosInformados_TratamientosDentales_TratamientoDentalId",
                         column: x => x.TratamientoDentalId,
                         principalTable: "TratamientosDentales",
@@ -1624,15 +1936,15 @@ namespace Odontosoft.Backend.Migrations
                 name: "SeguimientosTratamiento",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TratamientoDentalId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TratamientoDentalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroSesion = table.Column<int>(type: "int", nullable: false),
                     FechaSesion = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     Observaciones = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     EstadoPaciente = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MedicoId = table.Column<int>(type: "int", nullable: true),
+                    MedicoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Imagenes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
@@ -1644,6 +1956,12 @@ namespace Odontosoft.Backend.Migrations
                         principalTable: "Medicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_SeguimientosTratamiento_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SeguimientosTratamiento_TratamientosDentales_TratamientoDentalId",
                         column: x => x.TratamientoDentalId,
@@ -1658,14 +1976,29 @@ namespace Odontosoft.Backend.Migrations
                 column: "PacienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Alergias_TenantId",
+                table: "Alergias",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Antecedentes_PacienteId",
                 table: "Antecedentes",
                 column: "PacienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Antecedentes_TenantId",
+                table: "Antecedentes",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AuditoriasAcceso_DireccionIP",
                 table: "AuditoriasAcceso",
                 column: "DireccionIP");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditoriasAcceso_TenantId",
+                table: "AuditoriasAcceso",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuditoriasAcceso_UsuarioId_FechaHora",
@@ -1678,6 +2011,11 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "Tabla", "RegistroId", "FechaHora" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AuditoriasCambios_TenantId",
+                table: "AuditoriasCambios",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AuditoriasCambios_UsuarioId_FechaHora",
                 table: "AuditoriasCambios",
                 columns: new[] { "UsuarioId", "FechaHora" });
@@ -1688,6 +2026,11 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "ExamenPeriodontalId", "NumeroDiente" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_BolsasPeriodontales_TenantId",
+                table: "BolsasPeriodontales",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CatalogoTratamientosDentales_Categoria",
                 table: "CatalogoTratamientosDentales",
                 column: "Categoria");
@@ -1696,6 +2039,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "IX_CatalogoTratamientosDentales_Codigo",
                 table: "CatalogoTratamientosDentales",
                 column: "Codigo");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CatalogoTratamientosDentales_TenantId",
+                table: "CatalogoTratamientosDentales",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Citas_ConsultorioId",
@@ -1729,6 +2077,11 @@ namespace Odontosoft.Backend.Migrations
                 column: "SucursalId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Citas_TenantId",
+                table: "Citas",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ClinicaModulos_ClinicaId_ModuloId",
                 table: "ClinicaModulos",
                 columns: new[] { "ClinicaId", "ModuloId" },
@@ -1751,11 +2104,21 @@ namespace Odontosoft.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Clinicas_TenantId",
+                table: "Clinicas",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ConfiguracionesGenerales_ClinicaId_SucursalId_Clave",
                 table: "ConfiguracionesGenerales",
                 columns: new[] { "ClinicaId", "SucursalId", "Clave" },
                 unique: true,
                 filter: "[ClinicaId] IS NOT NULL AND [SucursalId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfiguracionesGenerales_TenantId",
+                table: "ConfiguracionesGenerales",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConsentimientosInformados_MedicoId",
@@ -1766,6 +2129,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "IX_ConsentimientosInformados_PacienteId_FechaConsentimiento",
                 table: "ConsentimientosInformados",
                 columns: new[] { "PacienteId", "FechaConsentimiento" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConsentimientosInformados_TenantId",
+                table: "ConsentimientosInformados",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConsentimientosInformados_TratamientoDentalId",
@@ -1795,10 +2163,25 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "PacienteId", "FechaConsulta" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Consultas_TenantId",
+                table: "Consultas",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Consultorios_SucursalId_Numero",
                 table: "Consultorios",
                 columns: new[] { "SucursalId", "Numero" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Consultorios_TenantId",
+                table: "Consultorios",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ControlesOrtodoncia_TenantId",
+                table: "ControlesOrtodoncia",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ControlesOrtodoncia_TratamientoOrtodonciaId_FechaControl",
@@ -1811,14 +2194,34 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "OdontogramaId", "NumeroDiente" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_DientesEstado_TenantId",
+                table: "DientesEstado",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Especialidades_TenantId",
+                table: "Especialidades",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EstudiosImagen_Codigo",
                 table: "EstudiosImagen",
                 column: "Codigo");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EstudiosImagen_TenantId",
+                table: "EstudiosImagen",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EstudiosLaboratorio_Codigo",
                 table: "EstudiosLaboratorio",
                 column: "Codigo");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EstudiosLaboratorio_TenantId",
+                table: "EstudiosLaboratorio",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamenesPeriodontales_MedicoId",
@@ -1831,6 +2234,11 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "PacienteId", "FechaExamen" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExamenesPeriodontales_TenantId",
+                table: "ExamenesPeriodontales",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FacturaDetalles_FacturaId",
                 table: "FacturaDetalles",
                 column: "FacturaId");
@@ -1839,6 +2247,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "IX_FacturaDetalles_ServicioId",
                 table: "FacturaDetalles",
                 column: "ServicioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FacturaDetalles_TenantId",
+                table: "FacturaDetalles",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Facturas_CitaId",
@@ -1862,6 +2275,11 @@ namespace Odontosoft.Backend.Migrations
                 column: "SucursalId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Facturas_TenantId",
+                table: "Facturas",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Facturas_UUID",
                 table: "Facturas",
                 column: "UUID");
@@ -1877,6 +2295,11 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "PacienteId", "FechaRegistro" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_HistoriasClinicas_TenantId",
+                table: "HistoriasClinicas",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HorariosMedico_MedicoId_SucursalId_DiaSemana",
                 table: "HorariosMedico",
                 columns: new[] { "MedicoId", "SucursalId", "DiaSemana" });
@@ -1885,6 +2308,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "IX_HorariosMedico_SucursalId",
                 table: "HorariosMedico",
                 column: "SucursalId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HorariosMedico_TenantId",
+                table: "HorariosMedico",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MaterialesDentales_Categoria",
@@ -1897,9 +2325,19 @@ namespace Odontosoft.Backend.Migrations
                 column: "Codigo");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MaterialesDentales_TenantId",
+                table: "MaterialesDentales",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Medicamentos_Nombre",
                 table: "Medicamentos",
                 column: "Nombre");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Medicamentos_TenantId",
+                table: "Medicamentos",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicoEspecialidades_EspecialidadId",
@@ -1913,10 +2351,20 @@ namespace Odontosoft.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_MedicoEspecialidades_TenantId",
+                table: "MedicoEspecialidades",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Medicos_CedulaProfesional",
                 table: "Medicos",
                 column: "CedulaProfesional",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Medicos_TenantId",
+                table: "Medicos",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Medicos_UsuarioId",
@@ -1945,6 +2393,16 @@ namespace Odontosoft.Backend.Migrations
                 column: "SucursalId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovimientosInventario_TenantId",
+                table: "MovimientosInventario",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notificaciones_TenantId",
+                table: "Notificaciones",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Notificaciones_UsuarioId_Leida_FechaCreacion",
                 table: "Notificaciones",
                 columns: new[] { "UsuarioId", "Leida", "FechaCreacion" });
@@ -1958,6 +2416,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "IX_Odontogramas_PacienteId_FechaCreacion",
                 table: "Odontogramas",
                 columns: new[] { "PacienteId", "FechaCreacion" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Odontogramas_TenantId",
+                table: "Odontogramas",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrdenesImagen_ConsultaId",
@@ -1981,6 +2444,11 @@ namespace Odontosoft.Backend.Migrations
                 column: "PacienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrdenesImagen_TenantId",
+                table: "OrdenesImagen",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrdenesLaboratorio_ConsultaId",
                 table: "OrdenesLaboratorio",
                 column: "ConsultaId");
@@ -2002,6 +2470,11 @@ namespace Odontosoft.Backend.Migrations
                 column: "PacienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrdenesLaboratorio_TenantId",
+                table: "OrdenesLaboratorio",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrdenImagenDetalles_EstudioImagenId",
                 table: "OrdenImagenDetalles",
                 column: "EstudioImagenId");
@@ -2012,6 +2485,11 @@ namespace Odontosoft.Backend.Migrations
                 column: "OrdenImagenId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrdenImagenDetalles_TenantId",
+                table: "OrdenImagenDetalles",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrdenLaboratorioDetalles_EstudioLaboratorioId",
                 table: "OrdenLaboratorioDetalles",
                 column: "EstudioLaboratorioId");
@@ -2020,6 +2498,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "IX_OrdenLaboratorioDetalles_OrdenLaboratorioId",
                 table: "OrdenLaboratorioDetalles",
                 column: "OrdenLaboratorioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrdenLaboratorioDetalles_TenantId",
+                table: "OrdenLaboratorioDetalles",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pacientes_CURP",
@@ -2038,6 +2521,11 @@ namespace Odontosoft.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pacientes_TenantId",
+                table: "Pacientes",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pagos_FacturaId",
                 table: "Pagos",
                 column: "FacturaId");
@@ -2049,9 +2537,19 @@ namespace Odontosoft.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pagos_TenantId",
+                table: "Pagos",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PermisosModulo_ModuloId",
                 table: "PermisosModulo",
                 column: "ModuloId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PermisosModulo_TenantId",
+                table: "PermisosModulo",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PermisosModulo_UsuarioSucursalId_ModuloId",
@@ -2081,9 +2579,19 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "SucursalId", "Estado" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_PresupuestosDentales_TenantId",
+                table: "PresupuestosDentales",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PresupuestosDetalle_PresupuestoDentalId",
                 table: "PresupuestosDetalle",
                 column: "PresupuestoDentalId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PresupuestosDetalle_TenantId",
+                table: "PresupuestosDetalle",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Productos_CodigoBarras",
@@ -2095,6 +2603,11 @@ namespace Odontosoft.Backend.Migrations
                 table: "Productos",
                 columns: new[] { "SucursalId", "Codigo" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Productos_TenantId",
+                table: "Productos",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RadiografiasDentales_MedicoId",
@@ -2113,6 +2626,11 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "PacienteId", "FechaToma" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_RadiografiasDentales_TenantId",
+                table: "RadiografiasDentales",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RadiografiasDentales_TipoRadiografia",
                 table: "RadiografiasDentales",
                 column: "TipoRadiografia");
@@ -2126,6 +2644,11 @@ namespace Odontosoft.Backend.Migrations
                 name: "IX_RecetaDetalles_RecetaId",
                 table: "RecetaDetalles",
                 column: "RecetaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecetaDetalles_TenantId",
+                table: "RecetaDetalles",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recetas_ConsultaId",
@@ -2149,6 +2672,16 @@ namespace Odontosoft.Backend.Migrations
                 column: "PacienteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recetas_TenantId",
+                table: "Recetas",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_TenantId",
+                table: "Roles",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolPermisos_ModuloId",
                 table: "RolPermisos",
                 column: "ModuloId");
@@ -2160,9 +2693,19 @@ namespace Odontosoft.Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_RolPermisos_TenantId",
+                table: "RolPermisos",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SeguimientosTratamiento_MedicoId",
                 table: "SeguimientosTratamiento",
                 column: "MedicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeguimientosTratamiento_TenantId",
+                table: "SeguimientosTratamiento",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SeguimientosTratamiento_TratamientoDentalId_NumeroSesion",
@@ -2175,10 +2718,20 @@ namespace Odontosoft.Backend.Migrations
                 column: "Codigo");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Servicios_TenantId",
+                table: "Servicios",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sucursales_ClinicaId_Codigo",
                 table: "Sucursales",
                 columns: new[] { "ClinicaId", "Codigo" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sucursales_TenantId",
+                table: "Sucursales",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TratamientosDentales_ConsultaId",
@@ -2207,6 +2760,11 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "PacienteId", "FechaTratamiento" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_TratamientosDentales_TenantId",
+                table: "TratamientosDentales",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TratamientosOrtodoncia_MedicoId",
                 table: "TratamientosOrtodoncia",
                 column: "MedicoId");
@@ -2223,9 +2781,19 @@ namespace Odontosoft.Backend.Migrations
                 columns: new[] { "PacienteId", "Estado" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_TratamientosOrtodoncia_TenantId",
+                table: "TratamientosOrtodoncia",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UsuarioRoles_RolId",
                 table: "UsuarioRoles",
                 column: "RolId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsuarioRoles_TenantId",
+                table: "UsuarioRoles",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsuarioRoles_UsuarioSucursalId_RolId",
@@ -2244,6 +2812,11 @@ namespace Odontosoft.Backend.Migrations
                 table: "Usuarios",
                 column: "NombreUsuario",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuarios_TenantId",
+                table: "Usuarios",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsuarioSucursales_SucursalId",
@@ -2421,6 +2994,9 @@ namespace Odontosoft.Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Clinicas");
+
+            migrationBuilder.DropTable(
+                name: "Tenants");
         }
     }
 }

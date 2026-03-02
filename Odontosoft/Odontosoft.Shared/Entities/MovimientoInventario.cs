@@ -5,12 +5,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class MovimientoInventario : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int ProductoId { get; set; }
-        public int SucursalId { get; set; }
+        public Guid ProductoId { get; set; }
+        public Guid SucursalId { get; set; }
 
         [Required, MaxLength(50)]
         public string TipoMovimiento { get; set; } // Entrada, Salida, Ajuste, Devolución

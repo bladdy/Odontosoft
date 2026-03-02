@@ -10,12 +10,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class ConfiguracionGeneral : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int? ClinicaId { get; set; }
-        public int? SucursalId { get; set; }
+        public Guid? ClinicaId { get; set; }
+        public Guid? SucursalId { get; set; }
 
         [Required, MaxLength(100)]
         public string Clave { get; set; }

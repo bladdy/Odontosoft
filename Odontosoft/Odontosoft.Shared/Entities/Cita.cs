@@ -5,12 +5,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class Cita : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public Guid TenantId { get; set; }
-        public int SucursalId { get; set; }
-        public int PacienteId { get; set; }
-        public int MedicoId { get; set; }
-        public int? ConsultorioId { get; set; }
+        public Guid SucursalId { get; set; }
+        public Guid PacienteId { get; set; }
+        public Guid MedicoId { get; set; }
+        public Guid? ConsultorioId { get; set; }
 
         [Required, MaxLength(30)]
         public string NumeroCita { get; set; }

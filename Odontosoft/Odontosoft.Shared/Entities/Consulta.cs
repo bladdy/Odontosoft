@@ -5,13 +5,13 @@ namespace Odontosoft.Shared.Entities
 {
     public class Consulta : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int CitaId { get; set; }
-        public int MedicoId { get; set; }
-        public int PacienteId { get; set; }
+        public Guid CitaId { get; set; }
+        public Guid MedicoId { get; set; }
+        public Guid PacienteId { get; set; }
 
         [Required, MaxLength(30)]
         public string NumeroConsulta { get; set; }

@@ -15,7 +15,7 @@ public class TratamientoDentalRepository : GenericRepository<TratamientoDental>,
         _context = context;
     }
 
-    public async Task<ActionResponse<TratamientoDental>> GetTratamientoCompletoAsync(int tratamientoId)
+    public async Task<ActionResponse<TratamientoDental>> GetTratamientoCompletoAsync(Guid tratamientoId)
     {
         try
         {
@@ -52,7 +52,7 @@ public class TratamientoDentalRepository : GenericRepository<TratamientoDental>,
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<TratamientoDental>>> GetTratamientosPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<TratamientoDental>>> GetTratamientosPacienteAsync(Guid pacienteId)
     {
         try
         {
@@ -78,7 +78,7 @@ public class TratamientoDentalRepository : GenericRepository<TratamientoDental>,
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<TratamientoDental>>> GetTratamientosActivosAsync(int medicoId)
+    public async Task<ActionResponse<IEnumerable<TratamientoDental>>> GetTratamientosActivosAsync(Guid medicoId)
     {
         try
         {
@@ -105,7 +105,7 @@ public class TratamientoDentalRepository : GenericRepository<TratamientoDental>,
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<TratamientoDental>>> GetTratamientosPorEstadoAsync(int sucursalId, string estado)
+    public async Task<ActionResponse<IEnumerable<TratamientoDental>>> GetTratamientosPorEstadoAsync(Guid sucursalId, string estado)
     {
         try
         {

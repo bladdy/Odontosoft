@@ -1,25 +1,33 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
 using Odontosoft.Backend.Middleware;
 using Odontosoft.Backend.Repositories.Implementations;
 using Odontosoft.Backend.Repositories.Interfaces;
 using Odontosoft.Backend.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
+// ==================== CONTROLLERS ====================
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition =
+            JsonIgnoreCondition.WhenWritingNull;
+    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
 
-// ==================== REGISTRAR UNIT OF WORK ====================
+// ==================== DATABASE ====================
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")));
+
+// ==================== UNIT OF WORK ====================
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// ==================== REGISTRAR REPOSITORIOS (OPCIONAL) ====================
-// Solo si quieres inyectarlos individualmente adem�s del UnitOfWork
+// ==================== REPOSITORIOS ====================
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IOdontogramaRepository, OdontogramaRepository>();
 builder.Services.AddScoped<ITratamientoDentalRepository, TratamientoDentalRepository>();
@@ -38,21 +46,38 @@ builder.Services.AddScoped<IRecetaRepository, RecetaRepository>();
 builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<ICatalogoTratamientoDentalRepository, CatalogoTratamientoDentalRepository>();
-// ============================= Servicios =============================
+
+// ==================== SERVICIOS ====================
 builder.Services.AddScoped<ITenantService, TenantService>();
+builder.Services.AddScoped<DatabaseSeeder>(); // 🔥 IMPORTANTE
 
 var app = builder.Build();
+
+// ==================== MIGRATIONS + SEED ====================
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+
+    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+    await seeder.SeedDatabase();
+}
+
+// ==================== CORS ====================
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
     .SetIsOriginAllowed(origin => true)
     .AllowCredentials());
-// Configure the HTTP request pipeline.
+
+// ==================== SWAGGER ====================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// ==================== MIDDLEWARE ====================
 app.UseMiddleware<TenantMiddleware>();
 
 app.UseHttpsRedirection();
@@ -62,7 +87,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-//appclinicsoft.com goodaddy.com 229
-
-//clinisystem.com

@@ -15,7 +15,7 @@ public class OdontogramaRepository : GenericRepository<Odontograma>, IOdontogram
         _context = context;
     }
 
-    public async Task<ActionResponse<Odontograma>> GetOdontogramaActualAsync(int pacienteId)
+    public async Task<ActionResponse<Odontograma>> GetOdontogramaActualAsync(Guid pacienteId)
     {
         try
         {
@@ -50,7 +50,7 @@ public class OdontogramaRepository : GenericRepository<Odontograma>, IOdontogram
         }
     }
 
-    public async Task<ActionResponse<Odontograma>> GetOdontogramaCompletoAsync(int odontogramaId)
+    public async Task<ActionResponse<Odontograma>> GetOdontogramaCompletoAsync(Guid odontogramaId)
     {
         try
         {
@@ -87,7 +87,7 @@ public class OdontogramaRepository : GenericRepository<Odontograma>, IOdontogram
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Odontograma>>> GetHistorialAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<Odontograma>>> GetHistorialAsync(Guid pacienteId)
     {
         try
         {
@@ -114,7 +114,7 @@ public class OdontogramaRepository : GenericRepository<Odontograma>, IOdontogram
         }
     }
 
-    public async Task<ActionResponse<Odontograma>> CrearOdontogramaInicialAsync(int pacienteId, int medicoId, string tipo)
+    public async Task<ActionResponse<Odontograma>> CrearOdontogramaInicialAsync(Guid pacienteId, Guid medicoId, string tipo)
     {
         try
         {

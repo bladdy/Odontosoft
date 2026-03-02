@@ -4,11 +4,11 @@ using Odontosoft.Backend.Repositories.Interfaces;
 
 public interface IRecetaRepository : IGenericRepository<Receta>
 {
-    Task<ActionResponse<Receta>> GetRecetaConDetallesAsync(int recetaId);
+    Task<ActionResponse<Receta>> GetRecetaConDetallesAsync(Guid recetaId);
 
-    Task<ActionResponse<IEnumerable<Receta>>> GetRecetasPacienteAsync(int pacienteId);
+    Task<ActionResponse<IEnumerable<Receta>>> GetRecetasPacienteAsync(Guid pacienteId);
 
-    Task<ActionResponse<IEnumerable<Receta>>> GetRecetasActivasAsync(int pacienteId);
+    Task<ActionResponse<IEnumerable<Receta>>> GetRecetasActivasAsync(Guid pacienteId);
 
     Task<ActionResponse<string>> GenerarNumeroRecetaAsync();
 }

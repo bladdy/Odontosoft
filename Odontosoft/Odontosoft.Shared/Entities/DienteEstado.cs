@@ -5,11 +5,11 @@ namespace Odontosoft.Shared.Entities
 {
     public class DienteEstado : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int OdontogramaId { get; set; }
+        public Guid OdontogramaId { get; set; }
 
         [Required, MaxLength(10)]
         public string NumeroDiente { get; set; } = null!; // Ej: "11", "21", "55", etc. (Sistema FDI)

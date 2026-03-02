@@ -14,7 +14,7 @@ public class MedicoRepository : GenericRepository<Medico>, IMedicoRepository
         _context = context;
     }
 
-    public async Task<ActionResponse<Medico>> GetMedicoConEspecialidadesAsync(int medicoId)
+    public async Task<ActionResponse<Medico>> GetMedicoConEspecialidadesAsync(Guid medicoId)
     {
         try
         {
@@ -49,7 +49,7 @@ public class MedicoRepository : GenericRepository<Medico>, IMedicoRepository
         }
     }
 
-    public async Task<ActionResponse<Medico>> GetMedicoConHorariosAsync(int medicoId, int sucursalId)
+    public async Task<ActionResponse<Medico>> GetMedicoConHorariosAsync(Guid medicoId, Guid sucursalId)
     {
         try
         {
@@ -83,7 +83,7 @@ public class MedicoRepository : GenericRepository<Medico>, IMedicoRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Medico>>> GetMedicosPorSucursalAsync(int sucursalId)
+    public async Task<ActionResponse<IEnumerable<Medico>>> GetMedicosPorSucursalAsync(Guid sucursalId)
     {
         try
         {
@@ -114,7 +114,7 @@ public class MedicoRepository : GenericRepository<Medico>, IMedicoRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Medico>>> GetMedicosPorEspecialidadAsync(int especialidadId)
+    public async Task<ActionResponse<IEnumerable<Medico>>> GetMedicosPorEspecialidadAsync(Guid especialidadId)
     {
         try
         {

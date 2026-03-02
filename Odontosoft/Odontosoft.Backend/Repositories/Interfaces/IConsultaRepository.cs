@@ -4,11 +4,11 @@ using Odontosoft.Backend.Repositories.Interfaces;
 
 public interface IConsultaRepository : IGenericRepository<Consulta>
 {
-    Task<ActionResponse<Consulta>> GetConsultaCompletaAsync(int consultaId);
+    Task<ActionResponse<Consulta>> GetConsultaCompletaAsync(Guid consultaId);
 
-    Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasPacienteAsync(int pacienteId);
+    Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasPacienteAsync(Guid pacienteId);
 
-    Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasMedicoAsync(int medicoId, DateTime? fechaInicio = null);
+    Task<ActionResponse<IEnumerable<Consulta>>> GetConsultasMedicoAsync(Guid medicoId, DateTime? fechaInicio = null);
 
     Task<ActionResponse<string>> GenerarNumeroConsultaAsync();
 }

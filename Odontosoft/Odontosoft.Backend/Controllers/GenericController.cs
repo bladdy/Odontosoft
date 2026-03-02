@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Odontosoft.Backend.UnitsOfWork.Interfaces;
 using Odontosoft.Shared.DTOs;
+using Odontosoft.Shared.Interfaces;
 
 namespace Odontosoft.Backend.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
-public class GenericController<T> : Controller where T : class
+public class GenericController<T> : Controller where T : class, ITenantEntity
 {
     private readonly IGenericUnitOfWork<T> _unitOfWork;
 
@@ -48,7 +50,7 @@ public class GenericController<T> : Controller where T : class
     }
 
     [HttpGet("{id}")]
-    public virtual async Task<IActionResult> GetAsync(int id)
+    public virtual async Task<IActionResult> GetAsync(Guid id)
     {
         var action = await _unitOfWork.GetAsync(id);
         if (action.WasSuccess)
@@ -81,7 +83,7 @@ public class GenericController<T> : Controller where T : class
     }
 
     [HttpDelete("{id}")]
-    public virtual async Task<IActionResult> DeleteAsync(int id)
+    public virtual async Task<IActionResult> DeleteAsync(Guid id)
     {
         var action = await _unitOfWork.DeleteAsync(id);
         if (action.WasSuccess)

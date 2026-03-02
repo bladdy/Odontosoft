@@ -5,9 +5,9 @@ namespace Odontosoft.Backend.Repositories.Interfaces;
 
 public interface IRadiografiaDentalRepository : IGenericRepository<RadiografiaDental>
 {
-    Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPacienteAsync(int pacienteId);
+    Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPacienteAsync(Guid pacienteId);
 
-    Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPorTipoAsync(int pacienteId, string tipo);
+    Task<ActionResponse<IEnumerable<RadiografiaDental>>> GetRadiografiasPorTipoAsync(Guid pacienteId, string tipo);
 
     Task<ActionResponse<string>> GenerarNumeroRadiografiaAsync();
 }

@@ -5,12 +5,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class RecetaDetalle : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int RecetaId { get; set; }
-        public int? MedicamentoId { get; set; }
+        public Guid RecetaId { get; set; }
+        public Guid? MedicamentoId { get; set; }
 
         [Required, MaxLength(300)]
         public string MedicamentoNombre { get; set; }

@@ -4,12 +4,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class PermisoModulo : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int UsuarioSucursalId { get; set; }
-        public int ModuloId { get; set; }
+        public Guid UsuarioSucursalId { get; set; }
+        public Guid ModuloId { get; set; }
         public bool PuedeLeer { get; set; } = false;
         public bool PuedeCrear { get; set; } = false;
         public bool PuedeEditar { get; set; } = false;

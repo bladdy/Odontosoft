@@ -5,11 +5,11 @@ namespace Odontosoft.Shared.Entities
 {
     public class Pago : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int FacturaId { get; set; }
+        public Guid FacturaId { get; set; }
 
         [Required, MaxLength(30)]
         public string NumeroPago { get; set; }

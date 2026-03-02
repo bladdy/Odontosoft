@@ -15,7 +15,7 @@ public class PresupuestoDentalRepository : GenericRepository<PresupuestoDental>,
         _context = context;
     }
 
-    public async Task<ActionResponse<PresupuestoDental>> GetPresupuestoCompletoAsync(int presupuestoId)
+    public async Task<ActionResponse<PresupuestoDental>> GetPresupuestoCompletoAsync(Guid presupuestoId)
     {
         try
         {
@@ -51,7 +51,7 @@ public class PresupuestoDentalRepository : GenericRepository<PresupuestoDental>,
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPacienteAsync(int pacienteId)
+    public async Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPacienteAsync(Guid pacienteId)
     {
         try
         {
@@ -78,7 +78,7 @@ public class PresupuestoDentalRepository : GenericRepository<PresupuestoDental>,
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPorEstadoAsync(int sucursalId, string estado)
+    public async Task<ActionResponse<IEnumerable<PresupuestoDental>>> GetPresupuestosPorEstadoAsync(Guid sucursalId, string estado)
     {
         try
         {
@@ -105,7 +105,7 @@ public class PresupuestoDentalRepository : GenericRepository<PresupuestoDental>,
         }
     }
 
-    public async Task<ActionResponse<string>> GenerarNumeroPresupuestoAsync(int sucursalId)
+    public async Task<ActionResponse<string>> GenerarNumeroPresupuestoAsync(Guid sucursalId)
     {
         try
         {
@@ -141,7 +141,7 @@ public class PresupuestoDentalRepository : GenericRepository<PresupuestoDental>,
         }
     }
 
-    public async Task<ActionResponse<bool>> AprobarPresupuestoAsync(int presupuestoId)
+    public async Task<ActionResponse<bool>> AprobarPresupuestoAsync(Guid presupuestoId)
     {
         try
         {

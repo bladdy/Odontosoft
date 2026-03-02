@@ -24,11 +24,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Alergia", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -51,8 +49,11 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
@@ -63,16 +64,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("PacienteId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Alergias", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Antecedente", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -93,8 +94,11 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
@@ -105,16 +109,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("PacienteId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Antecedentes", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.AuditoriaAcceso", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DireccionIP")
                         .IsRequired()
@@ -132,8 +136,11 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoAcceso")
                         .IsRequired()
@@ -145,12 +152,14 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DireccionIP");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UsuarioId", "FechaHora");
 
@@ -159,11 +168,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.AuditoriaCambios", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DireccionIP")
                         .IsRequired()
@@ -186,8 +193,11 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ValoresAnteriores")
                         .IsRequired()
@@ -199,6 +209,8 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("UsuarioId", "FechaHora");
 
                     b.HasIndex("Tabla", "RegistroId", "FechaHora");
@@ -208,14 +220,12 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.BolsaPeriodontal", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ExamenPeriodontalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ExamenPeriodontalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("LingualCentral")
                         .HasColumnType("int");
@@ -245,6 +255,9 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<bool>("Supuracion")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int?>("VestibularCentral")
                         .HasColumnType("int");
 
@@ -256,6 +269,8 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("ExamenPeriodontalId", "NumeroDiente");
 
                     b.ToTable("BolsasPeriodontales", (string)null);
@@ -263,11 +278,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.CatalogoTratamientoDental", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -303,30 +316,33 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<bool>("RequiereConsentimiento")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Categoria");
 
                     b.HasIndex("Codigo");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("CatalogoTratamientosDentales", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Cita", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ColorCalendario")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("ConsultorioId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ConsultorioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("DuracionMinutos")
                         .HasColumnType("int");
@@ -351,8 +367,8 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MotivoCancelacion")
                         .IsRequired()
@@ -374,11 +390,14 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoCita")
                         .IsRequired()
@@ -396,6 +415,8 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("SucursalId");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("MedicoId", "FechaHora");
 
                     b.HasIndex("PacienteId", "FechaHora");
@@ -405,11 +426,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Clinica", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -470,6 +489,9 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email");
@@ -477,22 +499,22 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("RFC")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Clinicas", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ClinicaModulo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ClinicaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ClinicaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("FechaActivacion")
                         .HasColumnType("datetime2");
@@ -500,8 +522,8 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime?>("FechaVencimiento")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModuloId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ModuloId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -515,19 +537,17 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ConfiguracionGeneral", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Clave")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ClinicaId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ClinicaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
@@ -537,8 +557,11 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime>("FechaModificacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
@@ -551,6 +574,8 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("ClinicaId", "SucursalId", "Clave")
                         .IsUnique()
                         .HasFilter("[ClinicaId] IS NOT NULL AND [SucursalId] IS NOT NULL");
@@ -560,11 +585,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ConsentimientoInformado", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Aceptado")
                         .HasColumnType("bit");
@@ -592,8 +615,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NombreTestigo")
                         .HasMaxLength(200)
@@ -603,20 +626,25 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoProcedimiento")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("TratamientoDentalId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TratamientoDentalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MedicoId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("TratamientoDentalId");
 
@@ -627,18 +655,16 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Consulta", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("Altura")
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int>("CitaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CitaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CodigoCIE10")
                         .IsRequired()
@@ -674,8 +700,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MotivoConsulta")
                         .IsRequired()
@@ -692,8 +718,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PadecimientoActual")
                         .IsRequired()
@@ -720,6 +746,9 @@ namespace Odontosoft.Backend.Migrations
                         .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CitaId")
@@ -730,6 +759,8 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("NumeroConsulta")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("PacienteId", "FechaConsulta");
 
                     b.ToTable("Consultas", (string)null);
@@ -737,11 +768,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Consultorio", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -761,10 +790,15 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("SucursalId", "Numero")
                         .IsUnique();
@@ -774,11 +808,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ControlOrtodoncia", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ActividadesRealizadas")
                         .HasMaxLength(2000)
@@ -805,10 +837,15 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("TratamientoOrtodonciaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TratamientoOrtodonciaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("TratamientoOrtodonciaId", "FechaControl");
 
@@ -817,11 +854,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.DienteEstado", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ColorNotacion")
                         .HasMaxLength(50)
@@ -847,8 +882,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("OdontogramaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OdontogramaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("SuperficieDistal")
                         .HasColumnType("bit");
@@ -865,7 +900,12 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<bool>("SuperficieVestibular")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("OdontogramaId", "NumeroDiente");
 
@@ -874,11 +914,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Especialidad", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -893,18 +931,21 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Especialidades", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.EstudioImagen", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -933,6 +974,9 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -942,16 +986,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("Codigo");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("EstudiosImagen", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.EstudioLaboratorio", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -985,20 +1029,23 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Codigo");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("EstudiosLaboratorio", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ExamenPeriodontal", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Diagnostico")
                         .HasMaxLength(2000)
@@ -1015,8 +1062,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Movilidad")
                         .HasColumnType("bit");
@@ -1025,8 +1072,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PlanTratamiento")
                         .HasMaxLength(2000)
@@ -1041,9 +1088,14 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<bool>("Sangrado")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MedicoId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("PacienteId", "FechaExamen");
 
@@ -1052,11 +1104,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Factura", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ArchivoPDF")
                         .IsRequired()
@@ -1068,8 +1118,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("CitaId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("CitaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Descuento")
                         .HasPrecision(18, 2)
@@ -1123,8 +1173,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Serie")
                         .IsRequired()
@@ -1135,8 +1185,11 @@ namespace Odontosoft.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoComprobante")
                         .IsRequired()
@@ -1161,6 +1214,8 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("SucursalId");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("UUID");
 
                     b.HasIndex("PacienteId", "FechaEmision");
@@ -1170,11 +1225,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.FacturaDetalle", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Cantidad")
                         .HasPrecision(18, 2)
@@ -1199,8 +1252,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("FacturaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FacturaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("IVA")
                         .HasPrecision(18, 2)
@@ -1210,12 +1263,15 @@ namespace Odontosoft.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ServicioId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ServicioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Subtotal")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Total")
                         .HasPrecision(18, 2)
@@ -1227,19 +1283,19 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("ServicioId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("FacturaDetalles", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.HistoriaClinica", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ConsultaId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ConsultaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Contenido")
                         .IsRequired()
@@ -1248,20 +1304,25 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime>("FechaRegistro")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("UsuarioRegistroId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UsuarioRegistroId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConsultaId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("PacienteId", "FechaRegistro");
 
@@ -1270,11 +1331,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.HorarioMedico", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1293,15 +1352,20 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<TimeSpan>("HoraInicio")
                         .HasColumnType("time");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SucursalId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("MedicoId", "SucursalId", "DiaSemana");
 
@@ -1310,11 +1374,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.MaterialDental", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1354,6 +1416,9 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<int?>("StockMinimo")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("UnidadMedida")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -1364,16 +1429,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("Codigo");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("MaterialesDentales", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Medicamento", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1411,6 +1476,9 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<bool>("RequiereReceta")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Via")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1420,16 +1488,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("Nombre");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Medicamentos", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Medico", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1460,18 +1528,23 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Universidad")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CedulaProfesional")
                         .IsUnique();
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UsuarioId");
 
@@ -1480,29 +1553,32 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.MedicoEspecialidad", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CedulaEspecialidad")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("EspecialidadId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EspecialidadId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("FechaObtencion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EspecialidadId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("MedicoId", "EspecialidadId")
                         .IsUnique();
@@ -1512,11 +1588,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Modulo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1536,8 +1610,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("ModuloPadreId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ModuloPadreId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -1564,11 +1638,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.MovimientoInventario", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
@@ -1581,8 +1653,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Referencia")
                         .IsRequired()
@@ -1595,8 +1667,11 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<int>("StockNuevo")
                         .HasColumnType("int");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoMovimiento")
                         .IsRequired()
@@ -1610,6 +1685,8 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("SucursalId");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("ProductoId", "FechaMovimiento");
 
                     b.ToTable("MovimientosInventario", (string)null);
@@ -1617,11 +1694,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Notificacion", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Enlace")
                         .IsRequired()
@@ -1642,6 +1717,9 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -1652,10 +1730,12 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UsuarioId", "Leida", "FechaCreacion");
 
@@ -1664,11 +1744,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Odontograma", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("EsActivo")
                         .HasColumnType("bit");
@@ -1679,15 +1757,18 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Observaciones")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoOdontograma")
                         .IsRequired()
@@ -1698,6 +1779,8 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("MedicoId");
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("PacienteId", "FechaCreacion");
 
                     b.ToTable("Odontogramas", (string)null);
@@ -1705,19 +1788,17 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenImagen", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ArchivoResultado")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("ConsultaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ConsultaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -1738,16 +1819,19 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroOrden")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1760,32 +1844,35 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("PacienteId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("OrdenesImagen", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenImagenDetalle", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EstudioImagenId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EstudioImagenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("OrdenImagenId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OrdenImagenId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Resultado")
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1793,24 +1880,24 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("OrdenImagenId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("OrdenImagenDetalles", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenLaboratorio", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ArchivoResultado")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("ConsultaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ConsultaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -1831,16 +1918,19 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroOrden")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1853,32 +1943,35 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("PacienteId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("OrdenesLaboratorio", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenLaboratorioDetalle", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EstudioLaboratorioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EstudioLaboratorioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Observaciones")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("OrdenLaboratorioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("OrdenLaboratorioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Resultado")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ValorReferencia")
                         .IsRequired()
@@ -1891,16 +1984,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("OrdenLaboratorioId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("OrdenLaboratorioDetalles", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Paciente", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -1994,8 +2087,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Telefono")
                         .IsRequired()
@@ -2007,11 +2100,16 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CURP");
 
                     b.HasIndex("Email");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("SucursalId", "NumeroExpediente")
                         .IsUnique();
@@ -2021,14 +2119,12 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Pago", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FacturaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FacturaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
@@ -2060,6 +2156,9 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FacturaId");
@@ -2067,22 +2166,22 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("NumeroPago")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Pagos", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.PermisoModulo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("FechaAsignacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ModuloId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ModuloId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("PuedeCrear")
                         .HasColumnType("bit");
@@ -2096,12 +2195,17 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<bool>("PuedeLeer")
                         .HasColumnType("bit");
 
-                    b.Property<int>("UsuarioSucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioSucursalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ModuloId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UsuarioSucursalId", "ModuloId")
                         .IsUnique();
@@ -2111,11 +2215,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.PresupuestoDental", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Descuento")
                         .HasPrecision(18, 2)
@@ -2149,8 +2251,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("NumeroCuotas")
                         .HasColumnType("int");
@@ -2164,15 +2266,18 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Subtotal")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Total")
                         .HasPrecision(18, 2)
@@ -2185,6 +2290,8 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("NumeroPresupuesto")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("PacienteId", "FechaEmision");
 
                     b.HasIndex("SucursalId", "Estado");
@@ -2194,11 +2301,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.PresupuestoDetalle", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
@@ -2229,8 +2334,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("PresupuestoDentalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PresupuestoDentalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Prioridad")
                         .HasColumnType("int");
@@ -2238,6 +2343,9 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<decimal>("Subtotal")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Total")
                         .HasPrecision(18, 2)
@@ -2252,16 +2360,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("PresupuestoDentalId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("PresupuestosDetalle", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Producto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -2329,12 +2437,17 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<int>("StockMinimo")
                         .HasColumnType("int");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CodigoBarras");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("SucursalId", "Codigo")
                         .IsUnique();
@@ -2344,11 +2457,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.RadiografiaDental", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CalidadImagen")
                         .HasMaxLength(100)
@@ -2361,8 +2472,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroDiente")
                         .HasMaxLength(10)
@@ -2377,8 +2488,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("RequiereAnalisis")
                         .HasColumnType("bit");
@@ -2387,6 +2498,9 @@ namespace Odontosoft.Backend.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoRadiografia")
                         .IsRequired()
@@ -2404,6 +2518,8 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("NumeroRadiografia")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("TipoRadiografia");
 
                     b.HasIndex("PacienteId", "FechaToma");
@@ -2413,14 +2529,12 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Receta", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ConsultaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ConsultaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -2441,16 +2555,19 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroReceta")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -2463,16 +2580,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("PacienteId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Recetas", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.RecetaDetalle", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
@@ -2497,8 +2614,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int?>("MedicamentoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("MedicamentoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("MedicamentoNombre")
                         .IsRequired()
@@ -2510,8 +2627,11 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("RecetaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RecetaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Via")
                         .IsRequired()
@@ -2524,16 +2644,16 @@ namespace Odontosoft.Backend.Migrations
 
                     b.HasIndex("RecetaId");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("RecetaDetalles", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Rol", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -2548,21 +2668,24 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.RolPermiso", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ModuloId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ModuloId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("PuedeCrear")
                         .HasColumnType("bit");
@@ -2576,12 +2699,17 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<bool>("PuedeLeer")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RolId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ModuloId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("RolId", "ModuloId")
                         .IsUnique();
@@ -2591,11 +2719,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.SeguimientoTratamiento", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Descripcion")
                         .HasMaxLength(2000)
@@ -2612,8 +2738,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("NumeroSesion")
                         .HasColumnType("int");
@@ -2622,12 +2748,17 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("TratamientoDentalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TratamientoDentalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MedicoId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("TratamientoDentalId", "NumeroSesion");
 
@@ -2636,11 +2767,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Servicio", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -2678,20 +2807,23 @@ namespace Odontosoft.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Codigo");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Servicios", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Sucursal", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -2701,8 +2833,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("ClinicaId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ClinicaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Codigo")
                         .IsRequired()
@@ -2745,7 +2877,12 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("ClinicaId", "Codigo")
                         .IsUnique();
@@ -2753,16 +2890,39 @@ namespace Odontosoft.Backend.Migrations
                     b.ToTable("Sucursales", (string)null);
                 });
 
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subdomain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
+                });
+
             modelBuilder.Entity("Odontosoft.Shared.Entities.TratamientoDental", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ConsultaId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ConsultaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("Costo")
                         .HasPrecision(18, 2)
@@ -2772,8 +2932,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int?>("DienteEstadoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("DienteEstadoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Estado")
                         .IsRequired()
@@ -2790,8 +2950,8 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroDiente")
                         .HasMaxLength(10)
@@ -2809,14 +2969,17 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("RequiereSeguimiento")
                         .HasColumnType("bit");
 
                     b.Property<int>("SesionActual")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoTratamiento")
                         .IsRequired()
@@ -2832,6 +2995,8 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("NumeroTratamiento")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("MedicoId", "Estado");
 
                     b.HasIndex("PacienteId", "FechaTratamiento");
@@ -2841,11 +3006,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.TratamientoOrtodoncia", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("CostoTotal")
                         .HasPrecision(18, 2)
@@ -2872,8 +3035,8 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime?>("FechaRealFin")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MedicoId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MedicoId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroTratamiento")
                         .IsRequired()
@@ -2888,8 +3051,11 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("PacienteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PacienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TipoAparato")
                         .IsRequired()
@@ -2903,6 +3069,8 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("NumeroTratamiento")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.HasIndex("PacienteId", "Estado");
 
                     b.ToTable("TratamientosOrtodoncia", (string)null);
@@ -2910,11 +3078,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Usuario", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -2960,6 +3126,9 @@ namespace Odontosoft.Backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("UltimoAcceso")
                         .HasColumnType("datetime2");
 
@@ -2971,29 +3140,34 @@ namespace Odontosoft.Backend.Migrations
                     b.HasIndex("NombreUsuario")
                         .IsUnique();
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.UsuarioRol", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("FechaAsignacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("RolId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RolId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("UsuarioSucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UsuarioSucursalId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RolId");
+
+                    b.HasIndex("TenantId");
 
                     b.HasIndex("UsuarioSucursalId", "RolId")
                         .IsUnique();
@@ -3003,11 +3177,9 @@ namespace Odontosoft.Backend.Migrations
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.UsuarioSucursal", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -3018,11 +3190,11 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime>("FechaAsignacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SucursalId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UsuarioId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -3042,7 +3214,15 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Antecedente", b =>
@@ -3053,7 +3233,37 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.AuditoriaAcceso", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.AuditoriaCambios", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.BolsaPeriodontal", b =>
@@ -3064,7 +3274,26 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("ExamenPeriodontal");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.CatalogoTratamientoDental", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Cita", b =>
@@ -3092,6 +3321,12 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Consultorio");
 
                     b.Navigation("Medico");
@@ -3099,6 +3334,19 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Paciente");
 
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Clinica", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ClinicaModulo", b =>
@@ -3120,6 +3368,17 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Modulo");
                 });
 
+            modelBuilder.Entity("Odontosoft.Shared.Entities.ConfiguracionGeneral", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("Odontosoft.Shared.Entities.ConsentimientoInformado", b =>
                 {
                     b.HasOne("Odontosoft.Shared.Entities.Medico", "Medico")
@@ -3134,6 +3393,12 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Odontosoft.Shared.Entities.TratamientoDental", "TratamientoDental")
                         .WithMany()
                         .HasForeignKey("TratamientoDentalId")
@@ -3142,6 +3407,8 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("TratamientoDental");
                 });
@@ -3166,11 +3433,19 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Cita");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Consultorio", b =>
@@ -3181,16 +3456,32 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ControlOrtodoncia", b =>
                 {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Odontosoft.Shared.Entities.TratamientoOrtodoncia", "TratamientoOrtodoncia")
                         .WithMany("Controles")
                         .HasForeignKey("TratamientoOrtodonciaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("TratamientoOrtodoncia");
                 });
@@ -3203,7 +3494,48 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Odontograma");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Especialidad", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.EstudioImagen", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.EstudioLaboratorio", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.ExamenPeriodontal", b =>
@@ -3220,9 +3552,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Factura", b =>
@@ -3244,11 +3584,19 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Cita");
 
                     b.Navigation("Paciente");
 
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.FacturaDetalle", b =>
@@ -3264,9 +3612,17 @@ namespace Odontosoft.Backend.Migrations
                         .HasForeignKey("ServicioId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Factura");
 
                     b.Navigation("Servicio");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.HistoriaClinica", b =>
@@ -3282,9 +3638,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Consulta");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.HorarioMedico", b =>
@@ -3301,18 +3665,56 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Medico");
 
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.MaterialDental", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Medicamento", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Medico", b =>
                 {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Odontosoft.Shared.Entities.Usuario", "Usuario")
                         .WithMany("Medicos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("Usuario");
                 });
@@ -3331,9 +3733,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Especialidad");
 
                     b.Navigation("Medico");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Modulo", b =>
@@ -3360,9 +3770,28 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Producto");
 
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Notificacion", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Odontograma", b =>
@@ -3379,9 +3808,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenImagen", b =>
@@ -3404,11 +3841,19 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Consulta");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenImagenDetalle", b =>
@@ -3425,9 +3870,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("EstudioImagen");
 
                     b.Navigation("OrdenImagen");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenLaboratorio", b =>
@@ -3450,11 +3903,19 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Consulta");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.OrdenLaboratorioDetalle", b =>
@@ -3471,9 +3932,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("EstudioLaboratorio");
 
                     b.Navigation("OrdenLaboratorio");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Paciente", b =>
@@ -3484,7 +3953,15 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Pago", b =>
@@ -3495,7 +3972,15 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Factura");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.PermisoModulo", b =>
@@ -3506,6 +3991,12 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Odontosoft.Shared.Entities.UsuarioSucursal", "UsuarioSucursal")
                         .WithMany("PermisosModulo")
                         .HasForeignKey("UsuarioSucursalId")
@@ -3513,6 +4004,8 @@ namespace Odontosoft.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Modulo");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("UsuarioSucursal");
                 });
@@ -3537,11 +4030,19 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
 
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.PresupuestoDetalle", b =>
@@ -3552,7 +4053,15 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("PresupuestoDental");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Producto", b =>
@@ -3563,7 +4072,15 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Sucursal");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.RadiografiaDental", b =>
@@ -3579,9 +4096,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Receta", b =>
@@ -3604,11 +4129,19 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Consulta");
 
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.RecetaDetalle", b =>
@@ -3624,9 +4157,28 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Medicamento");
 
                     b.Navigation("Receta");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Rol", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.RolPermiso", b =>
@@ -3643,9 +4195,17 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Modulo");
 
                     b.Navigation("Rol");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.SeguimientoTratamiento", b =>
@@ -3655,6 +4215,12 @@ namespace Odontosoft.Backend.Migrations
                         .HasForeignKey("MedicoId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Odontosoft.Shared.Entities.TratamientoDental", "TratamientoDental")
                         .WithMany("Seguimientos")
                         .HasForeignKey("TratamientoDentalId")
@@ -3663,7 +4229,20 @@ namespace Odontosoft.Backend.Migrations
 
                     b.Navigation("Medico");
 
+                    b.Navigation("Tenant");
+
                     b.Navigation("TratamientoDental");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Servicio", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Sucursal", b =>
@@ -3674,7 +4253,15 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Clinica");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.TratamientoDental", b =>
@@ -3701,6 +4288,12 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Consulta");
 
                     b.Navigation("DienteEstado");
@@ -3708,6 +4301,8 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.TratamientoOrtodoncia", b =>
@@ -3724,9 +4319,28 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Usuario", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.UsuarioRol", b =>
@@ -3737,6 +4351,12 @@ namespace Odontosoft.Backend.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Odontosoft.Shared.Entities.UsuarioSucursal", "UsuarioSucursal")
                         .WithMany()
                         .HasForeignKey("UsuarioSucursalId")
@@ -3744,6 +4364,8 @@ namespace Odontosoft.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Rol");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("UsuarioSucursal");
                 });

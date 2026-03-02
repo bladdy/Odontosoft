@@ -52,7 +52,7 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
         }
     }
 
-    public async Task<ActionResponse<Paciente>> GetPacienteCompletoAsync(int pacienteId)
+    public async Task<ActionResponse<Paciente>> GetPacienteCompletoAsync(Guid pacienteId)
     {
         try
         {
@@ -87,7 +87,7 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Paciente>>> BuscarPacientesAsync(int sucursalId, string termino)
+    public async Task<ActionResponse<IEnumerable<Paciente>>> BuscarPacientesAsync(Guid sucursalId, string termino)
     {
         try
         {
@@ -119,7 +119,7 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
         }
     }
 
-    public async Task<ActionResponse<Paciente>> GetByNumeroExpedienteAsync(int sucursalId, string numeroExpediente)
+    public async Task<ActionResponse<Paciente>> GetByNumeroExpedienteAsync(Guid sucursalId, string numeroExpediente)
     {
         try
         {
@@ -184,7 +184,7 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Paciente>>> GetPacientesConAlergiasCriticasAsync(int sucursalId)
+    public async Task<ActionResponse<IEnumerable<Paciente>>> GetPacientesConAlergiasCriticasAsync(Guid sucursalId)
     {
         try
         {
@@ -211,7 +211,7 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
         }
     }
 
-    public async Task<ActionResponse<string>> GenerarNumeroExpedienteAsync(int sucursalId)
+    public async Task<ActionResponse<string>> GenerarNumeroExpedienteAsync(Guid sucursalId)
     {
         try
         {

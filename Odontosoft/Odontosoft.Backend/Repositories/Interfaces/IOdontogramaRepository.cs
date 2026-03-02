@@ -5,11 +5,11 @@ namespace Odontosoft.Backend.Repositories.Interfaces;
 
 public interface IOdontogramaRepository : IGenericRepository<Odontograma>
 {
-    Task<ActionResponse<Odontograma>> GetOdontogramaActualAsync(int pacienteId);
+    Task<ActionResponse<Odontograma>> GetOdontogramaActualAsync(Guid pacienteId);
 
-    Task<ActionResponse<Odontograma>> GetOdontogramaCompletoAsync(int odontogramaId);
+    Task<ActionResponse<Odontograma>> GetOdontogramaCompletoAsync(Guid odontogramaId);
 
-    Task<ActionResponse<IEnumerable<Odontograma>>> GetHistorialAsync(int pacienteId);
+    Task<ActionResponse<IEnumerable<Odontograma>>> GetHistorialAsync(Guid pacienteId);
 
-    Task<ActionResponse<Odontograma>> CrearOdontogramaInicialAsync(int pacienteId, int medicoId, string tipo);
+    Task<ActionResponse<Odontograma>> CrearOdontogramaInicialAsync(Guid pacienteId, Guid medicoId, string tipo);
 }

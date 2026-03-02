@@ -5,11 +5,11 @@ namespace Odontosoft.Shared.Entities
 {
     public class Antecedente : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int PacienteId { get; set; }
+        public Guid PacienteId { get; set; }
 
         [Required, MaxLength(50)]
         public string Tipo { get; set; } // Patológico, No Patológico, Quirúrgico, Familiar, Gineco-Obstétrico

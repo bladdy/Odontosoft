@@ -5,14 +5,14 @@ namespace Odontosoft.Shared.Entities
 {
     public class TratamientoDental : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int PacienteId { get; set; }
-        public int MedicoId { get; set; }
-        public int? ConsultaId { get; set; }
-        public int? DienteEstadoId { get; set; }
+        public Guid PacienteId { get; set; }
+        public Guid MedicoId { get; set; }
+        public Guid? ConsultaId { get; set; }
+        public Guid? DienteEstadoId { get; set; }
 
         [Required, MaxLength(30)]
         public string NumeroTratamiento { get; set; } = null!;

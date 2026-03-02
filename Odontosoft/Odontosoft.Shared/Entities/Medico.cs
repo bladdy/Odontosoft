@@ -5,8 +5,8 @@ namespace Odontosoft.Shared.Entities
 {
     public class Medico : ITenantEntity
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
 
         public Guid TenantId { get; set; }
 

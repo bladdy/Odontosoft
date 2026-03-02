@@ -5,11 +5,11 @@ namespace Odontosoft.Shared.Entities
 {
     public class BolsaPeriodontal : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int ExamenPeriodontalId { get; set; }
+        public Guid ExamenPeriodontalId { get; set; }
 
         [Required, MaxLength(10)]
         public string NumeroDiente { get; set; } = null!;

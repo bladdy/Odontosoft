@@ -5,11 +5,11 @@ namespace Odontosoft.Shared.Entities
 {
     public class ControlOrtodoncia : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int TratamientoOrtodonciaId { get; set; }
+        public Guid TratamientoOrtodonciaId { get; set; }
 
         [Required]
         public DateTime FechaControl { get; set; }

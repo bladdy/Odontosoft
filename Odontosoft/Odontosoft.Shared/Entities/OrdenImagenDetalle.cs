@@ -5,12 +5,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class OrdenImagenDetalle : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int OrdenImagenId { get; set; }
-        public int EstudioImagenId { get; set; }
+        public Guid OrdenImagenId { get; set; }
+        public Guid EstudioImagenId { get; set; }
 
         [MaxLength(2000)]
         public string Resultado { get; set; }

@@ -14,7 +14,7 @@ public class CitaRepository : GenericRepository<Cita>, ICitaRepository
         _context = context;
     }
 
-    public async Task<ActionResponse<IEnumerable<Cita>>> GetAgendaMedicoAsync(int medicoId, DateTime fecha)
+    public async Task<ActionResponse<IEnumerable<Cita>>> GetAgendaMedicoAsync(Guid medicoId, DateTime fecha)
     {
         try
         {
@@ -46,7 +46,7 @@ public class CitaRepository : GenericRepository<Cita>, ICitaRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Cita>>> GetCitasPacienteAsync(int pacienteId, DateTime? fechaInicio = null)
+    public async Task<ActionResponse<IEnumerable<Cita>>> GetCitasPacienteAsync(Guid pacienteId, DateTime? fechaInicio = null)
     {
         try
         {
@@ -80,7 +80,7 @@ public class CitaRepository : GenericRepository<Cita>, ICitaRepository
         }
     }
 
-    public async Task<ActionResponse<bool>> HorarioDisponibleAsync(int medicoId, DateTime fechaHora, int duracionMinutos)
+    public async Task<ActionResponse<bool>> HorarioDisponibleAsync(Guid medicoId, DateTime fechaHora, int duracionMinutos)
     {
         try
         {
@@ -118,7 +118,7 @@ public class CitaRepository : GenericRepository<Cita>, ICitaRepository
         }
     }
 
-    public async Task<ActionResponse<IEnumerable<Cita>>> GetCitasPorEstadoAsync(int sucursalId, string estado, DateTime? fecha = null)
+    public async Task<ActionResponse<IEnumerable<Cita>>> GetCitasPorEstadoAsync(Guid sucursalId, string estado, DateTime? fecha = null)
     {
         try
         {
@@ -155,7 +155,7 @@ public class CitaRepository : GenericRepository<Cita>, ICitaRepository
         }
     }
 
-    public async Task<ActionResponse<Cita>> GetCitaConDetallesAsync(int citaId)
+    public async Task<ActionResponse<Cita>> GetCitaConDetallesAsync(Guid citaId)
     {
         try
         {
@@ -192,7 +192,7 @@ public class CitaRepository : GenericRepository<Cita>, ICitaRepository
         }
     }
 
-    public async Task<ActionResponse<string>> GenerarNumeroCitaAsync(int sucursalId)
+    public async Task<ActionResponse<string>> GenerarNumeroCitaAsync(Guid sucursalId)
     {
         try
         {

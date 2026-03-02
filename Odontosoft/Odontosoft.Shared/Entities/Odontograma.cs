@@ -5,12 +5,12 @@ namespace Odontosoft.Shared.Entities
 {
     public class Odontograma : ITenantEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public Tenant Tenant { get; set; }
         public Guid TenantId { get; set; }
-        public int PacienteId { get; set; }
-        public int MedicoId { get; set; }
+        public Guid PacienteId { get; set; }
+        public Guid MedicoId { get; set; }
 
         [Required]
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
