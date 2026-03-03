@@ -2171,6 +2171,41 @@ namespace Odontosoft.Backend.Migrations
                     b.ToTable("Pagos", (string)null);
                 });
 
+            modelBuilder.Entity("Odontosoft.Shared.Entities.PagoSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MetodoPago")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Monto")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ReferenciaExterna")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SubscriptionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.ToTable("PagoSubscriptions");
+                });
+
             modelBuilder.Entity("Odontosoft.Shared.Entities.PermisoModulo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2211,6 +2246,37 @@ namespace Odontosoft.Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("PermisosModulo", (string)null);
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Plan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<decimal>("PrecioBase")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PrecioPorSucursalExtra")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("SucursalesIncluidas")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
+
+                    b.ToTable("Plans");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.PresupuestoDental", b =>
@@ -2819,6 +2885,40 @@ namespace Odontosoft.Backend.Migrations
                     b.ToTable("Servicios", (string)null);
                 });
 
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activa")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("PrecioMensual")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("TenantId", "Activa")
+                        .IsUnique();
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("Odontosoft.Shared.Entities.Sucursal", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2899,6 +2999,9 @@ namespace Odontosoft.Backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("CurrentSubscriptionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -2906,11 +3009,24 @@ namespace Odontosoft.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("PlanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("Subdomain")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("SubscriptionExpiresAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CurrentSubscriptionId");
+
+                    b.HasIndex("PlanId");
 
                     b.ToTable("Tenants");
                 });
@@ -3983,6 +4099,17 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("Odontosoft.Shared.Entities.PagoSubscription", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Subscription", "Subscription")
+                        .WithMany("Pagos")
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subscription");
+                });
+
             modelBuilder.Entity("Odontosoft.Shared.Entities.PermisoModulo", b =>
                 {
                     b.HasOne("Odontosoft.Shared.Entities.Modulo", "Modulo")
@@ -4245,6 +4372,25 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Tenant");
                 });
 
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Subscription", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Plan", "Plan")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Odontosoft.Shared.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("Odontosoft.Shared.Entities.Sucursal", b =>
                 {
                     b.HasOne("Odontosoft.Shared.Entities.Clinica", "Clinica")
@@ -4262,6 +4408,22 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Clinica");
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Tenant", b =>
+                {
+                    b.HasOne("Odontosoft.Shared.Entities.Subscription", "CurrentSubscription")
+                        .WithMany()
+                        .HasForeignKey("CurrentSubscriptionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Odontosoft.Shared.Entities.Plan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId");
+
+                    b.Navigation("CurrentSubscription");
+
+                    b.Navigation("Plan");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.TratamientoDental", b =>
@@ -4507,6 +4669,11 @@ namespace Odontosoft.Backend.Migrations
                     b.Navigation("Recetas");
                 });
 
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Plan", b =>
+                {
+                    b.Navigation("Subscriptions");
+                });
+
             modelBuilder.Entity("Odontosoft.Shared.Entities.PresupuestoDental", b =>
                 {
                     b.Navigation("Detalles");
@@ -4532,6 +4699,11 @@ namespace Odontosoft.Backend.Migrations
             modelBuilder.Entity("Odontosoft.Shared.Entities.Servicio", b =>
                 {
                     b.Navigation("FacturaDetalles");
+                });
+
+            modelBuilder.Entity("Odontosoft.Shared.Entities.Subscription", b =>
+                {
+                    b.Navigation("Pagos");
                 });
 
             modelBuilder.Entity("Odontosoft.Shared.Entities.Sucursal", b =>

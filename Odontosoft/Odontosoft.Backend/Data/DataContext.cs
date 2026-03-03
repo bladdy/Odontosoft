@@ -18,6 +18,10 @@ public class DataContext : DbContext
         _tenantService = tenantService;
     }
 
+    public DbSet<Plan> Plans { get; set; }
+    public DbSet<Subscription> Subscriptions { get; set; }
+    public DbSet<PagoSubscription> PagoSubscriptions { get; set; }
+
     // Tenants (multi-tenant)
     public DbSet<Tenant> Tenants { get; set; }
 
@@ -141,9 +145,29 @@ public class DataContext : DbContext
             relationship.DeleteBehavior = DeleteBehavior.Restrict;
         }
 
+        modelBuilder.Entity<Plan>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.HasIndex(p => p.Nombre)
+                .IsUnique();
+
+            entity.Property(p => p.Nombre)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            entity.Property(p => p.PrecioBase)
+                .HasColumnType("decimal(18,2)");
+
+            entity.Property(p => p.PrecioPorSucursalExtra)
+                .HasColumnType("decimal(18,2)");
+        });
+
         modelBuilder.Entity<Tenant>()
-            .HasIndex(t => t.Subdomain)
-            .IsUnique();
+            .HasOne(t => t.CurrentSubscription)
+            .WithMany()
+            .HasForeignKey(t => t.CurrentSubscriptionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         modelBuilder.Entity<Clinica>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -152,11 +176,47 @@ public class DataContext : DbContext
             entity.HasIndex(e => e.Email);
         });
 
+        modelBuilder.Entity<Subscription>(entity =>
+        {
+            entity.HasKey(s => s.Id);
+            entity.HasIndex(s => new { s.TenantId, s.Activa }).IsUnique();
+
+            entity.Property(s => s.PrecioMensual)
+                .HasColumnType("decimal(18,2)");
+
+            entity.HasOne(s => s.Tenant)
+                .WithMany()
+                .HasForeignKey(s => s.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(s => s.Plan)
+                .WithMany(p => p.Subscriptions)
+                .HasForeignKey(s => s.PlanId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<PagoSubscription>(entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.HasIndex(p => p.Status);
+            entity.Property(p => p.Monto)
+                .HasColumnType("decimal(18,2)");
+
+            entity.Property(p => p.MetodoPago)
+                .HasMaxLength(100);
+
+            entity.HasOne(p => p.Subscription)
+                .WithMany(s => s.Pagos)
+                .HasForeignKey(p => p.SubscriptionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         modelBuilder.Entity<Sucursal>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.ToTable("Sucursales");
             entity.HasIndex(e => new { e.ClinicaId, e.Codigo }).IsUnique();
+            entity.HasQueryFilter(x => x.TenantId == _tenantService.TenantId);
 
             entity.HasOne(e => e.Clinica)
                 .WithMany(e => e.Sucursales)

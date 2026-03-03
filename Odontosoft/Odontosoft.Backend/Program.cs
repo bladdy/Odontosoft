@@ -137,6 +137,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // ==================== MIDDLEWARE ====================
+app.UseMiddleware<TenantAccessMiddleware>();
 app.UseMiddleware<TenantMiddleware>();
 app.UseHttpsRedirection();
 

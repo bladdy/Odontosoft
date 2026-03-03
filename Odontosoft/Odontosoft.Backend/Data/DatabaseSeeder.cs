@@ -80,6 +80,7 @@ namespace Odontosoft.Backend.Data
             {
                 var clinica = new Clinica
                 {
+                    TenantId = tenant.Id,
                     Nombre = "Clínica Odontológica Demo",
                     RazonSocial = "Clínica Demo SAC",
                     RFC = "12345678901",
@@ -134,13 +135,11 @@ namespace Odontosoft.Backend.Data
                 var admin = new Usuario
                 {
                     Nombre = "Admin",
-                    UsuarioSucursales = sucursalDemo.UsuarioSucursales,
-
+                    Apellidos = "Sistema",
                     NombreUsuario = "@admin",
                     Avatar = "avatar",
                     Telefono = "888888888",
                     FechaCreacion = DateTime.UtcNow,
-                    Apellidos = "Sistema",
                     Email = "admin@demo.com",
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123*"),
                     Activo = true
@@ -149,18 +148,24 @@ namespace Odontosoft.Backend.Data
                 _context.Usuarios.Add(admin);
                 await _context.SaveChangesAsync();
 
-                _context.UsuarioRoles.Add(new UsuarioRol
-                {
-                    UsuarioSucursalId = admin.Id,
-                    RolId = rolAdmin.Id
-                });
-
-                _context.UsuarioSucursales.Add(new UsuarioSucursal
+                // 🔹 Crear relación UsuarioSucursal primero
+                var usuarioSucursal = new UsuarioSucursal
                 {
                     UsuarioId = admin.Id,
                     SucursalId = sucursalDemo.Id
-                });
+                };
 
+                _context.UsuarioSucursales.Add(usuarioSucursal);
+                await _context.SaveChangesAsync();
+
+                // 🔹 Ahora sí crear UsuarioRol
+                var usuarioRol = new UsuarioRol
+                {
+                    UsuarioSucursalId = usuarioSucursal.Id, // ✅ correcto
+                    RolId = rolAdmin.Id
+                };
+
+                _context.UsuarioRoles.Add(usuarioRol);
                 await _context.SaveChangesAsync();
             }
 
