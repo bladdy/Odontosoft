@@ -15,17 +15,22 @@ public class JwtService
         _configuration = configuration;
     }
 
-    public string GenerateToken(Usuario user, Guid tenantId)
+    public string GenerateToken(Usuario user)
     {
+        if (!user.Activo)
+            throw new Exception("Usuario inactivo.");
+
         var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim("tenantId", tenantId.ToString())
-        };
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Name, user.NombreUsuario),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim("tenantId", user.TenantId.ToString()),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+    };
 
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
+using Odontosoft.Backend.Services;
 using Odontosoft.Shared.DTOs;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Helpers;
@@ -11,7 +12,7 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
 {
     private readonly DataContext _context;
 
-    public PacienteRepository(DataContext context) : base(context)
+    public PacienteRepository(DataContext context, ITenantService tenantService) : base(context, tenantService)
     {
         _context = context;
     }

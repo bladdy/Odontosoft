@@ -3,13 +3,18 @@ using Odontosoft.Backend.Data;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
 
+using Odontosoft.Backend.Services;
+
 namespace Odontosoft.Backend.Repositories.Implementations;
 
 public class UsuarioRepository : GenericRepository<Usuario>, IUsuarioRepository
 {
     private readonly DataContext _context;
 
-    public UsuarioRepository(DataContext context) : base(context)
+    public UsuarioRepository(
+        DataContext context,
+        ITenantService tenantService)
+        : base(context, tenantService)
     {
         _context = context;
     }

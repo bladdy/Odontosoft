@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Services;
 using Odontosoft.Shared.Entities;
+using Odontosoft.Shared.Enums;
 
 namespace Odontosoft.Backend.Data
 {
@@ -20,6 +21,24 @@ namespace Odontosoft.Backend.Data
         {
             await _context.Database.MigrateAsync();
 
+            var planBasico = await _context.Plans
+                .FirstOrDefaultAsync(p => p.Nombre == "Básico");
+
+            if (planBasico == null)
+            {
+                planBasico = new Plan
+                {
+                    Nombre = "Básico",
+                    PrecioBase = 50,
+                    PrecioPorSucursalExtra = 20,
+                    SucursalesIncluidas = 1,
+                    Activo = true
+                };
+
+                _context.Plans.Add(planBasico);
+                await _context.SaveChangesAsync();
+            }
+
             // =====================================================
             // 1️⃣ TENANT DEMO (IGNORANDO FILTRO GLOBAL)
             // =====================================================
@@ -35,7 +54,10 @@ namespace Odontosoft.Backend.Data
                     Id = Guid.NewGuid(),
                     Name = "Clínica Demo",
                     Subdomain = "demo",
-                    IsActive = true
+                    IsActive = true,
+                    Status = Shared.Enums.TenantStatus.Active,
+                    SubscriptionExpiresAt = DateTime.UtcNow.AddYears(1),
+                    PlanId = planBasico.Id
                 };
 
                 _context.Tenants.Add(tenant);
@@ -44,6 +66,44 @@ namespace Odontosoft.Backend.Data
 
             // 🔥 SET TENANT PARA MULTI-TENANT
             _tenantService.SetTenant(tenant);
+            if (tenant.CurrentSubscriptionId == null)
+            {
+                var subscription = new Subscription
+                {
+                    TenantId = tenant.Id,
+                    PlanId = planBasico.Id,
+                    FechaInicio = DateTime.UtcNow,
+                    FechaFin = DateTime.UtcNow.AddMonths(1),
+                    PrecioMensual = planBasico.PrecioBase,
+                    Activa = true
+                };
+
+                _context.Subscriptions.Add(subscription);
+                await _context.SaveChangesAsync();
+
+                // 🔥 Asignar subscription actual al tenant
+                tenant.CurrentSubscriptionId = subscription.Id;
+                tenant.Status = TenantStatus.Active;
+
+                await _context.SaveChangesAsync();
+
+                // =====================================================
+                // 3️⃣ CREAR PAGO (PagoSubscription)
+                // =====================================================
+
+                var pago = new PagoSubscription
+                {
+                    SubscriptionId = subscription.Id,
+                    Monto = subscription.PrecioMensual,
+                    FechaPago = DateTime.UtcNow,
+                    MetodoPago = "Seeder",
+                    ReferenciaExterna = "PAGO-DEMO-001",
+                    Status = PagoStatus.Pagado
+                };
+
+                _context.PagoSubscriptions.Add(pago);
+                await _context.SaveChangesAsync();
+            }
 
             // =====================================================
             // 2️⃣ ROLES

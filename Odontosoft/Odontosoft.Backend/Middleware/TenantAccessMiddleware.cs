@@ -14,31 +14,32 @@ public class TenantAccessMiddleware
         _next = next;
     }
 
-    public async Task Invoke(HttpContext context, ITenantService tenantService, DataContext db)
+    public async Task InvokeAsync(HttpContext context, DataContext dbContext, ITenantService tenantService)
     {
-        if (tenantService.TenantId != Guid.Empty)
+        if (context.Request.Path.StartsWithSegments("/swagger"))
         {
-            var tenant = await db.Tenants
-                .Include(t => t.CurrentSubscription)
-                .FirstOrDefaultAsync(t => t.Id == tenantService.TenantId);
-
-            if (tenant == null || tenant.Status != TenantStatus.Active)
-            {
-                context.Response.StatusCode = 403;
-                await context.Response.WriteAsync("Suscripción inactiva.");
-                return;
-            }
-
-            if (tenant.CurrentSubscription!.FechaFin < DateTime.UtcNow)
-            {
-                tenant.Status = TenantStatus.Suspended;
-                await db.SaveChangesAsync();
-
-                context.Response.StatusCode = 403;
-                await context.Response.WriteAsync("Suscripción vencida.");
-                return;
-            }
+            await _next(context);
+            return;
         }
+
+        var host = context.Request.Host.Host;
+
+        var subdomain = host.Contains("localhost")
+            ? "demo"
+            : host.Split('.').FirstOrDefault();
+
+        var tenant = await dbContext.Tenants
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Subdomain == subdomain);
+
+        if (tenant == null)
+        {
+            context.Response.StatusCode = 404;
+            await context.Response.WriteAsync("Tenant no encontrado.");
+            return;
+        }
+
+        tenantService.SetTenant(tenant);
 
         await _next(context);
     }

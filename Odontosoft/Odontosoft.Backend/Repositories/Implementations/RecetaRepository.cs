@@ -3,13 +3,18 @@ using Odontosoft.Backend.Data;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
 
+using Odontosoft.Backend.Services;
+
 namespace Odontosoft.Backend.Repositories.Implementations;
 
 public class RecetaRepository : GenericRepository<Receta>, IRecetaRepository
 {
     private readonly DataContext _context;
 
-    public RecetaRepository(DataContext context) : base(context)
+    public RecetaRepository(
+        DataContext context,
+        ITenantService tenantService)
+        : base(context, tenantService)
     {
         _context = context;
     }

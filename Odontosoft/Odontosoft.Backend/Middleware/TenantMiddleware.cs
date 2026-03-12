@@ -19,9 +19,10 @@ public class TenantMiddleware
         ITenantService tenantService)
     {
         var host = context.Request.Host.Host;
+
         var subdomain = host.Split('.').FirstOrDefault();
 
-        // 🔥 MODO DESARROLLO
+        // 🔧 Modo desarrollo
         if (host.Contains("localhost"))
         {
             subdomain = "demo";
@@ -36,8 +37,7 @@ public class TenantMiddleware
 
         var tenant = await dbContext.Tenants
             .AsNoTracking()
-            .FirstOrDefaultAsync(t =>
-                t.Subdomain.ToLower() == subdomain.ToLower());
+            .FirstOrDefaultAsync(t => t.Subdomain == subdomain);
 
         if (tenant == null)
         {
@@ -46,20 +46,7 @@ public class TenantMiddleware
             return;
         }
 
-        // Si hay JWT validamos coincidencia
-        var tenantClaim = context.User?.FindFirst("tenantId")?.Value;
-
-        if (!string.IsNullOrEmpty(tenantClaim))
-        {
-            if (tenantClaim != tenant.Id.ToString())
-            {
-                context.Response.StatusCode = 403;
-                await context.Response.WriteAsync(
-                    "El tenant del token no coincide con el subdominio.");
-                return;
-            }
-        }
-
+        // 🔥 AQUÍ SE RESUELVE EL TENANT
         tenantService.SetTenant(tenant);
 
         await _next(context);

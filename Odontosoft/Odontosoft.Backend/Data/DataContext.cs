@@ -216,7 +216,6 @@ public class DataContext : DbContext
             entity.HasKey(e => e.Id);
             entity.ToTable("Sucursales");
             entity.HasIndex(e => new { e.ClinicaId, e.Codigo }).IsUnique();
-            entity.HasQueryFilter(x => x.TenantId == _tenantService.TenantId);
 
             entity.HasOne(e => e.Clinica)
                 .WithMany(e => e.Sucursales)
@@ -1036,29 +1035,25 @@ public class DataContext : DbContext
     }
 
     private void SetTenantFilter<TEntity>(ModelBuilder modelBuilder)
-    where TEntity : class, ITenantEntity
+ where TEntity : class, ITenantEntity
     {
         modelBuilder.Entity<TEntity>()
-            .HasQueryFilter(e =>
-                _tenantService.TenantId == Guid.Empty ||
-                e.TenantId == _tenantService.TenantId);
+            .HasQueryFilter(e => e.TenantId == _tenantService.TenantId);
     }
 
     public override async Task<int> SaveChangesAsync(
     CancellationToken cancellationToken = default)
     {
+        var tenantId = _tenantService.TenantId;
+
+        if (tenantId == Guid.Empty)
+            tenantId = GetDefaultTenantId();
+
         foreach (var entry in ChangeTracker
             .Entries<ITenantEntity>()
             .Where(e => e.State == EntityState.Added))
         {
-            if (_tenantService.TenantId == Guid.Empty)
-            {
-                entry.Entity.TenantId = GetDefaultTenantId();
-            }
-            else
-            {
-                entry.Entity.TenantId = _tenantService.TenantId;
-            }
+            entry.Entity.TenantId = tenantId;
         }
 
         return await base.SaveChangesAsync(cancellationToken);
@@ -1071,12 +1066,16 @@ public class DataContext : DbContext
         if (_cachedDefaultTenantId.HasValue)
             return _cachedDefaultTenantId.Value;
 
-        var tenant = Tenants.AsNoTracking().FirstOrDefault();
+        var tenant = Tenants
+            .AsNoTracking()
+            .Select(t => new { t.Id })
+            .FirstOrDefault();
 
         if (tenant == null)
             throw new Exception("No existe un Tenant configurado.");
 
         _cachedDefaultTenantId = tenant.Id;
+
         return tenant.Id;
     }
 }

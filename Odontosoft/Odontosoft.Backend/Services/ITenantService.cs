@@ -5,7 +5,10 @@ namespace Odontosoft.Backend.Services;
 public interface ITenantService
 {
     Guid TenantId { get; }
+
     string? Subdomain { get; }
+
+    bool HasTenant { get; }
 
     Task<Tenant?> GetByIdentifierAsync(string identifier);
 

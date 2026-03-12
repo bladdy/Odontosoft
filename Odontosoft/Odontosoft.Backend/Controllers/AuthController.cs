@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
         if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
             return Unauthorized("Password incorrecto");
 
-        var token = _jwtService.GenerateToken(user, user.TenantId);
+        var token = _jwtService.GenerateToken(user);
 
         return Ok(new { token });
     }

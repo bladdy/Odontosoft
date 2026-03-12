@@ -1,15 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
+using Odontosoft.Backend.Services;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
 
 namespace Odontosoft.Backend.Repositories.Implementations;
 
-public class CatalogoTratamientoDentalRepository : GenericRepository<CatalogoTratamientoDental>, ICatalogoTratamientoDentalRepository
+public class CatalogoTratamientoDentalRepository
+    : GenericRepository<CatalogoTratamientoDental>, ICatalogoTratamientoDentalRepository
 {
     private readonly DataContext _context;
 
-    public CatalogoTratamientoDentalRepository(DataContext context) : base(context)
+    public CatalogoTratamientoDentalRepository(
+        DataContext context,
+        ITenantService tenantService)
+        : base(context, tenantService)
     {
         _context = context;
     }

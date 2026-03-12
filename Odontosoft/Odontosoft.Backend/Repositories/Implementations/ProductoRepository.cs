@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
+using Odontosoft.Backend.Services;
+
+using Odontosoft.Backend.Services;
 
 namespace Odontosoft.Backend.Repositories.Implementations;
 
@@ -9,7 +12,10 @@ public class ProductoRepository : GenericRepository<Producto>, IProductoReposito
 {
     private readonly DataContext _context;
 
-    public ProductoRepository(DataContext context) : base(context)
+    public ProductoRepository(
+        DataContext context,
+        ITenantService tenantService)
+        : base(context, tenantService)
     {
         _context = context;
     }

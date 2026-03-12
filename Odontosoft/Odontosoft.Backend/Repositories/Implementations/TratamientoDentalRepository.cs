@@ -4,13 +4,15 @@ using Odontosoft.Backend.Repositories.Interfaces;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
 
+using Odontosoft.Backend.Services;
+
 namespace Odontosoft.Backend.Repositories.Implementations;
 
 public class TratamientoDentalRepository : GenericRepository<TratamientoDental>, ITratamientoDentalRepository
 {
     private readonly DataContext _context;
 
-    public TratamientoDentalRepository(DataContext context) : base(context)
+    public TratamientoDentalRepository(DataContext context, ITenantService tenantService) : base(context, tenantService)
     {
         _context = context;
     }

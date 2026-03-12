@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
+using Odontosoft.Backend.Services;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
 
@@ -9,7 +10,7 @@ public class FacturaRepository : GenericRepository<Factura>, IFacturaRepository
 {
     private readonly DataContext _context;
 
-    public FacturaRepository(DataContext context) : base(context)
+    public FacturaRepository(DataContext context, ITenantService tenantService) : base(context, tenantService)
     {
         _context = context;
     }

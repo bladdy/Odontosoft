@@ -7,20 +7,19 @@ using Odontosoft.Shared.Entities;
 
 namespace Odontosoft.Backend.Controllers;
 
+[Route("api/[controller]")]
 [ApiController]
-[Route("api/clinicas")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class ClinicasController : GenericController<Clinica>
+public class PacienteController : GenericController<Paciente>
 {
     private readonly ITenantService _tenantService;
-    private readonly IGenericUnitOfWork<Clinica> _unitOfWork;
+    private readonly IGenericUnitOfWork<Paciente> _unitOfWork;
 
-    public ClinicasController(
-        IGenericUnitOfWork<Clinica> unitOfWork,
-        ITenantService tenantService)
-        : base(unitOfWork, tenantService)
+    public PacienteController(
+        IGenericUnitOfWork<Paciente> unitOfWork,
+        ITenantService tenantService
+    ) : base(unitOfWork, tenantService)
     {
-        _unitOfWork = unitOfWork;
         _tenantService = tenantService;
+        _unitOfWork = unitOfWork;
     }
 }

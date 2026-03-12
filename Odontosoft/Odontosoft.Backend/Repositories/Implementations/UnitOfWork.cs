@@ -4,6 +4,7 @@
 
 using Odontosoft.Backend.Data;
 using Odontosoft.Backend.Repositories.Interfaces;
+using Odontosoft.Backend.Services;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
 
@@ -12,6 +13,7 @@ namespace Odontosoft.Backend.Repositories.Implementations
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DataContext _context;
+        private readonly ITenantService _tenantService;
 
         // Repositorios de Odontología
         private IOdontogramaRepository? _odontogramas;
@@ -43,79 +45,80 @@ namespace Odontosoft.Backend.Repositories.Implementations
         private IGenericRepository<Servicio>? _servicios;
         private IGenericRepository<MaterialDental>? _materialesDentales;
 
-        public UnitOfWork(DataContext context)
+        public UnitOfWork(DataContext context, ITenantService tenantService)
         {
             _context = context;
+            _tenantService = tenantService;
         }
 
         // ==================== PROPIEDADES DE ODONTOLOGÍA ====================
 
         public IOdontogramaRepository Odontogramas =>
-            _odontogramas ??= new OdontogramaRepository(_context);
+            _odontogramas ??= new OdontogramaRepository(_context, _tenantService);
 
         public ITratamientoDentalRepository TratamientosDentales =>
-            _tratamientosDentales ??= new TratamientoDentalRepository(_context);
+            _tratamientosDentales ??= new TratamientoDentalRepository(_context, _tenantService);
 
         public IPresupuestoDentalRepository PresupuestosDentales =>
-            _presupuestosDentales ??= new PresupuestoDentalRepository(_context);
+            _presupuestosDentales ??= new PresupuestoDentalRepository(_context, _tenantService);
 
         public IRadiografiaDentalRepository RadiografiasDentales =>
-            _radiografiasDentales ??= new RadiografiaDentalRepository(_context);
+            _radiografiasDentales ??= new RadiografiaDentalRepository(_context, _tenantService);
 
         public IExamenPeriodontalRepository ExamenesPeriodontales =>
-            _examenesPeriodontales ??= new ExamenPeriodontalRepository(_context);
+            _examenesPeriodontales ??= new ExamenPeriodontalRepository(_context, _tenantService);
 
         public ITratamientoOrtodonciaRepository TratamientosOrtodoncia =>
-            _tratamientosOrtodoncia ??= new TratamientoOrtodonciaRepository(_context);
+            _tratamientosOrtodoncia ??= new TratamientoOrtodonciaRepository(_context, _tenantService);
 
         // ==================== PROPIEDADES BASE ====================
 
         public IClinicaRepository Clinicas =>
-            _clinicas ??= new ClinicaRepository(_context);
+            _clinicas ??= new ClinicaRepository(_context, _tenantService);
 
         public ISucursalRepository Sucursales =>
-            _sucursales ??= new SucursalRepository(_context);
+            _sucursales ??= new SucursalRepository(_context, _tenantService);
 
         public IUsuarioRepository Usuarios =>
-            _usuarios ??= new UsuarioRepository(_context);
+            _usuarios ??= new UsuarioRepository(_context, _tenantService);
 
         public IPacienteRepository Pacientes =>
-            _pacientes ??= new PacienteRepository(_context);
+            _pacientes ??= new PacienteRepository(_context, _tenantService);
 
         public IMedicoRepository Medicos =>
-            _medicos ??= new MedicoRepository(_context);
+            _medicos ??= new MedicoRepository(_context, _tenantService);
 
         public ICitaRepository Citas =>
-            _citas ??= new CitaRepository(_context);
+            _citas ??= new CitaRepository(_context, _tenantService);
 
         public IConsultaRepository Consultas =>
-            _consultas ??= new ConsultaRepository(_context);
+            _consultas ??= new ConsultaRepository(_context, _tenantService);
 
         public IRecetaRepository Recetas =>
-            _recetas ??= new RecetaRepository(_context);
+            _recetas ??= new RecetaRepository(_context, _tenantService);
 
         public IFacturaRepository Facturas =>
-            _facturas ??= new FacturaRepository(_context);
+            _facturas ??= new FacturaRepository(_context, _tenantService);
 
         public IProductoRepository Productos =>
-            _productos ??= new ProductoRepository(_context);
+            _productos ??= new ProductoRepository(_context, _tenantService);
 
         // ==================== PROPIEDADES DE CATÁLOGOS ====================
 
         public ICatalogoTratamientoDentalRepository CatalogosTratamientos =>
-            _catalogosTratamientos ??= new CatalogoTratamientoDentalRepository(_context);
+            _catalogosTratamientos ??= new CatalogoTratamientoDentalRepository(_context, _tenantService);
 
         public IGenericRepository<Especialidad> Especialidades =>
-            _especialidades ??= new GenericRepository<Especialidad>(_context);
+            _especialidades ??= new GenericRepository<Especialidad>(_context, _tenantService);
 
         public IGenericRepository<Medicamento> Medicamentos =>
-            _medicamentos ??= new GenericRepository<Medicamento>(_context);
+            _medicamentos ??= new GenericRepository<Medicamento>(_context, _tenantService);
 
         public IGenericRepository<Servicio> Servicios =>
-            _servicios ??= new GenericRepository<Servicio>(_context);
+            _servicios ??= new GenericRepository<Servicio>(_context, _tenantService);
 
         public IGenericRepository<MaterialDental> MaterialesDentales =>
-            _materialesDentales ??= new GenericRepository<MaterialDental>(_context);
+            _materialesDentales ??= new GenericRepository<MaterialDental>(_context, _tenantService);
 
         // ==================== MÉTODOS ====================
 

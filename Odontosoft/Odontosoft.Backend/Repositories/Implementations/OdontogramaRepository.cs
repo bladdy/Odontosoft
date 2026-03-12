@@ -3,6 +3,7 @@ using Odontosoft.Backend.Data;
 using Odontosoft.Backend.Repositories.Interfaces;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Responses;
+using Odontosoft.Backend.Services;
 
 namespace Odontosoft.Backend.Repositories.Implementations;
 
@@ -10,7 +11,7 @@ public class OdontogramaRepository : GenericRepository<Odontograma>, IOdontogram
 {
     private readonly DataContext _context;
 
-    public OdontogramaRepository(DataContext context) : base(context)
+    public OdontogramaRepository(DataContext context, ITenantService tenantService) : base(context, tenantService)
     {
         _context = context;
     }

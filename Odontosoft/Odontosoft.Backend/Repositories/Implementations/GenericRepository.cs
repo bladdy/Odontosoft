@@ -1,68 +1,80 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
 using Odontosoft.Backend.Repositories.Interfaces;
+using Odontosoft.Backend.Services;
 using Odontosoft.Shared.DTOs;
-using Odontosoft.Shared.Helpers;
-using Odontosoft.Shared.Interfaces;
 using Odontosoft.Shared.Responses;
 
 namespace Odontosoft.Backend.Repositories.Implementations;
 
-public class GenericRepository<T> : IGenericRepository<T>
-    where T : class, ITenantEntity
+public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly DataContext _context;
-    private readonly DbSet<T> _entity;
+    protected readonly DataContext _context;
+    protected readonly DbSet<T> _entity;
+    protected readonly ITenantService _tenantService;
 
-    public GenericRepository(DataContext context)
+    public GenericRepository(DataContext context, ITenantService tenantService)
     {
         _context = context;
         _entity = context.Set<T>();
+        _tenantService = tenantService;
     }
 
-    public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination)
+    public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync()
     {
-        var queryable = _entity.AsQueryable();
+        var list = await _entity.ToListAsync();
 
         return new ActionResponse<IEnumerable<T>>
         {
             WasSuccess = true,
-            Result = await queryable
-                .Paginate(pagination)
-                .ToListAsync()
+            Result = list
+        };
+    }
+
+    public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync(PaginationDTO pagination)
+    {
+        var query = _entity.AsQueryable();
+
+        var list = await query
+            .Skip((pagination.Page - 1) * pagination.RecordsNumber)
+            .Take(pagination.RecordsNumber)
+            .ToListAsync();
+
+        return new ActionResponse<IEnumerable<T>>
+        {
+            WasSuccess = true,
+            Result = list
         };
     }
 
     public virtual async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
     {
+        var total = await _entity.CountAsync();
+
         return new ActionResponse<int>
         {
             WasSuccess = true,
-            Result = await _entity.CountAsync()
+            Result = total
         };
     }
 
     public virtual async Task<ActionResponse<T>> GetAsync(Guid id)
     {
-        var row = await _entity
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _entity.FindAsync(id);
 
-        if (row == null)
-            return new ActionResponse<T> { Message = "Registro no encontrado" };
+        if (entity == null)
+        {
+            return new ActionResponse<T>
+            {
+                WasSuccess = false,
+                Message = "Registro no encontrado"
+            };
+        }
 
         return new ActionResponse<T>
         {
             WasSuccess = true,
-            Result = row
-        };
-    }
-
-    public virtual async Task<ActionResponse<IEnumerable<T>>> GetAsync()
-    {
-        return new ActionResponse<IEnumerable<T>>
-        {
-            WasSuccess = true,
-            Result = await _entity.ToListAsync()
+            Result = entity
         };
     }
 
@@ -80,15 +92,6 @@ public class GenericRepository<T> : IGenericRepository<T>
 
     public virtual async Task<ActionResponse<T>> UpdateAsync(T entity)
     {
-        var current = await _entity
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == entity.Id);
-
-        if (current == null)
-            return new ActionResponse<T> { Message = "Registro no encontrado" };
-
-        entity.TenantId = current.TenantId;
-
         _entity.Update(entity);
         await _context.SaveChangesAsync();
 
@@ -101,18 +104,29 @@ public class GenericRepository<T> : IGenericRepository<T>
 
     public virtual async Task<ActionResponse<T>> DeleteAsync(Guid id)
     {
-        var row = await _entity
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _entity.FindAsync(id);
 
-        if (row == null)
-            return new ActionResponse<T> { Message = "Registro no encontrado" };
+        if (entity == null)
+        {
+            return new ActionResponse<T>
+            {
+                WasSuccess = false,
+                Message = "Registro no encontrado"
+            };
+        }
 
-        _entity.Remove(row);
+        _entity.Remove(entity);
         await _context.SaveChangesAsync();
 
         return new ActionResponse<T>
         {
-            WasSuccess = true
+            WasSuccess = true,
+            Result = entity
         };
+    }
+
+    public virtual IQueryable<T> GetQueryable()
+    {
+        return _entity.AsQueryable();
     }
 }
