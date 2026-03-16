@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Odontosoft.Backend.Data;
 using Odontosoft.Backend.Services;
 using Odontosoft.Shared.DTOs;
+using Odontosoft.Shared.DTOs.Paciente;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Helpers;
 using Odontosoft.Shared.Responses;
@@ -244,6 +245,142 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
             {
                 WasSuccess = false,
                 Message = ex.Message
+            };
+        }
+    }
+
+    public async Task<ActionResponse<Paciente>> AddFullAsync(PacienteCreateDTO paciente)
+    {
+        try
+        {
+            var newPaciente = new Paciente
+            {
+                Id = Guid.NewGuid(),
+                TenantId = _tenantService.TenantId,
+                SucursalId = paciente.SucursalId,
+                NumeroExpediente = paciente.NumeroExpediente,
+                Nombre = paciente.Nombre,
+                Apellidos = paciente.Apellidos,
+                FechaNacimiento = paciente.FechaNacimiento,
+                Ocupacion = paciente.Ocupacion,
+                CodigoPostal = paciente.CodigoPostal,
+                EstadoCivil = paciente.EstadoCivil,
+                GrupoSanguineo = paciente.GrupoSanguineo,
+                Sexo = paciente.Sexo,
+                CURP = paciente.CURP,
+                RFC = paciente.RFC,
+                Email = paciente.Email,
+                Telefono = paciente.Telefono,
+                ContactoEmergencia = paciente.ContactoEmergencia,
+                TelefonoEmergencia = paciente.TelefonoEmergencia,
+                Direccion = paciente.Direccion,
+                Ciudad = paciente.Ciudad,
+                Estado = paciente.Estado,
+                Foto = paciente.Foto,
+                FechaRegistro = DateTime.UtcNow,
+                Activo = paciente.Activo
+            };
+            _context.Pacientes.Add(newPaciente);
+            await _context.SaveChangesAsync();
+            return new ActionResponse<Paciente>
+            {
+                WasSuccess = true,
+                Result = newPaciente
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ActionResponse<Paciente>
+            {
+                WasSuccess = false,
+                Message = $"Error al crear el paciente."
+            };
+        }
+    }
+
+    public async Task<ActionResponse<Paciente>> UpdateFullAsync(PacienteUpdateDTO paciente)
+    {
+        try
+        {
+            var existingPaciente = await _context.Pacientes.FindAsync(paciente.Id);
+            if (existingPaciente == null)
+            {
+                return new ActionResponse<Paciente>
+                {
+                    WasSuccess = false,
+                    Message = "Paciente no encontrado"
+                };
+            }
+            existingPaciente.SucursalId = paciente.SucursalId;
+            existingPaciente.NumeroExpediente = paciente.NumeroExpediente;
+            existingPaciente.Nombre = paciente.Nombre;
+            existingPaciente.Apellidos = paciente.Apellidos;
+            existingPaciente.FechaNacimiento = paciente.FechaNacimiento;
+            existingPaciente.Ocupacion = paciente.Ocupacion;
+            existingPaciente.CodigoPostal = paciente.CodigoPostal;
+            existingPaciente.EstadoCivil = paciente.EstadoCivil;
+            existingPaciente.GrupoSanguineo = paciente.GrupoSanguineo;
+            existingPaciente.Sexo = paciente.Sexo;
+            existingPaciente.CURP = paciente.CURP;
+            existingPaciente.RFC = paciente.RFC;
+            existingPaciente.Email = paciente.Email;
+            existingPaciente.Telefono = paciente.Telefono;
+            existingPaciente.ContactoEmergencia = paciente.ContactoEmergencia;
+            existingPaciente.TelefonoEmergencia = paciente.TelefonoEmergencia;
+            existingPaciente.Direccion = paciente.Direccion;
+            existingPaciente.Ciudad = paciente.Ciudad;
+            existingPaciente.Estado = paciente.Estado;
+            existingPaciente.Foto = paciente.Foto;
+            existingPaciente.Activo = paciente.Activo;
+
+            _context.Pacientes.Update(existingPaciente);
+            await _context.SaveChangesAsync();
+            return new ActionResponse<Paciente>
+            {
+                WasSuccess = true,
+                Result = existingPaciente
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ActionResponse<Paciente>
+            {
+                WasSuccess = false,
+                Message = $"Error al actualizar el paciente."
+            };
+        }
+    }
+
+    public async Task<ActionResponse<bool>> InactivateAsync(Guid pacienteId)
+    {
+        try
+        {
+            var existingPaciente = await _context.Pacientes.FindAsync(pacienteId);
+            if (existingPaciente == null)
+            {
+                return new ActionResponse<bool>
+                {
+                    WasSuccess = false,
+                    Message = "Paciente no encontrado",
+                    Result = false
+                };
+            }
+            existingPaciente.Activo = !existingPaciente.Activo;
+            _context.Pacientes.Update(existingPaciente);
+            await _context.SaveChangesAsync();
+            return new ActionResponse<bool>
+            {
+                WasSuccess = true,
+                Result = true
+            };
+        }
+        catch (Exception)
+        {
+            return new ActionResponse<bool>
+            {
+                WasSuccess = false,
+                Message = $"Error al actualizar el paciente.",
+                Result = false
             };
         }
     }
