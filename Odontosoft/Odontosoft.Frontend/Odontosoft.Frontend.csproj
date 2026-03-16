@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -50,9 +50,9 @@
     <Folder Include="Pages\NotaClinica\Components\" />
     <Folder Include="Pages\NotaClinica\Models\" />
     <Folder Include="Pages\NotaClinica\Services\" />
-    <Folder Include="Pages\Paciente\Components\" />
-    <Folder Include="Pages\Paciente\Models\" />
-    <Folder Include="Pages\Paciente\Services\" />
+    <Folder Include="Pages\Pacientes\Components\" />
+    <Folder Include="Pages\Pacientes\Models\" />
+    <Folder Include="Pages\Pacientes\Services\" />
     <Folder Include="Pages\Prescripcion\Components\" />
     <Folder Include="Pages\Prescripcion\Models\" />
     <Folder Include="Pages\Prescripcion\Services\" />
@@ -71,6 +71,10 @@
     <Folder Include="Pages\Usuario\Components\" />
     <Folder Include="Pages\Usuario\Models\" />
     <Folder Include="Pages\Usuario\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Odontosoft.Shared\Odontosoft.Shared.csproj" />
   </ItemGroup>
 
 </Project>

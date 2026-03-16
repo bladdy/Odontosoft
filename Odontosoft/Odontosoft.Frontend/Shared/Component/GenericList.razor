@@ -1,0 +1,34 @@
+﻿@typeparam Titem
+
+@if (MyList is null)
+{
+    @if (Loading is null)
+    {
+        <div class="flex justify-center items-center h-full py-6">
+            <Loading />
+        </div>
+    }
+    else
+    {
+        @Loading
+    }
+}
+else if (MyList.Count == 0)
+{
+    @if (NoRecords is null)
+    {
+        <div class="flex justify-center items-center py-6">
+            <p class="text-gray-500 text-sm">
+                No hay registros que mostrar
+            </p>
+        </div>
+    }
+    else
+    {
+        @NoRecords
+    }
+}
+else
+{
+    @Body
+}
