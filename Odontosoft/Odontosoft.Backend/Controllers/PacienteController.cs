@@ -53,4 +53,13 @@ public class PacienteController : GenericController<Paciente>
             return Ok(action.Result);
         return BadRequest(action.Message);
     }
+
+    [HttpGet("{id}")]
+    public override async Task<IActionResult> GetAsync(Guid id)
+    {
+        var action = await _pacienteRepository.GetPacienteCompletoAsync(id);
+        if (action.WasSuccess)
+            return Ok(action.Result);
+        return BadRequest(action.Message);
+    }
 }

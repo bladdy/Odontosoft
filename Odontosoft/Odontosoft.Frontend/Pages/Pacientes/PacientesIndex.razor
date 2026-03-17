@@ -1,69 +1,167 @@
 ﻿@page "/pacientes/lista"
-<h3>PacientesIndex</h3>
+@using Odontosoft.Frontend.Helpers
 
+<h3 class="text-2xl font-semibold mb-4">Pacientes</h3>
 
-<div class="mb-2" style="display: flex; flex-wrap:wrap; align-items: center; gap: 10px;">
-    <input style="width:400px;" type="text" class="form-control" placeholder="Buscar Evento..." @bind="Filter" />
+<div class="flex flex-wrap items-center gap-3 mb-3">
 
+    <input type="text"
+           placeholder="Buscar Paciente..."
+           @bind="Filter"
+           class="w-[400px] border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500" />
 
-    <div class="d-flex align-items-center gap-2">
-        <label class="mb-0">Mostrar:</label>
-        <InputSelect class="form-select" @bind-Value="SelectedPageSize" style="width:80px;">
+    <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-600">Mostrar:</label>
+
+        <select class="border border-gray-300 rounded-lg px-3 py-2 w-20"
+                @bind="SelectedPageSize"
+                @bind:after="PageSizeChanged">
+
+            <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
             <option value="100">100</option>
-        </InputSelect>
+
+        </select>
     </div>
-    <button type="button" class="btn btn-custom" @onclick="ApplyFilterAsync">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg> Buscar
+
+    <button type="button"
+            class="flex items-center gap-2 bg-gray-900 hover:bg-gray-700 text-white px-4 py-2 rounded-lg shadow-sm transition"
+            @onclick="ApplyFilterAsync">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="w-5 h-5"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+
+            <circle cx="10" cy="10" r="7"></circle>
+            <line x1="21" y1="21" x2="15" y2="15"></line>
+
+        </svg>
+
+        Buscar
+
     </button>
-    <button type="button" class="btn btn-custom" @onclick="CleanFilterAsync">
-        <i class="bi bi-x-circle" /> Limpiar
+
+    <button type="button"
+            class="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg shadow-sm transition"
+            @onclick="CleanFilterAsync">
+
+        Limpiar
+
     </button>
+
 </div>
 
+
 <GenericList MyList="Pacientes">
+
     <Body>
-        <table class="table table-striped table-hover table-bordered align-middle">
-            <thead class="" style="background-color:#3C6A79; color: white;">
-                <tr class="text-center">
-                    <th>Expediente</th>
-                    <th>Nombres</th>
-                    <th>Telefono</th>
-                    <th>Evento</th>
-                    <th>Fecha Nac.</th>
-                    <th>Enviado</th>
-                    <th>Entregado</th>
-                    <th>Error</th>
-                    <th>Mensaje</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var paciente in Pacientes!)
-                {
-                    <tr class="align-middle">
 
-                        <td>@paciente.NumeroExpediente</td>
-                        <td>@paciente.Nombre @paciente.Apellidos</td>
-                        <td>@paciente.Apellidos</td>
-                        <td>@paciente.Apellidos</td>
+        <div class="border border-gray-200 rounded-lg shadow-sm">
 
-                        <td>@paciente.FechaNacimiento</td>
-                        <td>
-                            <span class="badge bg-success">@paciente.Sexo</span>
-                        </td>
+            <table class="min-w-full min-h-full text-sm text-left border-collapse">
 
-                        <td>°°°</td>
+                <thead class="bg-gray-900 text-white">
+
+                    <tr class="">
+
+                        <th class="px-4 py-2">Expediente</th>
+                        <th class="px-4 py-2">Documento</th>
+                        <th class="px-4 py-2">Nombres</th>
+                        <th class="px-4 py-2">Telefono</th>
+                        <th class="px-4 py-2">Fecha Nac.</th>
+                        <th class="px-4 py-2">Edad</th>
+                        <th class="px-4 py-2">Sexo</th>
+                        <th class="px-4 py-2"></th>
 
                     </tr>
-                }
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-center my-3">
+
+                </thead>
+
+                <tbody class="divide-y divide-gray-200">
+
+                    @foreach (var paciente in Pacientes!)
+                    {
+                        <tr class="hover:bg-gray-50">
+
+                            <td class="px-4 py-2">@paciente.NumeroExpediente</td>
+
+                            <td class="px-4 py-2">
+                                @paciente.CURP
+                            </td>
+                            <td class="px-4 py-2">
+                                @paciente.Nombre @paciente.Apellidos
+                            </td>
+
+                            <td class="px-4 py-2">
+                                @paciente.Telefono
+                            </td>
+
+                            <td class="px-4 py-2">
+                                @paciente.FechaNacimiento.ToString("dd/MM/yyyy")
+                            </td>
+                            <td class="px-4 py-2">
+                                (@DateHelper.GetAge(paciente.FechaNacimiento) años)
+                            </td>
+                            <td class="px-4 py-2">
+
+                                <span class="bg-gray-500 text-white text-xs px-2 py-1 rounded-full">
+                                    @paciente.Sexo.ToUpper()
+                                </span>
+
+                            </td>
+
+
+
+                            <td class="px-4 py-2 relative">
+                                <button @onclick="() => ToggleMenu(paciente.Id)"
+                                        class="p-2 rounded-md hover:bg-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+                                </button>
+                                @if (openMenuId == paciente.Id)
+                                {
+                                    <div class="absolute right-20 top-8 w-28 bg-white border border-gray-200 rounded-lg shadow-lg z-[9999]">
+
+                                        <button @onclick="() => VerPaciente(paciente.Id)"
+                                                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                                            Ver
+                                        </button>
+
+                                        <button @onclick="() => CrearCita(paciente.Id)"
+                                                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                                            Cita
+                                        </button>
+
+                                        <button @onclick="() => EditarPaciente(paciente.Id)"
+                                                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                                            Editar
+                                        </button>
+
+                                    </div>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="flex justify-center my-4">
+
             <Pagination CurrentPage="currentPage"
                         TotalPages="totalPages"
                         SelectedPage="SelectedPage" />
+
         </div>
 
     </Body>
+
 </GenericList>

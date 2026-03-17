@@ -4,140 +4,158 @@ using Odontosoft.Frontend.Repositories;
 using Odontosoft.Shared.Entities;
 using System.Net;
 
-namespace Odontosoft.Frontend.Pages.Pacientes
+namespace Odontosoft.Frontend.Pages.Pacientes;
+
+public partial class PacientesIndex
 {
-    public partial class PacientesIndex
+    private int totalPages;
+    private int currentPage = 1;
+    private Guid? openMenuId;
+
+    [Parameter, SupplyParameterFromQuery] public int? Page { get; set; } = 1;
+
+    [Parameter, SupplyParameterFromQuery]
+    public int? SelectedPageSize { get; set; }
+
+    [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+
+    [Inject] private IRepository Repository { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = default!;
+    [Parameter, SupplyParameterFromQuery] public int? RecordsNumber { get; set; } = 10;
+    public List<Paciente> Pacientes { get; set; } = [];
+
+    protected override async Task OnParametersSetAsync()
     {
-        private int totalPages;
-        private int currentPage = 1;
+        SelectedPageSize ??= 10;
+        RecordsNumber ??= SelectedPageSize;
 
-        [Parameter, SupplyParameterFromQuery] public string? Page { get; set; }
-        [Parameter, SupplyParameterFromQuery] public int? SelectedPageSize { get; set; } = 25;
-        [Parameter, SupplyParameterFromQuery] public int? RecordsNumber { get; set; }
-        [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+        currentPage = Page ?? 1;
 
-        [Inject] private IRepository Repository { get; set; } = default!;
-
-        [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
-        [Inject] private SweetAlertService SweetAlertService { get; set; } = default!;
-
-        public List<Paciente> Pacientes { get; set; } = [];
-
-        protected override async Task OnParametersSetAsync()
+        await LoadPacientes(currentPage);
+    }
+    private async Task LoadPacientes(int page = 1)
+    {
+        if (Page != null)
         {
-            // Validar RecordsNumber
-            RecordsNumber = RecordsNumber is null or <= 0 ? 15 : RecordsNumber;
+            page = Page.Value;
+        }
+        var ok = await LoadListAsync(currentPage);
+        if (ok)
+        {
+            await LoadPagesAsync();
+        }
+    }
 
-            // Validar Page desde Query
-            if (!string.IsNullOrWhiteSpace(Page) && int.TryParse(Page, out var pageFromQuery))
+    private async Task LoadPagesAsync()
+    {
+        try
+        {
+            var url = $"api/Paciente/totalRecords?RecordsNumber={RecordsNumber}";
+
+            if (!string.IsNullOrWhiteSpace(Filter))
             {
-                currentPage = pageFromQuery <= 0 ? 1 : pageFromQuery;
+                url += $"&Filter={Filter}";
             }
-            else
+
+            var responseHttp = await Repository.GetAsync<int>(url);
+
+            if (responseHttp.Error)
             {
-                currentPage = 1;
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
             }
-            await LoadPacientes(currentPage);
+
+            totalPages = responseHttp.Response;
         }
-
-        private async Task LoadPacientes(int page)
+        catch (Exception ex)
         {
-            var ok = await LoadListAsync(page);
+            await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+        }
+    }
 
-            if (ok)
+    private async Task PageSizeChanged()
+    {
+        currentPage = 1;
+        await LoadPacientes(currentPage);
+    }
+
+    private async Task ApplyFilterAsync()
+    {
+        currentPage = 1;
+        await LoadPacientes(currentPage);
+    }
+
+    private async Task CleanFilterAsync()
+    {
+        Filter = string.Empty;
+        currentPage = 1;
+        await LoadPacientes(currentPage);
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await LoadPacientes(currentPage);
+    }
+
+    private async Task<bool> LoadListAsync(int page)
+    {
+        try
+        {
+            RecordsNumber = SelectedPageSize ?? 10;
+            var url = $"api/Paciente/paginated?Page={page}&RecordsNumber={RecordsNumber}";
+
+            if (!string.IsNullOrWhiteSpace(Filter))
             {
-                await LoadPagesAsync();
+                url += $"&Filter={Filter}";
             }
-        }
+            var responseHttp = await Repository.GetAsync<List<Paciente>>(url);
 
-        private async Task LoadPagesAsync()
-        {
-            try
+            if (responseHttp.Error)
             {
-                var url = $"api/Paciente/totalRecords?RecordsNumber={RecordsNumber}";
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
 
-                if (SelectedPageSize != null)
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
-                    url += $"&PageSize={SelectedPageSize}";
-                }
-                if (!string.IsNullOrWhiteSpace(Filter))
-                {
-                    url += $"&Filter={Filter}";
-                }
-                var responseHttp = await Repository.GetAsync<int>(url);
-
-                if (responseHttp.Error)
-                {
-                    var message = await responseHttp.GetErrorMessageAsync();
-                    await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                    return;
-                }
-
-                // El backend ya devuelve el total de páginas
-                totalPages = responseHttp.Response;
-            }
-            catch (Exception ex)
-            {
-                await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
-            }
-        }
-
-        private async Task ApplyFilterAsync()
-        {
-            int page = 1;
-            await LoadPacientes(page);
-        }
-
-        private async Task CleanFilterAsync()
-        {
-            Filter = string.Empty;
-            await LoadPacientes(1);
-        }
-
-        private async Task SelectedPage(int page)
-        {
-            currentPage = page;
-            await LoadPacientes(currentPage);
-        }
-
-        private async Task<bool> LoadListAsync(int page)
-        {
-            try
-            {
-                var url = $"api/Paciente/paginated?PageNumber={page}";
-                if (SelectedPageSize != null)
-                {
-                    url += $"&PageSize={SelectedPageSize}";
-                }
-                if (!string.IsNullOrWhiteSpace(Filter))
-                {
-                    url += $"&Filter={Filter}";
-                }
-                var responseHttp = await Repository.GetAsync<List<Paciente>>(url);
-
-                if (responseHttp.Error)
-                {
-                    var message = await responseHttp.GetErrorMessageAsync();
-
-                    await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-
-                    if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        NavigationManager.NavigateTo("/events");
-                    }
-
-                    return false;
+                    NavigationManager.NavigateTo("/pacientes");
                 }
 
-                Pacientes = responseHttp.Response ?? new();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
                 return false;
             }
+
+            Pacientes = responseHttp.Response ?? [];
+            return true;
         }
+        catch (Exception ex)
+        {
+            await SweetAlertService.FireAsync("Error", ex.Message, SweetAlertIcon.Error);
+            return false;
+        }
+    }
+
+    private void ToggleMenu(Guid id)
+    {
+        if (openMenuId == id)
+            openMenuId = null;
+        else
+            openMenuId = id;
+    }
+
+    private void VerPaciente(Guid id)
+    {
+        NavigationManager.NavigateTo($"/pacientes/{id}");
+    }
+
+    private void CrearCita(Guid id)
+    {
+        NavigationManager.NavigateTo($"/citas/nueva/{id}");
+    }
+
+    private void EditarPaciente(Guid id)
+    {
+        NavigationManager.NavigateTo($"/pacientes/editar/{id}");
     }
 }

@@ -49,7 +49,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public virtual async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
     {
-        var total = await _entity.CountAsync();
+        var query = _entity.AsQueryable();
+        double totalRecords = await query.CountAsync();
+
+        var total = (int)Math.Ceiling(totalRecords / pagination.RecordsNumber);
 
         return new ActionResponse<int>
         {
