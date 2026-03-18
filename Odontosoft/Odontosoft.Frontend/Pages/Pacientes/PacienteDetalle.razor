@@ -1,7 +1,9 @@
 ﻿@page "/pacientes/{Id:guid}"
 @using Odontosoft.Frontend.Helpers
+@using Odontosoft.Shared.Enums
 
-<h3 class="text-2xl font-semibold mb-6">Detalle del Paciente</h3>
+<h3 class="mb-6 text-2xl font-semibold">Detalle del Paciente
+</h3>
 
 @if (Paciente == null)
 {
@@ -10,196 +12,242 @@
 else
 {
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 lg:gap-6">
 
-        <!-- FOTO Y ESTADO -->
-        <div class="bg-white shadow rounded-xl p-6 flex flex-col items-center mb-6 lg:mb-0">
+    <!-- FOTO Y ESTADO -->
+    <div class="p-6 mb-6 bg-white shadow rounded-xl lg:mb-0 lg:col-span-12">
 
-            <img src="/user.jpg"
-                 class="w-32 h-32 rounded-full border mb-4" />
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
-            <h4 class="text-lg font-semibold">
-                @Paciente.Nombre @Paciente.Apellidos
-            </h4>
+            <!-- IZQUIERDA: FOTO + DATOS -->
+            <div class="flex flex-col items-center w-full gap-4 sm:flex-row sm:items-center sm:gap-6">
 
-            <span class="text-gray-500 text-sm">
-                Expediente: @Paciente.NumeroExpediente
-            </span>
-
-            <span class="mt-3 px-3 py-1 text-xs rounded-full
-            @(Paciente.Activo ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700")">
-
-                @(Paciente.Activo ? "Activo" : "Inactivo")
-
-            </span>
-
-        </div>
-
-        <!-- DATOS PERSONALES -->
-        <div class="bg-white shadow rounded-xl p-6 col-span-2">
-
-            <h4 class="text-lg font-semibold mb-4">Información Personal</h4>
-
-            <div class="grid grid-cols-2 gap-4 text-sm">
-
-                <div>
-                    <label class="text-gray-500">Nombre</label>
-                    <p>@Paciente.Nombre</p>
+                <!-- FOTO -->
+                <div class="flex-shrink-0 w-24 h-24 overflow-hidden bg-gray-100 rounded-full md:w-32 md:h-32">
+                    <img src="/user.jpg"
+                        class="object-cover w-full h-full" />
                 </div>
 
-                <div>
-                    <label class="text-gray-500">Apellidos</label>
-                    <p>@Paciente.Apellidos</p>
+                <!-- DATOS -->
+                <div class="flex flex-col items-center w-full text-center sm:items-start sm:text-left">
+
+                    <span class="text-sm text-gray-500">
+                        Expediente: @Paciente.NumeroExpediente
+                    </span>
+
+                    <h4 class="text-lg font-semibold md:text-xl">
+                        @Paciente.Nombre @Paciente.Apellidos
+                    </h4>
+
+                    <p class="text-sm text-gray-500">
+                        @Paciente.Direccion, @Paciente.Ciudad, @Paciente.Estado, @Paciente.CodigoPostal
+                    </p>
+
+                    <!-- INFO EXTRA -->
+                    <div class="flex flex-col gap-2 mt-3 text-sm text-gray-500 sm:flex-row sm:gap-6">
+
+                        <div class="flex items-center justify-center gap-2 sm:justify-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-phone"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" /></svg>
+                            Teléfono:
+                            <span class="text-gray-900">@Paciente.Telefono</span>
+                        </div>
+
+                        <div class="flex items-center justify-center gap-2 sm:justify-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-time"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" /><path d="M14 18a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M15 3v4" /><path d="M7 3v4" /><path d="M3 11h16" /><path d="M18 16.496v1.504l1 1" /></svg>
+                            Última Visita:
+                            <span class="text-gray-900">
+                                @(
+                                    Paciente.Citas?
+                                        .Where(d => d.EstadoCita == EstadoCita.Completada.ToString())
+                                        .OrderByDescending(d => d.FechaHora)
+                                        .FirstOrDefault()?.FechaHora.ToString("dd/MM/yyyy")
+                                    ?? "Sin registros"
+                                )
+                            </span>
+                        </div>
+                        
+
+                    </div>
+
                 </div>
 
-                <div>
-                    <label class="text-gray-500">Fecha Nacimiento</label>
-                    <p>@Paciente.FechaNacimiento.ToString("dd/MM/yyyy")</p>
-                </div>
+            </div>
 
-                <div>
-                    <label class="text-gray-500">Edad</label>
-                    <p>@DateHelper.GetAge(Paciente.FechaNacimiento) años</p>
-                </div>
+            <!-- DERECHA: ESTADO + BOTÓN -->
+            <div class="flex flex-col items-center justify-center gap-3 sm:justify-center">
 
-                <div>
-                    <label class="text-gray-500">Sexo</label>
-                    <p>@Paciente.Sexo</p>
-                </div>
+                <span class="px-3 py-1 text-xs rounded-full whitespace-nowrap
+                    @(Paciente.Activo ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700")">
+                    @(Paciente.Activo ? "Activo" : "Inactivo")
+                </span>
 
-                <div>
-                    <label class="text-gray-500">Estado Civil</label>
-                    <p>@Paciente.EstadoCivil</p>
-                </div>
-
-                <div>
-                    <label class="text-gray-500">CURP</label>
-                    <p>@Paciente.CURP</p>
-                </div>
-
-                <div>
-                    <label class="text-gray-500">RFC</label>
-                    <p>@Paciente.RFC</p>
-                </div>
-
-                <div>
-                    <label class="text-gray-500">Grupo Sanguíneo</label>
-                    <p>@Paciente.GrupoSanguineo</p>
-                </div>
-
-                <div>
-                    <label class="text-gray-500">Ocupación</label>
-                    <p>@Paciente.Ocupacion</p>
-                </div>
+                <button class="px-4 py-2 text-sm text-white bg-gray-500 rounded-xl hover:bg-gray-700 whitespace-nowrap">
+                    Agendar Cita
+                </button>
 
             </div>
 
         </div>
 
-    </div>
+</div>
+
+
+</div>
+<div class="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-12">
 
     <!-- CONTACTO -->
+    <div class="p-6 bg-white shadow rounded-xl lg:col-span-5">
 
-    <div class="bg-white shadow rounded-xl p-6 mt-6">
+        <h4 class="mb-4 text-lg font-semibold">Información</h4>
 
-        <h4 class="text-lg font-semibold mb-4">Información de Contacto</h4>
-
-        <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
 
             <div>
-                <label class="text-gray-500">Teléfono</label>
-                <p>@Paciente.Telefono</p>
+                <label class="block text-gray-500">Fecha de Nacimiento</label>
+                <p class="text-gray-900 break-words">@Paciente.FechaNacimiento.ToString("dd MMM yyyy") (@DateHelper.GetAge(Paciente.FechaNacimiento) años)</p>
+            </div>
+            <div>
+                <label class="block text-gray-500">Estado Civil</label>
+                <p class="text-gray-900 break-words">@Paciente.EstadoCivil</p>
+            </div>
+            <div>
+                <label class="block text-gray-500">Género</label>
+                <p class="text-gray-900 break-words">@Paciente.Sexo</p>
             </div>
 
             <div>
-                <label class="text-gray-500">Email</label>
-                <p>@Paciente.Email</p>
+                <label class="block text-gray-500">Grupo Sanguíneo</label>
+                <p class="text-gray-900 break-words">@Paciente.GrupoSanguineo</p>
             </div>
 
             <div>
-                <label class="text-gray-500">Teléfono Emergencia</label>
-                <p>@Paciente.TelefonoEmergencia</p>
+                <label class="block text-gray-500">Telefono</label>
+                <p class="text-gray-900 break-words">@Paciente.Telefono</p>
             </div>
-
             <div>
-                <label class="text-gray-500">Contacto Emergencia</label>
-                <p>@Paciente.ContactoEmergencia</p>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- DIRECCIÓN -->
-
-    <div class="bg-white shadow rounded-xl p-6 mt-6">
-
-        <h4 class="text-lg font-semibold mb-4">Dirección</h4>
-
-        <div class="grid grid-cols-2 gap-4 text-sm">
-
-            <div>
-                <label class="text-gray-500">Dirección</label>
-                <p>@Paciente.Direccion</p>
-            </div>
-
-            <div>
-                <label class="text-gray-500">Ciudad</label>
-                <p>@Paciente.Ciudad</p>
-            </div>
-
-            <div>
-                <label class="text-gray-500">Estado</label>
-                <p>@Paciente.Estado</p>
-            </div>
-
-            <div>
-                <label class="text-gray-500">Código Postal</label>
-                <p>@Paciente.CodigoPostal</p>
+                <label class="block text-gray-500">Contacto Emergencia</label>
+                <p class="text-gray-900 break-words">@Paciente.ContactoEmergencia</p>
             </div>
 
         </div>
 
     </div>
 
-    <!-- CLÍNICA Y SUCURSAL -->
+    <!-- Signos Vitales  -->
+<div class="p-6 bg-white shadow rounded-xl lg:col-span-7">
 
-    <div class="bg-white shadow rounded-xl p-6 mt-6">
+    <h4 class="mb-4 text-lg font-semibold">Signos Vitales (Última Consulta)</h4>
 
-        <h4 class="text-lg font-semibold mb-4">Clínica</h4>
+    @{
+        var ultimaCita = Paciente?.Citas?
+            .Where(d => d.EstadoCita == EstadoCita.Completada.ToString())
+            .OrderByDescending(d => d.FechaHora)
+            .FirstOrDefault();
 
-        <div class="grid grid-cols-2 gap-4 text-sm">
+        var ultimoSigno = ultimaCita?.Consulta;
+    }
+
+    @if (ultimoSigno != null)
+    {
+        <div class="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
 
             <div>
-                <label class="text-gray-500">Clínica</label>
-                <p>@Paciente.Sucursal?.Clinica?.Nombre</p>
+                <label class="block text-gray-500">Peso</label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.Peso?.ToString() ?? "N/A") kg
+                </p>
             </div>
 
             <div>
-                <label class="text-gray-500">Sucursal</label>
-                <p>@Paciente.Sucursal?.Nombre</p>
+                <label class="block text-gray-500">Altura</label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.Altura?.ToString() ?? "N/A") cm
+                </p>
             </div>
 
             <div>
-                <label class="text-gray-500">Teléfono</label>
-                <p>@Paciente.Sucursal?.Telefono</p>
+                <label class="block text-gray-500">Presión Arterial</label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.PresionArterial ?? "N/A") mmHg    
+                </p>
             </div>
 
             <div>
-                <label class="text-gray-500">Email</label>
-                <p>@Paciente.Sucursal?.Email</p>
+                <label class="block text-gray-500">Frecuencia Cardíaca</label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.FrecuenciaCardiaca?.ToString() ?? "N/A") bpm  
+                </p>
+            </div>
+
+            <div>
+                <label class="block text-gray-500">Temperatura</label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.Temperatura?.ToString() ?? "N/A") °C
+                </p>
+            </div>
+            <div>
+                <label class="block text-gray-500">IMC
+
+                    @if(ultimoSigno.IMC < 18.5m)
+                    {
+                        <span class="px-2 py-1 ml-2 text-xs text-blue-700 bg-blue-100 rounded-full">
+                            Bajo Peso
+                        </span>
+                    }
+                    else if(ultimoSigno.IMC >= 18.5m && ultimoSigno.IMC < 25)
+                    {
+                        <span class="px-2 py-1 ml-2 text-xs text-green-700 bg-green-100 rounded-full">
+                            Normal
+                        </span>
+                    }
+                    else if(ultimoSigno.IMC >= 25 && ultimoSigno.IMC < 30)
+                    {
+                        <span class="px-2 py-1 ml-2 text-xs text-yellow-700 bg-yellow-100 rounded-full">
+                            Sobrepeso
+                        </span>
+                    }
+                    else if(ultimoSigno.IMC >= 30)
+                    {
+                        <span class="px-2 py-1 ml-2 text-xs text-red-700 bg-red-100 rounded-full">
+                            Obesidad
+                        </span>
+                    }
+                </label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.IMC?.ToString() ?? "N/A") kg/m²
+                </p>
+            </div>
+            <div>
+                <label class="block text-gray-500">Frecuencia Respiratoria</label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.FrecuenciaRespiratoria?.ToString() ?? "N/A")  rpm
+                </p>
+            </div>
+            <div>
+                <label class="block text-gray-500">Saturación de Oxígeno</label>
+                <p class="text-gray-900">
+                    @(ultimoSigno.SaturacionO2?.ToString() ?? "N/A") %
+                </p>
             </div>
 
         </div>
+    }
+    else
+    {
+        <div class="text-sm text-center text-gray-500">
+            No hay signos vitales registrados.
+        </div>
+    }
 
-    </div>
+</div>
 
-}
+</div>
+
 <!-- TABS -->
 
-<div class="bg-white shadow rounded-xl mt-6">
+<div class="mt-6 bg-white shadow rounded-xl min-h-[500px]">
 
-    <div class="flex border-b text-sm">
+    <div class="flex text-sm border-b">
 
         <button @onclick="@(() => activeTab = "citas")" 
             
@@ -232,23 +280,39 @@ else
                     <thead class="bg-gray-100">
                         <tr>
                             <th class="px-4 py-2">Número</th>
-                            <th class="px-4 py-2">Fecha</th>
-                            <th class="px-4 py-2">Estado</th>
+                            <th class="px-4 py-2">Fecha y Hora</th>
                             <th class="px-4 py-2">Motivo</th>
+                            <th class="px-4 py-2">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var cita in Paciente.Citas!)
+                        @if (Paciente?.Citas != null && Paciente.Citas.Any())
                         {
-                            <tr class="border-b">
-                                <td class="px-4 py-2">@cita.NumeroCita</td>
-                                <td class="px-4 py-2">@cita.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
-                                <td class="px-4 py-2">
-                                    <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700">
-                                        @cita.EstadoCita
-                                    </span>
+                            foreach (var cita in Paciente.Citas)
+                            {
+                                <tr class="border-b">
+                                    <td class="px-4 py-2">@cita?.NumeroCita</td>
+
+                                    <td class="px-4 py-2">
+                                        @(cita?.FechaHora.ToString("dd MMM yyyy HH:mm") ?? "Sin fecha")
+                                    </td>
+
+                                    <td class="px-4 py-2">@cita?.MotivoConsulta</td>
+
+                                    <td class="px-4 py-2">
+                                        <span class="px-2 py-1 text-xs text-blue-700 bg-blue-100 rounded-full">
+                                            @cita?.EstadoCita
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="px-4 py-2 text-center text-gray-500">
+                                    No hay citas registradas.
                                 </td>
-                                <td class="px-4 py-2">@cita.MotivoConsulta</td>
                             </tr>
                         }
                     </tbody>
@@ -262,13 +326,13 @@ else
         <!-- ===================== -->
         @if (activeTab == "alergias")
         {
-            <div class="grid md:grid-cols-2 gap-4">
+            <div class="grid gap-4 md:grid-cols-2">
 
                 @foreach (var alergia in Paciente!.Alergias!)
                 {
-                    <div class="border rounded-lg p-4">
+                    <div class="p-4 border rounded-lg">
 
-                        <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center justify-between mb-2">
                             <strong>@alergia.Nombre</strong>
 
                             <span class="text-xs px-2 py-1 rounded-full
@@ -281,7 +345,7 @@ else
                         </div>
 
                         <p class="text-sm text-gray-500">@alergia.Tipo</p>
-                        <p class="text-sm mt-2">@alergia.Descripcion</p>
+                        <p class="mt-2 text-sm">@alergia.Descripcion</p>
 
                     </div>
                 }
@@ -298,7 +362,7 @@ else
 
                 @foreach (var item in Paciente!.Antecedentes!)
                 {
-                    <div class="border-l-4 border-gray-300 pl-4">
+                    <div class="pl-4 border-l-4 border-gray-300">
 
                         <div class="flex justify-between">
                             <strong>@item.Tipo</strong>
@@ -319,3 +383,5 @@ else
     </div>
 
 </div>
+
+}

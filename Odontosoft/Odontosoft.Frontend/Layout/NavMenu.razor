@@ -1,13 +1,13 @@
 ﻿<!-- Mobile toggle -->
-<button class="md:hidden fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded-lg shadow"
+<button class="fixed z-50 p-2 text-white bg-gray-900 rounded-lg shadow md:hidden top-4 left-4"
         @onclick="ToggleNavMenu">
-    ☰
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-menu-2"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M21 6a1 1 0 0 1 -1 1h-16a1 1 0 1 1 0 -2h16a1 1 0 0 1 1 1" /><path d="M21 12a1 1 0 0 1 -1 1h-16a1 1 0 0 1 0 -2h16a1 1 0 0 1 1 1" /><path d="M21 18a1 1 0 0 1 -1 1h-16a1 1 0 0 1 0 -2h16a1 1 0 0 1 1 1" /></svg>
 </button>
 
 <!-- Overlay mobile -->
 @if (collapseNavMenu)
 {
-    <div class="fixed inset-0 bg-black/50 z-40 md:hidden" @onclick="ToggleNavMenu"></div>
+    <div class="fixed inset-0 z-40 bg-black/50 md:hidden" @onclick="ToggleNavMenu"></div>
 }
 
 <!-- Sidebar -->
@@ -21,7 +21,7 @@
 ">
 
     <!-- Logo -->
-    <div class="h-16 flex items-center justify-center text-xl font-bold border-b border-gray-700">
+    <div class="flex items-center justify-center h-16 text-xl font-bold border-b border-gray-700">
         Odontosoft
     </div>
 
@@ -30,7 +30,7 @@
 
         <!-- Home -->
         <NavLink href="/" Match="NavLinkMatch.All"
-                 class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+                 class="flex items-center gap-3 px-3 py-2 transition rounded hover:bg-gray-700"
                  activeClass="bg-gray-700"
                  >
             <!-- Icono SVG -->
@@ -51,7 +51,7 @@
         <!-- Paciente (Multinivel) -->
         <div class="block">
             <button @onclick="TogglePacienteMenu"
-                    class="w-full flex items-center justify-between px-3 py-2 rounded hover:bg-gray-700 transition">
+                    class="flex items-center justify-between w-full px-3 py-2 transition rounded hover:bg-gray-700">
 
                 <!-- Grupo Icono + Texto -->
                 <div class="flex items-center gap-3">
@@ -82,15 +82,13 @@
 
 
             <!-- Submenú Pacientes -->
-            <div class="pl-4 mt-1 space-y-1
-                    overflow-hidden
-                    transition-all duration-300 ease-in-out"
+            <div class="pl-4 mt-1 space-y-1 overflow-hidden transition-all duration-300 ease-in-out"
                  style="@($"max-height: {(showPacienteSubMenu ? "500px" : "0")}; opacity: {(showPacienteSubMenu ? "1" : "0")};")">
 
 
                 <!-- Home -->
                 <NavLink href="/pacientes/lista" Match="NavLinkMatch.All"
-                         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+                         class="flex items-center gap-3 px-3 py-2 transition rounded hover:bg-gray-700"
                          activeClass="bg-gray-700"
                          >
                     <!-- Icono SVG -->
@@ -105,7 +103,7 @@
                     <span class="flex-1">Lista de Pacientes</span>
                 </NavLink>
                 <NavLink href="/pacientes/historial" Match="NavLinkMatch.All"
-                         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+                         class="flex items-center gap-3 px-3 py-2 transition rounded hover:bg-gray-700"
                          activeClass="bg-gray-700"
                          >
                     <!-- Icono SVG -->
@@ -127,7 +125,7 @@
                     <span class="flex-1">Historial de Pacientes</span>
                 </NavLink>
                 <NavLink href="/pacientes/citas" Match="NavLinkMatch.All"
-                         class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-700 transition"
+                         class="flex items-center gap-3 px-3 py-2 transition rounded hover:bg-gray-700"
                          activeClass="bg-gray-700"
                          >
                     <!-- Icono SVG -->

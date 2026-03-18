@@ -61,6 +61,8 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
             var paciente = await _context.Pacientes
                 .Include(p => p.Sucursal).ThenInclude(s => s.Clinica)
                 .Include(p => p.Citas)
+                .ThenInclude(p => p.Consulta)
+                .ThenInclude(p => p.Medico)
                 .Include(p => p.Alergias.Where(a => a.Activo))
                 .Include(p => p.Antecedentes.Where(a => a.Activo))
                 .FirstOrDefaultAsync(p => p.Id == pacienteId);
