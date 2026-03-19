@@ -50,7 +50,6 @@
     <Folder Include="Pages\NotaClinica\Components\" />
     <Folder Include="Pages\NotaClinica\Models\" />
     <Folder Include="Pages\NotaClinica\Services\" />
-    <Folder Include="Pages\Pacientes\Components\" />
     <Folder Include="Pages\Pacientes\Models\" />
     <Folder Include="Pages\Pacientes\Services\" />
     <Folder Include="Pages\Prescripcion\Components\" />

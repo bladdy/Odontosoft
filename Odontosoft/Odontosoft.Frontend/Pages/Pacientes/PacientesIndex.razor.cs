@@ -1,6 +1,7 @@
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
 using Odontosoft.Frontend.Repositories;
+using Odontosoft.Shared.DTOs.Paciente;
 using Odontosoft.Shared.Entities;
 using System.Net;
 
@@ -12,6 +13,7 @@ public partial class PacientesIndex
     private int currentPage = 1;
     private Guid? openMenuId;
 
+    private bool showModal = false;
     [Parameter, SupplyParameterFromQuery] public int? Page { get; set; } = 1;
 
     [Parameter, SupplyParameterFromQuery]
@@ -34,6 +36,7 @@ public partial class PacientesIndex
 
         await LoadPacientes(currentPage);
     }
+
     private async Task LoadPacientes(int page = 1)
     {
         if (Page != null)
@@ -98,6 +101,18 @@ public partial class PacientesIndex
     {
         currentPage = page;
         await LoadPacientes(currentPage);
+    }
+
+    private void OpenModal() => showModal = true;
+
+    private void CloseModal() => showModal = false;
+
+    private async void OnPacienteCreated(PacienteCreateDTO paciente)
+    {
+        // refrescar lista, toast, etc
+
+        await LoadPacientes(currentPage);
+        showModal = false;
     }
 
     private async Task<bool> LoadListAsync(int page)

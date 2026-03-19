@@ -98,7 +98,9 @@ else
     <!-- CONTACTO -->
     <div class="p-6 bg-white shadow rounded-xl lg:col-span-5">
 
-        <h4 class="mb-4 text-lg font-semibold">Información</h4>
+        <h4 class="flex items-center gap-2 mb-4 text-lg font-semibold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" /><path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39" /></svg>
+            Información</h4>
 
         <div class="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
 
@@ -136,7 +138,9 @@ else
     <!-- Signos Vitales  -->
 <div class="p-6 bg-white shadow rounded-xl lg:col-span-7">
 
-    <h4 class="mb-4 text-lg font-semibold">Signos Vitales (Última Consulta)</h4>
+    <h4 class="flex items-center gap-2 mb-4 text-lg font-semibold">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-heartbeat"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 13.572l-7.5 7.428l-2.896 -2.868m-6.117 -8.104a5 5 0 0 1 9.013 -3.022a5 5 0 1 1 7.5 6.572" /><path d="M3 13h2l2 3l2 -6l1 3h3" /></svg>
+    Signos Vitales (Última Consulta)</h4>
 
     @{
         var ultimaCita = Paciente?.Citas?
@@ -294,7 +298,7 @@ else
                                     <td class="px-4 py-2">@cita?.NumeroCita</td>
 
                                     <td class="px-4 py-2">
-                                        @(cita?.FechaHora.ToString("dd MMM yyyy HH:mm") ?? "Sin fecha")
+                                        @(cita?.FechaHora.ToString("dd MMM yyyy HH:mm tt") ?? "Sin fecha")
                                     </td>
 
                                     <td class="px-4 py-2">@cita?.MotivoConsulta</td>

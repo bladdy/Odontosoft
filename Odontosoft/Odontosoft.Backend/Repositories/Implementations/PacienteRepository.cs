@@ -6,6 +6,7 @@ using Odontosoft.Shared.DTOs.Paciente;
 using Odontosoft.Shared.Entities;
 using Odontosoft.Shared.Helpers;
 using Odontosoft.Shared.Responses;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Odontosoft.Backend.Repositories.Implementations;
 
@@ -50,6 +51,39 @@ public class PacienteRepository : GenericRepository<Paciente>, IPacienteReposito
             {
                 WasSuccess = false,
                 Message = ex.Message
+            };
+        }
+    }
+
+    public override async Task<ActionResponse<int>> GetTotalRecordsAsync(PaginationDTO pagination)
+    {
+        try
+        {
+            var queryable = _context.Pacientes
+                .Include(p => p.Sucursal)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(pagination.Filter))
+            {
+                queryable = queryable.Where(p =>
+                    p.Nombre.Contains(pagination.Filter) ||
+                    p.Apellidos.Contains(pagination.Filter) ||
+                    p.NumeroExpediente.Contains(pagination.Filter));
+            }
+            double totalRecords = await queryable.CountAsync();
+            var total = (int)Math.Ceiling(totalRecords / pagination.RecordsNumber);
+            return new ActionResponse<int>
+            {
+                WasSuccess = true,
+                Result = total
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ActionResponse<int>
+            {
+                WasSuccess = false,
+                Result = 0
             };
         }
     }

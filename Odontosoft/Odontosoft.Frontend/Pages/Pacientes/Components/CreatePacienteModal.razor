@@ -1,0 +1,67 @@
+﻿@inherits ComponentBase
+@if (IsOpen)
+{
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+
+        <!-- MODAL -->
+        <div class="w-full max-w-2xl p-6 bg-white shadow-xl rounded-2xl">
+
+            <!-- HEADER -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold">Crear Paciente</h3>
+                <button @onclick="Close" class="text-gray-500 hover:text-gray-700">✕</button>
+            </div>
+
+            <!-- FORM -->
+            <EditForm Model="Paciente" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                    <div>
+                        <label class="text-sm text-gray-500">Nombre</label>
+                        <InputText @bind-Value="Paciente.Nombre" class="w-full px-3 py-2 border rounded-xl" />
+                    </div>
+
+                    <div>
+                        <label class="text-sm text-gray-500">Apellidos</label>
+                        <InputText @bind-Value="Paciente.Apellidos" class="w-full px-3 py-2 border rounded-xl" />
+                    </div>
+
+                    <div>
+                        <label class="text-sm text-gray-500">Teléfono</label>
+                        <InputText @bind-Value="Paciente.Telefono" class="w-full px-3 py-2 border rounded-xl" />
+                    </div>
+
+                    <div>
+                        <label class="text-sm text-gray-500">Email</label>
+                        <InputText @bind-Value="Paciente.Email" class="w-full px-3 py-2 border rounded-xl" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Dirección</label>
+                        <InputText @bind-Value="Paciente.Direccion" class="w-full px-3 py-2 border rounded-xl" />
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="flex justify-end gap-2 mt-6">
+                    <button type="button"
+                            @onclick="Close"
+                            class="px-4 py-2 text-sm text-white bg-gray-500 rounded-xl hover:bg-gray-600">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="px-4 py-2 text-sm text-white bg-gray-900 rounded-xl hover:bg-gray-700">
+                        Guardar
+                    </button>
+                </div>
+
+            </EditForm>
+
+        </div>
+
+    </div>
+}
