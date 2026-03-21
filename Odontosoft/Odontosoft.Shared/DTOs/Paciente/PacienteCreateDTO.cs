@@ -4,64 +4,63 @@ namespace Odontosoft.Shared.DTOs.Paciente;
 
 public class PacienteCreateDTO
 {
-    [Required]
+
     public Guid SucursalId { get; set; }
 
-    [Required, MaxLength(20)]
+    [MaxLength(20)]
     public string NumeroExpediente { get; set; }
-
-    [Required, MaxLength(150)]
+    [Display(Name = "Nombre")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(150)]
     public string Nombre { get; set; }
-
-    [Required, MaxLength(150)]
+    [Display(Name = "Apellidos")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(150)]
     public string Apellidos { get; set; }
-
-    [Required]
-    public DateTime FechaNacimiento { get; set; }
-
-    [Required, MaxLength(10)]
+    [Display(Name = "Fecha Nacimiento")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+    public DateTime FechaNacimiento { get; set; } = new DateTime(1900, 1, 1);
+    [Display(Name = "Genero")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(10)]
     public string Sexo { get; set; }
-
-    [Required, MaxLength(20)]
+    [Display(Name = "Documento")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(20)]
     public string? CURP { get; set; }
-
-    [Required, MaxLength(20)]
+    [Display(Name = "RFC")]
+    [MaxLength(20)]
     public string? RFC { get; set; }
-
-    [Required, MaxLength(200)]
+    [Display(Name = "Email")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(200)]
     public string? Email { get; set; }
-
-    [Required, MaxLength(20)]
+    [Display(Name = "Telefono")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(20)]
     public string? Telefono { get; set; }
-
-    [Required, MaxLength(20)]
+    [Display(Name = "Telefono Emergencia")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(20)]
     public string? TelefonoEmergencia { get; set; }
-
-    [Required, MaxLength(200)]
+    [Display(Name = "Contacto Emergencia")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(200)]
     public string? ContactoEmergencia { get; set; }
-
-    [Required, MaxLength(500)]
+    [Display(Name = "Direccion")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(500)]
     public string? Direccion { get; set; }
-
-    [Required, MaxLength(100)]
+    [Display(Name = "Ciudad")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(100)]
     public string? Ciudad { get; set; }
-
-    [Required, MaxLength(100)]
+    [Display(Name = "Estado")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(100)]
     public string? Estado { get; set; }
-
-    [Required, MaxLength(10)]
+    [Display(Name = "Codigo Postal")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(10)]
     public string? CodigoPostal { get; set; }
-
-    [Required, MaxLength(100)]
+    [Display(Name = "Ocupación")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(100)]
     public string? Ocupacion { get; set; }
-
-    [Required, MaxLength(50)]
+    [Display(Name = "Estado Civil")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(50)]
     public string? EstadoCivil { get; set; }
-
-    [Required, MaxLength(100)]
+    [Display(Name = "Grupo Sanguineo")]
+    [Required(ErrorMessage = "El campo {0} es obligatorio."), MaxLength(100)]
     public string? GrupoSanguineo { get; set; }
 
-    [Required, MaxLength(500)]
     public string? Foto { get; set; }
 
     public bool Activo { get; set; } = true;
