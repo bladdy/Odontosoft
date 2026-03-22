@@ -1,0 +1,223 @@
+﻿@inherits ComponentBase
+@if (IsOpen)
+{
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+
+        <!-- MODAL -->
+        <div class="w-full max-w-2xl p-6 bg-white shadow-xl rounded-2xl">
+
+            <!-- HEADER -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold">
+                    Editar Paciente
+
+
+                    @if (Paciente.NumeroExpediente != null)
+                    {
+                        <span>
+                            @Paciente.NumeroExpediente
+                        </span>
+                    }
+                </h3>
+                <button @onclick="Close" class="text-white bg-gray-900 hover:bg-gray-700 rounded-full py-2 px-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- FORM -->
+            <EditForm Model="Paciente" OnValidSubmit="@HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <!--
+                -->
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+
+                    <!-- FOTO -->
+                    <div class="col-span-full">
+                        <label class="block text-sm font-medium text-gray-500">Foto</label>
+                        <div class="mt-2 flex items-center gap-x-3">
+                            <div class="size-16 bg-gray-200 rounded-full">
+                                <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-16 text-gray-500"> <path d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" fill-rule="evenodd" /> </svg>
+                            </div>
+                            <button type="button" class="px-4 py-2 text-sm text-white bg-gray-900 rounded-xl hover:bg-gray-700">
+                                Cargar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- NOMBRE -->
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Nombre</label>
+                        <InputText @bind-Value="Paciente.Nombre" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.Nombre)" />
+                    </div>
+
+                    <!-- APELLIDOS -->
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Apellidos</label>
+                        <InputText @bind-Value="Paciente.Apellidos" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.Apellidos)" />
+                    </div>
+
+                    <!-- DOCUMENTO -->
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Documento</label>
+                        <InputText @bind-Value="Paciente.CURP" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.CURP)" />
+                    </div>
+
+                    <!-- FECHA -->
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Fecha de Nacimiento</label>
+                        <InputDate @bind-Value="Paciente.FechaNacimiento"
+                                   min="1960-01-01"
+                                   max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                   class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.FechaNacimiento)" />
+                    </div>
+
+                    <!-- SELECTS -->
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Estado Civil</label>
+                        <InputSelect @bind-Value="Paciente.EstadoCivil" class="w-full px-3 py-2 border rounded-xl">
+                            <option value="">Seleccione</option>
+                            <option>Soltero</option>
+                            <option>Casado</option>
+                            <option>Divorciado</option>
+                            <option>Viudo</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Paciente.EstadoCivil)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Género</label>
+                        <InputSelect @bind-Value="Paciente.Sexo" class="w-full px-3 py-2 border rounded-xl">
+                            <option value="">Seleccione</option>
+                            <option>Masculino</option>
+                            <option>Femenino</option>
+                            <option>Otro</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Paciente.Sexo)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Grupo Sanguíneo</label>
+                        <InputSelect @bind-Value="Paciente.GrupoSanguineo" class="w-full px-3 py-2 border rounded-xl">
+                            <option value="">Seleccione</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Paciente.GrupoSanguineo)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Ocupación</label>
+                        <InputSelect @bind-Value="Paciente.Ocupacion" class="w-full px-3 py-2 border rounded-xl">
+                            <option value="">Seleccione</option>
+                            <option>Empleado</option>
+                            <option>Estudiante</option>
+                            <option>Independiente</option>
+                            <option>Desempleado</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Paciente.Ocupacion)" />
+                    </div>
+
+                    <!-- DIRECCION -->
+                    <div class="sm:col-span-4">
+                        <label class="text-sm text-gray-500">Dirección</label>
+                        <InputText @bind-Value="Paciente.Direccion" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.Direccion)" />
+                    </div>
+
+                    <!-- UBICACION -->
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">País</label>
+                        <InputSelect @bind-Value="Paciente.Estado" class="w-full px-3 py-2 border rounded-xl">
+                            <option value="">Seleccione</option>
+                            <option>Coahuila</option>
+                            <option>Nuevo León</option>
+                            <option>CDMX</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Paciente.Estado)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Estado</label>
+                        <InputSelect @bind-Value="Paciente.Estado" class="w-full px-3 py-2 border rounded-xl">
+                            <option value="">Seleccione</option>
+                            <option>Coahuila</option>
+                            <option>Nuevo León</option>
+                            <option>CDMX</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Paciente.Estado)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Ciudad</label>
+                        <InputSelect @bind-Value="Paciente.Ciudad" class="w-full px-3 py-2 border rounded-xl">
+                            <option value="">Seleccione</option>
+                            <option>Monclova</option>
+                            <option>Saltillo</option>
+                            <option>Torreón</option>
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Paciente.Ciudad)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Código Postal</label>
+                        <InputText @bind-Value="Paciente.CodigoPostal" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.CodigoPostal)" />
+                    </div>
+
+                    <!-- CONTACTO -->
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Correo</label>
+                        <InputText @bind-Value="Paciente.Email" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.Email)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Teléfono</label>
+                        <InputText @bind-Value="Paciente.Telefono" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.Telefono)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Contacto de Emergencia</label>
+                        <InputText @bind-Value="Paciente.ContactoEmergencia" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.ContactoEmergencia)" />
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <label class="text-sm text-gray-500">Teléfono de Emergencia</label>
+                        <InputText @bind-Value="Paciente.TelefonoEmergencia" class="w-full px-3 py-2 border rounded-xl" />
+                        <ValidationMessage For="@(() => Paciente.TelefonoEmergencia)" />
+                    </div>
+
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="flex justify-end gap-2 mt-6">
+                    <button type="button" @onclick="Close"
+                            class="px-4 py-2 text-sm text-white bg-gray-500 rounded-xl hover:bg-gray-600">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="px-4 py-2 text-sm text-white bg-gray-900 rounded-xl hover:bg-gray-700">
+                        Guardar
+                    </button>
+                </div>
+
+            </EditForm>
+
+        </div>
+    </div>
+}

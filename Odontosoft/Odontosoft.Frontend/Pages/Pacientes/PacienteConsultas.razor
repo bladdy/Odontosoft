@@ -1,22 +1,24 @@
-﻿@page "/pacientes/lista"
+﻿@page "/pacientes/consultas"
+
+
 @using Odontosoft.Frontend.Helpers
 @using Odontosoft.Frontend.Pages.Pacientes.Components
 
-<h3 class="mb-4 text-2xl font-semibold">Pacientes</h3>
+<h3 class="mb-4 text-2xl font-semibold">Consultas de Pacientes</h3>
 
 <div class="flex flex-wrap items-center gap-3 mb-3">
 
     <input type="text"
-    placeholder="Buscar Paciente..."
-    @bind="Filter"
-    class="w-[400px] border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500" />
+           placeholder="Buscar Paciente..."
+           @bind="Filter"
+           class="w-[400px] border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500" />
 
     <div class="flex items-center gap-2">
         <label class="text-sm text-gray-600">Mostrar:</label>
 
         <select class="w-20 px-3 py-2 border border-gray-300 rounded-lg"
-        @bind="SelectedPageSize"
-        @bind:after="PageSizeChanged">
+                @bind="SelectedPageSize"
+                @bind:after="PageSizeChanged">
 
             <option value="10">10</option>
             <option value="25">25</option>
@@ -27,15 +29,15 @@
     </div>
 
     <button type="button"
-    class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-900 rounded-lg shadow-sm hover:bg-gray-700"
-    @onclick="ApplyFilterAsync">
+            class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-900 rounded-lg shadow-sm hover:bg-gray-700"
+            @onclick="ApplyFilterAsync">
 
         <svg xmlns="http://www.w3.org/2000/svg"
-        class="w-5 h-5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2">
+             class="w-5 h-5"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
 
             <circle cx="10" cy="10" r="7"></circle>
             <line x1="21" y1="21" x2="15" y2="15"></line>
@@ -47,16 +49,16 @@
     </button>
 
     <button type="button"
-    class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-500 rounded-lg shadow-sm hover:bg-gray-600"
-    @onclick="CleanFilterAsync">
+            class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-500 rounded-lg shadow-sm hover:bg-gray-600"
+            @onclick="CleanFilterAsync">
 
         Limpiar
 
     </button>
     <button type="button"
-    class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-900 rounded-lg shadow-sm hover:bg-gray-700"
+            class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-900 rounded-lg shadow-sm hover:bg-gray-700"
             @onclick="OpenModal">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4" /></svg>
         Crear Paciente
 
     </button>
@@ -126,7 +128,7 @@
 
                             <td class="relative px-4 py-2">
                                 <button @onclick="() => ToggleMenu(paciente.Id)"
-                                class="p-2 rounded-md hover:bg-gray-100">
+                                        class="p-2 rounded-md hover:bg-gray-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                 </button>
                                 @if (openMenuId == paciente.Id)
@@ -134,18 +136,18 @@
                                     <div class="absolute right-20 top-8 w-28 bg-white border border-gray-200 rounded-lg shadow-lg z-[9999]">
 
                                         <button @onclick="() => VerPaciente(paciente.Id)"
-                                        class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
-                                            Ver Historial
+                                                class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
+                                            Ver
                                         </button>
 
                                         <button @onclick="() => CrearCita(paciente.Id)"
-                                        class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
-                                            Crear Cita
+                                                class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
+                                            Cita
                                         </button>
 
                                         <button @onclick="() => OpenEditModal(paciente)"
-                                        class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
-                                            Editar Paciente
+                                                class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
+                                            Editar
                                         </button>
 
                                     </div>
@@ -165,18 +167,17 @@
         <div class="flex justify-center my-4">
 
             <Pagination CurrentPage="currentPage"
-            TotalPages="totalPages"
-            SelectedPage="SelectedPage" />
+                        TotalPages="totalPages"
+                        SelectedPage="SelectedPage" />
 
         </div>
 
     </Body>
 
 </GenericList>
-<CreatePacienteModal 
-    IsOpen="@showModal"
-    OnClose="CloseModal" 
-    OnPacienteCreated="OnPacienteCreated" />
+<CreatePacienteModal IsOpen="@showModal"
+                     OnClose="CloseModal"
+                     OnPacienteCreated="OnPacienteCreated" />
 
 <EditPacienteModal IsOpen="@showEditModal"
                    Paciente="@pacienteSeleccionado"

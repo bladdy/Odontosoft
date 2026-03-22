@@ -7,7 +7,7 @@ using System.Net;
 
 namespace Odontosoft.Frontend.Pages.Pacientes;
 
-public partial class PacientesIndex
+public partial class PacienteConsultas
 {
     private int totalPages;
     private int currentPage = 1;
