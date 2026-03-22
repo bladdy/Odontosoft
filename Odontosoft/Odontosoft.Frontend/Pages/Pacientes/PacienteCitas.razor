@@ -36,9 +36,6 @@
         <div class="bg-gray-900 p-3 font-semibold text-center text-white">
             @fechaSeleccionada.ToString("dddd, dd MMMM yyyy")
         </div>
-        <div class="p-2 text-sm text-red-500">
-            Total citas: @Citas.Count
-        </div>
         <!-- HORAS -->
         @foreach (var hora in Horas)
         {
@@ -46,7 +43,7 @@
 
                 <!-- Hora -->
                 <div class="absolute left-2 top-1 text-xs text-gray-400">
-                    @hora:00
+                    @DateTime.Today.AddHours(hora).ToString("h:mm tt")
                 </div>
 
                 <!-- Citas -->
