@@ -1,185 +1,76 @@
 ﻿@page "/pacientes/citas"
 
+<div class="p-4">
 
-@using Odontosoft.Frontend.Helpers
-@using Odontosoft.Frontend.Pages.Pacientes.Components
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-4 gap-2 flex-wrap">
+        <div>
+            <InputDate @bind-Value="fechaSeleccionada"
+                       class="px-3 py-2 border rounded-xl" />
 
-<h3 class="mb-4 text-2xl font-semibold">Citas de Pacientes</h3>
+            <!-- 👨‍⚕️ Filtro médico -->
+            <select @onchange="OnMedicoChange"
+                    class="px-3 py-2 border rounded-xl">
+                <option value="">Todos los doctores</option>
 
-<div class="flex flex-wrap items-center gap-3 mb-3">
+                @foreach (var medico in Medicos)
+                {
+                    <option value="@medico.Id">
+                        @(medico.Usuario?.Nombre ?? "Sin nombre")
+                    </option>
+                }
+            </select>
+        </div>
+        <button class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-900 rounded-lg shadow-sm hover:bg-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M16 19h6" /><path d="M19 16v6" /></svg>
+            Agendar Cita
+        </button>
+        <!-- 📅 DatePicker -->
 
-    <input type="text"
-           placeholder="Buscar Paciente..."
-           @bind="Filter"
-           class="w-[400px] border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500" />
-
-    <div class="flex items-center gap-2">
-        <label class="text-sm text-gray-600">Mostrar:</label>
-
-        <select class="w-20 px-3 py-2 border border-gray-300 rounded-lg"
-                @bind="SelectedPageSize"
-                @bind:after="PageSizeChanged">
-
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-
-        </select>
     </div>
 
-    <button type="button"
-            class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-900 rounded-lg shadow-sm hover:bg-gray-700"
-            @onclick="ApplyFilterAsync">
+    <!-- 📋 AGENDA -->
+    <div class="border rounded-xl overflow-hidden">
 
-        <svg xmlns="http://www.w3.org/2000/svg"
-             class="w-5 h-5"
-             viewBox="0 0 24 24"
-             fill="none"
-             stroke="currentColor"
-             stroke-width="2">
+        <!-- HEADER -->
+        <div class="bg-gray-900 p-3 font-semibold text-center text-white">
+            @fechaSeleccionada.ToString("dddd, dd MMMM yyyy")
+        </div>
+        <div class="p-2 text-sm text-red-500">
+            Total citas: @Citas.Count
+        </div>
+        <!-- HORAS -->
+        @foreach (var hora in Horas)
+        {
+            <div class="relative border-b h-20">
 
-            <circle cx="10" cy="10" r="7"></circle>
-            <line x1="21" y1="21" x2="15" y2="15"></line>
+                <!-- Hora -->
+                <div class="absolute left-2 top-1 text-xs text-gray-400">
+                    @hora:00
+                </div>
 
-        </svg>
+                <!-- Citas -->
+                @foreach (var cita in GetCitasPorDia(hora).Select((c, index) => new { c, index }))
+                {
+                    <div class="absolute text-xs text-white p-2 rounded shadow"
+                         style="
+                            background:@(GetColor(cita.c));
+                            height:@(cita.c.DuracionMinutos * 2)px;
+                             top:@(cita.c.FechaHora.Minute * 2)px;
+                             left:@(70 + (cita.index * 110))px;
+                            width:100px;
+                         ">
 
-        Buscar
+                        <div class="font-semibold">@cita.c.NumeroCita</div>
+                        <div>@cita.c.TipoCita</div>
+                        <div class="text-[10px]">@cita.c.MotivoConsulta</div>
 
-    </button>
+                    </div>
+                }
 
-    <button type="button"
-            class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-500 rounded-lg shadow-sm hover:bg-gray-600"
-            @onclick="CleanFilterAsync">
+            </div>
+        }
 
-        Limpiar
-
-    </button>
-    <button type="button"
-            class="flex items-center gap-2 px-4 py-2 text-white transition bg-gray-900 rounded-lg shadow-sm hover:bg-gray-700"
-            @onclick="OpenModal">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M16 19h6" /><path d="M19 16v6" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4" /></svg>
-        Crear Paciente
-
-    </button>
+    </div>
 
 </div>
-
-
-<GenericList MyList="Pacientes">
-
-    <Body>
-
-        <div class="border border-gray-200 rounded-lg shadow-sm">
-
-            <table class="min-w-full min-h-full text-sm text-left border-collapse">
-
-                <thead class="text-white bg-gray-900">
-
-                    <tr class="">
-
-                        <th class="px-4 py-2">Expediente</th>
-                        <th class="px-4 py-2">Documento</th>
-                        <th class="px-4 py-2">Nombres</th>
-                        <th class="px-4 py-2">Telefono</th>
-                        <th class="px-4 py-2">Fecha Nac.</th>
-                        <th class="px-4 py-2">Edad</th>
-                        <th class="px-4 py-2">Sexo</th>
-                        <th class="px-4 py-2"></th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody class="divide-y divide-gray-200">
-
-                    @foreach (var paciente in Pacientes!)
-                    {
-                        <tr class="hover:bg-gray-50">
-
-                            <td class="px-4 py-2">@paciente.NumeroExpediente</td>
-
-                            <td class="px-4 py-2">
-                                @paciente.CURP
-                            </td>
-                            <td class="px-4 py-2">
-                                @paciente.Nombre @paciente.Apellidos
-                            </td>
-
-                            <td class="px-4 py-2">
-                                @paciente.Telefono
-                            </td>
-
-                            <td class="px-4 py-2">
-                                @paciente.FechaNacimiento.ToString("dd/MM/yyyy")
-                            </td>
-                            <td class="px-4 py-2">
-                                (@DateHelper.GetAge(paciente.FechaNacimiento) años)
-                            </td>
-                            <td class="px-4 py-2">
-
-                                <span class="px-2 py-1 text-xs text-white bg-gray-500 rounded-full">
-                                    @paciente.Sexo.ToUpper()
-                                </span>
-
-                            </td>
-
-
-
-                            <td class="relative px-4 py-2">
-                                <button @onclick="() => ToggleMenu(paciente.Id)"
-                                        class="p-2 rounded-md hover:bg-gray-100">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
-                                </button>
-                                @if (openMenuId == paciente.Id)
-                                {
-                                    <div class="absolute right-20 top-8 w-28 bg-white border border-gray-200 rounded-lg shadow-lg z-[9999]">
-
-                                        <button @onclick="() => VerPaciente(paciente.Id)"
-                                                class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
-                                            Ver
-                                        </button>
-
-                                        <button @onclick="() => CrearCita(paciente.Id)"
-                                                class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
-                                            Cita
-                                        </button>
-
-                                        <button @onclick="() => OpenEditModal(paciente)"
-                                                class="w-full px-4 py-2 text-sm text-left hover:bg-gray-100">
-                                            Editar
-                                        </button>
-
-                                    </div>
-                                }
-                            </td>
-
-                        </tr>
-                    }
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-        <div class="flex justify-center my-4">
-
-            <Pagination CurrentPage="currentPage"
-                        TotalPages="totalPages"
-                        SelectedPage="SelectedPage" />
-
-        </div>
-
-    </Body>
-
-</GenericList>
-<CreatePacienteModal IsOpen="@showModal"
-                     OnClose="CloseModal"
-                     OnPacienteCreated="OnPacienteCreated" />
-
-<EditPacienteModal IsOpen="@showEditModal"
-                   Paciente="@pacienteSeleccionado"
-                   OnClose="CloseEditModal"
-                   OnPacienteUpdated="OnPacienteUpdated" />
